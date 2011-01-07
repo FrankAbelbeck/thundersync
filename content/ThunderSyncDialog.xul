@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "chrome://thundersync/locale/ThunderSyncDialog.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="ThunderSyncDialog.css" type="text/css"?>
+
+<!--
+Definition of ThunderSync's main synchronisation dialog.
+Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+author: Frank Abelbeck
+version: 2010-12-17
+-->
+
+<dialog id="ThunderSync.dialog.sync"
+	title="&ThunderSyncDialog.title;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	orient="vertical"
+	buttons=",">
+	
+	<script type="application/x-javascript"
+		src="chrome://thundersync/content/ThunderSyncDialog.js" />
+	<script type="application/x-javascript"
+		src="chrome://thundersync/content/ThunderSyncVCardLib.js" />
+	
+	<dialogheader title="&ThunderSyncDialog.dialog.title;"
+		description="&ThunderSyncDialog.dialog.description;" />
+	
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="string-bundle" src="chrome://thundersync/locale/ThunderSyncDialog.properties"/>
+	</stringbundleset>
+	
+	<tree id="ThunderSyncDialog.tree"
+		rows="12"
+		hidecolumnpicker="true"
+		seltype="single"
+		treelines="true"
+		onclick="ThunderSyncDialog.changeContainerState()"
+		ondblclick="ThunderSyncDialog.changeItemState()"
+		flex="1">
+		<treecols>
+			<treecol id="ThunderSyncDialog.treecol.local"
+				sort="?ThunderSyncDialog.treecol.local"
+				label="&ThunderSyncDialog.header.local;"
+				primary="true"
+				flex="2" />
+			<treecol id="ThunderSyncDialog.treecol.mode"
+				sort="?ThunderSyncDialog.treecol.mode"
+				label="&ThunderSyncDialog.header.mode;"
+				style="text-align:center"
+				flex="1" />
+			<treecol id="ThunderSyncDialog.treecol.remote"
+				sort="?ThunderSyncDialog.treecol.remote"
+				label="&ThunderSyncDialog.header.remote;"
+				flex="2" />
+			<treecol id="ThunderSyncDialog.treecol.type"
+				sort="?ThunderSyncDialog.treecol.type"
+				label="&ThunderSyncDialog.header.type;"
+				flex="2" />
+		</treecols>
+		<treechildren id="ThunderSyncDialog.treechildren" />
+	</tree>
+	
+	<progressmeter id="ThunderSyncDialog.progressmeter" value="0%" mode="determined" />
+	
+	<hbox pack="end">
+<!--	
+		<button label="33%" oncommand="document.getElementById('ThunderSyncDialog.progressmeter').setAttribute('value','33%');" />
+		<button label="50%" oncommand="document.getElementById('ThunderSyncDialog.progressmeter').setAttribute('value','50%');" />
+		<button label="60%" oncommand="document.getElementById('ThunderSyncDialog.progressmeter').setAttribute('value','60%');" />
+-->
+		<button id="ThunderSyncDialog.button.compare"
+			label="&ThunderSyncDialog.button.compare;"
+			oncommand="ThunderSyncDialog.compare()" />
+		<button id="ThunderSyncDialog.button.sync"
+			label="&ThunderSyncDialog.button.sync;"
+			oncommand="ThunderSyncDialog.sync()" disabled="true" />
+		<button id="ThunderSyncDialog.button.close"
+			label="&ThunderSyncDialog.button.close;"
+			oncommand="close();" />
+	</hbox>
+	
+</dialog>

@@ -1,0 +1,74 @@
+<!--
+Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+author: Frank Abelbeck
+version: 2010-12-17
+-->
+
+<!ENTITY ThunderSyncPreferences.title "ThunderSync-Einstellungen">
+
+<!ENTITY ThunderSyncPreferences.local "Adressbuch">
+<!ENTITY ThunderSyncPreferences.remote "Sync-Pfad">
+<!ENTITY ThunderSyncPreferences.choose "Pfad wählen">
+<!ENTITY ThunderSyncPreferences.clear "Pfad löschen">
+
+<!ENTITY ThunderSyncPreferences.dialog.title "Synchronisationspfade">
+<!ENTITY ThunderSyncPreferences.dialog.description "Tip: Kontextmenu nutzen.">
+
+<!ENTITY ThunderSyncPreferences.label.format "Exportformat">
+<!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
+
+<!ENTITY ThunderSyncPreferences.label.importencoding "Dateikodierung (Import)">
+<!ENTITY ThunderSyncPreferences.label.exportencoding "Dateikodierung (Export)">
+
+<!ENTITY ThunderSyncPreferences.encoding.standard "vCard-Standard">
+
+<!ENTITY ThunderSyncPreferences.encoding.iso88591 "Westeuropäisch (ISO 8859-1)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88592 "Mitteleuropäisch (ISO 8859-2)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88593 "Südeuropäisch (ISO 8859-3)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88594 "Nordeuropäisch (ISO 8859-4)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88595 "Kyrillisch (ISO 8859-5)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88596 "Arabisch (ISO 8859-6)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88597 "Griechisch (ISO 8859-7)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88598 "Hebräisch (ISO 8859-8)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88599 "Türkisch (ISO 8859-9)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885910 "Nordisch (ISO 8859-10)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885911 "Thai (ISO 8859-11)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885913 "Baltisch (ISO 8859-13)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885914 "Keltisch (ISO 8859-14)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885915 "Westeuropäisch+Euro (ISO 8859-15)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885916 "Südosteuropäisch (ISO 8859-16)">
+
+<!ENTITY ThunderSyncPreferences.encoding.windows874 "Thai (Windows-874)">
+<!ENTITY ThunderSyncPreferences.encoding.windows932 "Japanisch (Windows-932)">
+<!ENTITY ThunderSyncPreferences.encoding.windows936 "Chinesisch, vereinfacht (Windows-936)">
+<!ENTITY ThunderSyncPreferences.encoding.windows949 "Koreanisch (Windows-949)">
+<!ENTITY ThunderSyncPreferences.encoding.windows950 "Chinesisch, traditionell (Windows-950)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1250 "Mitteleuropäisch (Windows-1250)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1251 "Kyrillisch (Windows-1251)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1252 "Westeuropäisch (Windows-1252)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1253 "Griechisch (Windows-1253)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1254 "Türkisch (Windows-1254)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1255 "Hebräisch (Windows-1255)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1256 "Arabisch (Windows-1256)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1257 "Baltisch (Windows-1257)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1258 "Vietnamesisch (Windows-1258)">
+
+<!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">

@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "chrome://thundersync/locale/ThunderSyncPreferences.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!--
+ThunderSync Preferences Dialog.
+Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+author: Frank Abelbeck
+version: 2010-12-17
+-->
+
+
+<dialog id="ThunderSyncPreferences.dialog.preferences"
+	title="&ThunderSyncPreferences.title;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	buttons="accept,cancel"
+	onload="ThunderSyncPref.load();"
+	ondialogaccept="return ThunderSyncPref.accept();">
+	
+	<script type="application/x-javascript"
+		src="chrome://thundersync/content/ThunderSyncPreferences.js" />
+	
+	<dialogheader title="&ThunderSyncPreferences.dialog.title;"
+		description="&ThunderSyncPreferences.dialog.description;" />
+	
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="string-bundle" src="chrome://thundersync/locale/ThunderSyncPreferences.properties"/>
+	</stringbundleset>
+	
+	<popupset>
+		<menupopup id="ThunderSyncPreferences.popup.addressbook">
+			<menuitem label="&ThunderSyncPreferences.choose;"
+				oncommand="ThunderSyncPref.openPathDialog()" />
+			<menuitem label="&ThunderSyncPreferences.clear;"
+				oncommand="ThunderSyncPref.clearPath()" />
+		</menupopup>
+	</popupset>
+	
+	<listbox id="ThunderSyncPreferences.list.addressbook" seltype="single">
+		<listcols>
+			<listcol />
+			<listcol flex="1" />
+		</listcols>
+		<listhead>
+			<listheader label="&ThunderSyncPreferences.local;" />
+			<listheader label="&ThunderSyncPreferences.remote;" />
+		</listhead>
+	</listbox>
+
+	<grid flex="1">
+		<columns>
+			<column />
+			<column flex="1" />
+		</columns>
+		<rows>
+			<row>
+				<vbox valign="middle">
+					<label value="&ThunderSyncPreferences.label.format;"
+						control="ThunderSyncPreferences.menulist.format"/>
+				</vbox>
+				<menulist id="ThunderSyncPreferences.menulist.format" oncommand="ThunderSyncPref.updateExportFormat();">
+					<menupopup>
+						<menuitem label="&ThunderSyncPreferences.format.vcard;"
+							class="ThunderSyncPreferences.menuitem.format"
+							value="vcard" /> 
+					</menupopup>
+				</menulist>
+			</row>
+			<row id="ThunderSyncPreferences.gridrow.importencoding">
+				<vbox valign="middle">
+					<label value="&ThunderSyncPreferences.label.importencoding;"
+						control="ThunderSyncPreferences.menulist.importencoding"/>
+				</vbox>
+				<menulist id="ThunderSyncPreferences.menulist.importencoding">
+					<menupopup>
+						<menuitem label="&ThunderSyncPreferences.encoding.standard;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Standard" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88591;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-1" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88592;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-2" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88593;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-3" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88594;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-4" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88595;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-5" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88596;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-6" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88597;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-7" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88598;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-8" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88599;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-9" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885910;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-10" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885911;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-11" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885913;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-13" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885914;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-14" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885915;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-15" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885916;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-16" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows874;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-874" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows932;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-932" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows936;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-936" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows949;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-949" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows950;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-950" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1250;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1250" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1251;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1251" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1252;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1252" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1253;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1253" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1254;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1254" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1255;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1255" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1256;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1256" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1257;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1257" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1258;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1258" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.utf8;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="UTF-8" /> 
+					</menupopup>
+				</menulist>
+			</row>
+			<row id="ThunderSyncPreferences.gridrow.exportencoding">
+				<vbox valign="middle">
+					<label value="&ThunderSyncPreferences.label.exportencoding;"
+						control="ThunderSyncPreferences.menulist.exportencoding"/>
+				</vbox>
+				<menulist id="ThunderSyncPreferences.menulist.exportencoding">
+					<menupopup>
+						<menuitem label="&ThunderSyncPreferences.encoding.utf8;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="UTF-8" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.standard;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-15" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88591;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-1" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88592;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-2" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88593;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-3" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88594;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-4" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88595;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-5" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88596;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-6" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88597;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-7" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88598;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-8" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso88599;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-9" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885910;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-10" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885911;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-11" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885913;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-13" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885914;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-14" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885915;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-15" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.iso885916;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="ISO-8859-16" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows874;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-874" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows932;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-932" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows936;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-936" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows949;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-949" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows950;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-950" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1250;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1250" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1251;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1251" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1252;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1252" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1253;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1253" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1254;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1254" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1255;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1255" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1256;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1256" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1257;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1257" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.windows1258;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="Windows-1258" /> 
+					</menupopup>
+				</menulist>
+			</row>
+		</rows>
+	</grid>
+
+</dialog>

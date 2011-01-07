@@ -1,0 +1,41 @@
+<!--
+Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+author: Frank Abelbeck
+version: 2010-12-17
+-->
+
+<!ENTITY ThunderSyncDialog.title "ThunderSync">
+<!ENTITY ThunderSyncDialog.dialog.title "ThunderSync: Synchronisation">
+<!ENTITY ThunderSyncDialog.dialog.description "Importieren, exportieren, zusammenführen.">
+
+<!ENTITY ThunderSyncDialog.useLocal     "Thunderbird-Eintrag verwenden">
+<!ENTITY ThunderSyncDialog.useRemote    "Externen Eintrag verwenden">
+<!ENTITY ThunderSyncDialog.deleteLocal  "Thunderbird-Eintrag löschen">
+<!ENTITY ThunderSyncDialog.deleteRemote "Externen Eintrag löschen">
+
+<!ENTITY ThunderSyncDialog.header.local  "Thunderbird">
+<!ENTITY ThunderSyncDialog.header.remote "Externe Ressource">
+<!ENTITY ThunderSyncDialog.header.mode   "Modus">
+<!ENTITY ThunderSyncDialog.header.type   "Eigenschaft">
+
+<!ENTITY ThunderSyncDialog.button.compare "Vergleichen">
+<!ENTITY ThunderSyncDialog.button.sync    "Synchronisieren">
+<!ENTITY ThunderSyncDialog.button.close   "Schließen">
