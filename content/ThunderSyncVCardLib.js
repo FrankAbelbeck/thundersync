@@ -20,7 +20,7 @@
  * or see <http://www.gnu.org/licenses/>.
  *
  * @author Frank Abelbeck
- * @version 2010-12-17
+ * @version 2011-01-07
  */
 
 var ThunderSyncVCardLib = {
@@ -202,13 +202,12 @@ var ThunderSyncVCardLib = {
 	 */
 	foldQuotedPrintable: function (datastr,offset) {
 		var pos = 75-offset;
-		var foldedstr = datastr.substr(0,pos)
-		datastr = datastr.substr(pos)
-		if (datastr.length > 0) { foldedstr += "=" + this.CRLF + " "; }
+		var foldedstr = "";
 		while (datastr.length > 0) {
-			foldedstr += datastr.substr(0,74)
-			datastr = datastr.substr(74)
-			if (datastr.length > 0) { foldedstr += "=" + this.CRLF + " "; }
+			foldedstr += datastr.substr(0,pos);
+			datastr = datastr.substr(pos);
+			if (datastr.length > 0) { foldedstr += "=" + this.CRLF; }
+			pos = 74;
 		}
 		return foldedstr;
 	},
@@ -263,24 +262,6 @@ var ThunderSyncVCardLib = {
 			if (datastr.length > 0) { foldedstr += this.CRLF + " " };
 		}
 		return foldedstr;
-	},
-	
-	convertToUnicode: function (datastr,charset) {
-		var retstr = "";
-		for (var i=0; i<datastr.length; i++) {
-			if (datastr.charCodeAt(i) < 128) {
-				retstr += datastr[i];
-			}
-// 			else {
-// 				if (charset == "UTF-8") {
-// 					
-// 				}
-// 				else {
-// 					
-// 				}
-// 			}
-		}
-		return retstr;
 	},
 	
 	/**
@@ -450,10 +431,21 @@ var ThunderSyncVCardLib = {
 		for (var i = 0; i < this.otherProperties.length; i++) {
 			var value = card.getProperty(this.otherProperties[i],"");
 			if (value != "") {
-				vcfstr += "X-MOZILLA-PROPERTY;CHARSET="+encoding+":"
-					+ this.otherProperties[i] + ";"
-					+ value
-					+ this.CRLF;
+				var tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
+				tmpstr += tmpstr + this.foldQuotedPrintable(
+					this.toQuotedPrintable(
+						this.otherProperties[i],
+						tmpstr.length
+					)
+				)
+				tmpstr += ";"
+				tmpstr += tmpstr + this.foldQuotedPrintable(
+					this.toQuotedPrintable(
+						value,
+						tmpstr.length
+					)
+				)
+				vcfstr += tmpstr + this.CRLF;
 			}
 		}
 		
@@ -521,8 +513,8 @@ var ThunderSyncVCardLib = {
 		try {
 			var lines = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/
 				.exec(datastr)[1]
- 				.replace(/=\r\n[\t| ]+/g,"")
-  				.replace(/\r\n[\t| ]+/g,"")
+ 				.replace(/=\r\n([^\r\n])/g,"$1")
+  				.replace(/\r\n[\t| ]/g," ")
 				.split(this.CRLF);
 		} catch (exception) {
 			var lines = new Array();
@@ -539,16 +531,24 @@ var ThunderSyncVCardLib = {
 				var properties = Object();
 				for (var k = 1; k < property.length; k++) {
 					var prop = property[k].split("=");
-					if (prop.length <= 1) {
-						properties[prop[0]] = true;
-					} else {
-						properties[prop[0]] = prop[1];
+					switch (prop.length) {
+						case 1:
+							properties[prop[0]] = true;
+							break;
+						case 2: properties[prop[0]] = prop[1];
 					}
 				}
   			} catch (exception) {
   				i++;
   				continue;
   			}
+			
+			try {
+				var charset = properties["CHARSET"].toUpperCase();
+			}
+			catch (exception) {
+				var charset = encoding;
+			}
 			
 			if (properties["ENCODING"] == "QUOTED-PRINTABLE" || properties["QUOTED-PRINTABLE"]) {
 				for (var k = 0; k < value.length; k++) {
@@ -557,15 +557,12 @@ var ThunderSyncVCardLib = {
 			}
 			if (properties["ENCODING"] == "BASE64" || properties["BASE64"]) {
 				for (var k = 0; k < value.length; k++) {
-					value[k] = window.atob(value[k]);
+					try {
+						value[k] = window.atob(value[k].replace(/ /g,""));
+					} catch (exception) {
+						value[k] = "";
+					}
 				}
-			}
-			
-			try {
-				var charset = properties["CHARSET"].toUpperCase();
-			}
-			catch (exception) {
-				var charset = encoding;
 			}
 			
 			if (charset == "UTF-8") {

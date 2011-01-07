@@ -20,7 +20,7 @@
  * or see <http://www.gnu.org/licenses/>.
  *
  * @author Frank Abelbeck
- * @version 2010-12-19 (1.1)
+ * @version 2011-01-07
  */
 
 var ThunderSyncDialog = {

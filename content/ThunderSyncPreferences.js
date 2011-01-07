@@ -20,7 +20,7 @@
  * or see <http://www.gnu.org/licenses/>.
  *
  * @author Frank Abelbeck
- * @version 2010-12-19 (1.1)
+ * @version 2010-01-07
  */
 
 var ThunderSyncPref = {
@@ -28,6 +28,10 @@ var ThunderSyncPref = {
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
 			.getService(Components.interfaces.nsIPrefService)
 			.getBranch("extensions.ThunderSync.Addressbooks.");
+		
+		//
+		// read all addressbooks, fill list in preferences dialog
+		//
 		var abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
 		var allAddressBooks = abManager.directories;
 		var ablist = document.getElementById("ThunderSyncPreferences.list.addressbook");
@@ -82,6 +86,9 @@ var ThunderSyncPref = {
 			}
 		}
 		
+		//
+		// read export format preference or set it to vCard if unset
+		//
 		var format = "";
 		try {
 			format = Components.classes["@mozilla.org/preferences-service;1"]
@@ -97,6 +104,9 @@ var ThunderSyncPref = {
 			format = "vcard";
 		}
 		
+		//
+		// enable/disable options specific to the vCard format
+		//
 		if (format == "vcard") {
 			document.getElementById("ThunderSyncPreferences.gridrow.importencoding")
 				.setAttribute("collapsed","false");
@@ -110,6 +120,9 @@ var ThunderSyncPref = {
 				.setAttribute("collapsed","true");
 		}
 		
+		//
+		// set export format dropdown box to preference value
+		//
 		var list = document.getElementById("ThunderSyncPreferences.menulist.format");
 		var items = list.getElementsByClassName("ThunderSyncPreferences.menuitem.format");
 		for (var i=0;i<items.length;i++) {
@@ -119,6 +132,9 @@ var ThunderSyncPref = {
 			}
 		}
 		
+		//
+		// read preference for import encoding and set dropdown box
+		//
 		var encoding = "";
 		try {
 			encoding = Components.classes["@mozilla.org/preferences-service;1"]
@@ -142,6 +158,9 @@ var ThunderSyncPref = {
 			}
 		}
 		
+		//
+		// read preference for export encoding and set dropdown box
+		//
 		var encoding = "";
 		try {
 			encoding = Components.classes["@mozilla.org/preferences-service;1"]
