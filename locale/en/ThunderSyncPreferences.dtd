@@ -34,3 +34,41 @@ version: 2010-12-17
 
 <!ENTITY ThunderSyncPreferences.label.format "Export format">
 <!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
+
+<!ENTITY ThunderSyncPreferences.label.importencoding "File charset (Import)">
+<!ENTITY ThunderSyncPreferences.label.exportencoding "File charset (Export)">
+
+<!ENTITY ThunderSyncPreferences.encoding.standard "vCard standard">
+
+<!ENTITY ThunderSyncPreferences.encoding.iso88591 "Western European (ISO 8859-1)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88592 "Central European (ISO 8859-2)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88593 "South European (ISO 8859-3)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88594 "North European (ISO 8859-4)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88595 "Cyrillic (ISO 8859-5)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88596 "Arabic (ISO 8859-6)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88597 "Greek (ISO 8859-7)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88598 "Hebrew (ISO 8859-8)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88599 "Turkish (ISO 8859-9)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885910 "Nordic (ISO 8859-10)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885911 "Thai (ISO 8859-11)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885913 "Baltic (ISO 8859-13)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885914 "Celtic (ISO 8859-14)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885915 "Western Europe +Euro (ISO 8859-15)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885916 "South-Eastern European (ISO 8859-16)">
+
+<!ENTITY ThunderSyncPreferences.encoding.windows874 "Thai (Windows-874)">
+<!ENTITY ThunderSyncPreferences.encoding.windows932 "Japanese (Windows-932)">
+<!ENTITY ThunderSyncPreferences.encoding.windows936 "Chinese, simplified (Windows-936)">
+<!ENTITY ThunderSyncPreferences.encoding.windows949 "Korean (Windows-949)">
+<!ENTITY ThunderSyncPreferences.encoding.windows950 "Chinese, traditional (Windows-950)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1250 "Central European (Windows-1250)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1251 "Cyrillic (Windows-1251)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1252 "Western European (Windows-1252)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1253 "Greek (Windows-1253)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1254 "Turkish (Windows-1254)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1255 "Hebrew (Windows-1255)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1256 "Arabic (Windows-1256)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1257 "Baltic (Windows-1257)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1258 "Vietnamese (Windows-1258)">
+
+<!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">

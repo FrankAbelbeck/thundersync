@@ -35,8 +35,8 @@ version: 2010-12-17
 <!ENTITY ThunderSyncPreferences.label.format "Exportformat">
 <!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
 
-<!ENTITY ThunderSyncPreferences.label.importencoding "Dateikodierung (Import)">
-<!ENTITY ThunderSyncPreferences.label.exportencoding "Dateikodierung (Export)">
+<!ENTITY ThunderSyncPreferences.label.importencoding "Dateizeichensatz (Import)">
+<!ENTITY ThunderSyncPreferences.label.exportencoding "Dateizeichensatz (Export)">
 
 <!ENTITY ThunderSyncPreferences.encoding.standard "vCard-Standard">
 
