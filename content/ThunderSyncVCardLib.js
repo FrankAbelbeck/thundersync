@@ -277,6 +277,10 @@ var ThunderSyncVCardLib = {
 	 * @return ASCII string with vCard content
 	 */
 	fromCard: function (card,encoding) {
+		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+		converter.charset = encoding;
+		
 		vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF
 		
  		try {
@@ -418,7 +422,7 @@ var ThunderSyncVCardLib = {
 			}
 		}
 		
-		var notes = card.getProperty("Notes","");
+		var notes = converter.ConvertFromUnicode(card.getProperty("Notes",""));
 		if (notes != "") {
 			var tmpstr = "NOTE;CHARSET="+encoding+";QUOTED-PRINTABLE:"
 			vcfstr += tmpstr + this.foldQuotedPrintable(
@@ -428,7 +432,7 @@ var ThunderSyncVCardLib = {
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
-			var value = card.getProperty(this.otherProperties[i],"");
+			var value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],""));
 			if (value != "") {
 				var tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";QUOTED-PRINTABLE:"
 				vcfstr += tmpstr + this.foldQuotedPrintable(
@@ -554,82 +558,11 @@ var ThunderSyncVCardLib = {
 				}
 			}
 			
-			if (charset == "UTF-8") {
-				//
-				// UTF coding: x = character bit
-				// 0000 0000 -- 0000 007F: 0xxxxxxx
-				// 0000 0080 -- 0000 07FF: 110xxxxx 10xxxxxx
-				// 0000 0800 -- 0000 7FFF: 1110xxxx 10xxxxxx 10xxxxxx
-				// 0001 0000 -- 0010 FFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-				//
+			if (property[0] != "PHOTO") {
+				converter.charset = charset;
 				for (var k = 0; k < value.length; k++) {
-					var tmpstr = "";
-					var c = 0;
-					var charcode = 0;
-					var charcode1 = 0;
-					var charcode2 = 0;
-					var charcode3 = 0;
-					var charcode4 = 0;
-					while (c < value[k].length) {
-						charcode1 = value[k].charCodeAt(c);
-						if (charcode1 <= 0x7f) {
-							tmpstr += value[k][c];
-							c++;
-							continue;
-						}
-						if (charcode1 >= 194 && charcode1 <= 223) {
-							// 11000010 = 194 ... 11011111 = 223
-							charcode2 = value[k].charCodeAt(c+1);
-							if (charcode2 >= 128 && charcode2 <= 191) {
-								charcode1 = (charcode1 & 63) << 6;
-								charcode2 =  charcode2 & 127;
-								tmpstr += String.fromCharCode(charcode1+charcode2);
-								c += 2;
-								continue;
-							}
-						}
-						if (charcode1 >= 224 && charcode1 <= 239) {
-							// 11100000 = 224 ... 11101111 = 239
-							charcode2 = value[k].charCodeAt(c+1);
-							charcode3 = value[k].charCodeAt(c+2);
-							if (charcode2 >= 128 && charcode2 <= 191 &&
-							    charcode3 >= 128 && charcode3 <= 191) {
-								charcode1 = (charcode1 & 31)  << 10;
-								charcode2 = (charcode2 & 127) << 6;
-								charcode3 =  charcode3 & 127;
-								tmpstr += String.fromCharCode(charcode1+charcode2+charcode3);
-								c += 3;
-								continue;
-							}
-						}
-						if (charcode1 >= 240 && charcode1 <= 247) {
-							// 11110111 = 240 ... 11110111 = 247
-							charcode2 = value[k].charCodeAt(c+1);
-							charcode3 = value[k].charCodeAt(c+2);
-							charcode4 = value[k].charCodeAt(c+3);
-							if (charcode2 >= 128 && charcode2 <= 191 &&
-							    charcode3 >= 128 && charcode3 <= 191 &&
-							    charcode4 >= 128 && charcode4 <= 191) {
-								charcode1 = (charcode1 & 15)  << 15;
-								charcode2 = (charcode2 & 127) << 12;
-								charcode3 = (charcode3 & 127) << 6;
-								charcode4 =  charcode4 & 127;
-								tmpstr += String.fromCharCode(charcode1+charcode2+charcode3+charcode4);
-								c += 4;
-								continue;
-							}
-						}
-						c++;
-					}
-					value[k] = tmpstr;
-				}
-			}
-			else {
-				if (property[0] != "PHOTO") {
-					converter.charset = charset;
-					for (var k = 0; k < value.length; k++) {
-						value[k] = converter.ConvertToUnicode(value[k]);
-					}
+					try { value[k] = converter.ConvertToUnicode(value[k]); }
+					catch (exception) {}
 				}
 			}
 			
