@@ -201,13 +201,13 @@ var ThunderSyncVCardLib = {
 	 * @return folded quoted printable data string
 	 */
 	foldQuotedPrintable: function (datastr,offset) {
-		var pos = 75-offset;
+ 		var pos = 75 - offset;
 		var foldedstr = "";
 		while (datastr.length > 0) {
 			foldedstr += datastr.substr(0,pos);
 			datastr = datastr.substr(pos);
 			if (datastr.length > 0) { foldedstr += "=" + this.CRLF; }
-			pos = 74;
+			pos = 75;
 		}
 		return foldedstr;
 	},
@@ -277,8 +277,6 @@ var ThunderSyncVCardLib = {
 	 * @return ASCII string with vCard content
 	 */
 	fromCard: function (card,encoding) {
-		if (encoding == "Standard") { encoding = "UTF-8"; }
-		
 		vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF
 		
  		try {
@@ -422,30 +420,23 @@ var ThunderSyncVCardLib = {
 		
 		var notes = card.getProperty("Notes","");
 		if (notes != "") {
-			var tmpstr = "NOTE;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
+			var tmpstr = "NOTE;CHARSET="+encoding+";QUOTED-PRINTABLE:"
 			vcfstr += tmpstr + this.foldQuotedPrintable(
-					this.toQuotedPrintable(notes),tmpstr.length
+					this.toQuotedPrintable(notes),
+					tmpstr.length
 				) + this.CRLF;
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
 			var value = card.getProperty(this.otherProperties[i],"");
 			if (value != "") {
-				var tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
-				tmpstr += tmpstr + this.foldQuotedPrintable(
+				var tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";QUOTED-PRINTABLE:"
+				vcfstr += tmpstr + this.foldQuotedPrintable(
 					this.toQuotedPrintable(
-						this.otherProperties[i],
-						tmpstr.length
-					)
-				)
-				tmpstr += ";"
-				tmpstr += tmpstr + this.foldQuotedPrintable(
-					this.toQuotedPrintable(
-						value,
-						tmpstr.length
-					)
-				)
-				vcfstr += tmpstr + this.CRLF;
+						this.otherProperties[i] + ";" + value
+					),
+					tmpstr.length
+				) + this.CRLF;
 			}
 		}
 		
@@ -463,7 +454,7 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
+					var photostr = "PHOTO;BASE64;TYPE="
 						+ suffix + ":";
 					vcfstr += photostr
 						+ this.foldBase64(
@@ -480,7 +471,7 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
+					var photostr = "PHOTO;BASE64;TYPE="
 						+ suffix + ":";
 					vcfstr += photostr
 						+ this.foldBase64(
@@ -506,8 +497,6 @@ var ThunderSyncVCardLib = {
 	 * @return nsIAbCard
 	 */
 	toCard: function (datastr,encoding) {
-		if (encoding == "Standard") { encoding = "ISO-8859-1"; }
-		
 		var card = Components.classes["@mozilla.org/addressbook/cardproperty;1"]  
 			.createInstance(Components.interfaces.nsIAbCard);
 		try {

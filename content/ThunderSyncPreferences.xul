@@ -194,12 +194,9 @@ version: 2011-01-07
 				</vbox>
 				<menulist id="ThunderSyncPreferences.menulist.exportencoding">
 					<menupopup>
-						<menuitem label="&ThunderSyncPreferences.encoding.utf8;"
-							class="ThunderSyncPreferences.menuitem.encoding"
-							value="UTF-8" /> 
 						<menuitem label="&ThunderSyncPreferences.encoding.standard;"
 							class="ThunderSyncPreferences.menuitem.encoding"
-							value="ISO-8859-15" /> 
+							value="Standard" /> 
 						<menuitem label="&ThunderSyncPreferences.encoding.iso88591;"
 							class="ThunderSyncPreferences.menuitem.encoding"
 							value="ISO-8859-1" /> 
@@ -287,6 +284,9 @@ version: 2011-01-07
 						<menuitem label="&ThunderSyncPreferences.encoding.windows1258;"
 							class="ThunderSyncPreferences.menuitem.encoding"
 							value="Windows-1258" /> 
+						<menuitem label="&ThunderSyncPreferences.encoding.utf8;"
+							class="ThunderSyncPreferences.menuitem.encoding"
+							value="UTF-8" /> 
 					</menupopup>
 				</menulist>
 			</row>

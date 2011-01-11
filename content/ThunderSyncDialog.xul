@@ -51,7 +51,6 @@ version: 2010-12-17
 		hidecolumnpicker="true"
 		seltype="single"
 		treelines="true"
-		onclick="ThunderSyncDialog.changeContainerState()"
 		ondblclick="ThunderSyncDialog.changeItemState()"
 		flex="1">
 		<treecols>

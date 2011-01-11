@@ -363,10 +363,31 @@ var ThunderSyncDialog = {
 					.getService(Components.interfaces.nsIPrefService)
 					.getBranch("extensions.ThunderSync.")
 					.getCharPref("exportEncoding");
-				converter.init(fStream, "UTF-8", 0, 0);
-				converter.writeString(
-					ThunderSyncVCardLib.fromCard(card,encoding)
-				);
+				if (encoding == "Standard") { encoding = "UTF-8"; }
+				converter.init(fStream, encoding, 0, 0);
+				try {
+					converter.writeString(
+						ThunderSyncVCardLib.fromCard(
+							card,
+							encoding
+						)
+					);
+				}
+				catch (exception) {
+					converter.init(fStream, "UTF-8", 0, 0);
+					try {
+						converter.writeString(
+							ThunderSyncVCardLib.fromCard(
+								card,
+								"UTF-8"
+							)
+						);
+					}
+					catch (exception) {
+						// neither custom encoding
+						// nor Unicode works: ignore
+					}
+				}
 				converter.close();
 				break;
 		}
@@ -409,6 +430,7 @@ var ThunderSyncDialog = {
 					.getService(Components.interfaces.nsIPrefService)
 					.getBranch("extensions.ThunderSync.")
 					.getCharPref("importEncoding");
+				if (encoding == "Standard") { encoding = "ISO-8859-1"; }
 				card = ThunderSyncVCardLib.toCard(datastr,encoding);
 				break;
 			default:
@@ -605,19 +627,6 @@ var ThunderSyncDialog = {
 		}
 		else {
 			this.checkIfSyncReady();
-		}
-	},
-	
-	/**
-	 *
-	 */
-	changeContainerState: function () {
-		try {
-			var tree = document.getElementById("ThunderSyncDialog.tree");
-			tree.treeBoxObject.view.toggleOpenState(tree.currentIndex);
-		}
-		catch (exception) {
-			return;
 		}
 	},
 	
