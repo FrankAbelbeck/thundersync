@@ -2,7 +2,7 @@
 ThunderSync, a Mozilla Thunderbird v3 extension
 --------------------------------------------------------------------------------
 
-Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
 
 This file is part of the Mozilla Thunderbird extension "ThunderSync."
 
@@ -24,7 +24,7 @@ or see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
 
 Author.....: Frank Abelbeck
-Version....: 2010-12-19 (1.0.1)
+Version....: 2011-01-12 (1.1)
 Licence....: GNU General Public License version 2
 
 Description: Allows to synchronise Thunderbird's addressbook with external
@@ -97,7 +97,8 @@ Changelog:
 1.0 (2010-12-17)
    - initial release
 
-1.1 (2010-12-19)
+1.1 (2011-01-12)
    - preferences storage names changed to Mozilla policy
-   - added Hebrew character support (thanks to Yair Lanz for feedback)
+   - added support for various charsets (thanks to Yair Lanz for feedback)
+   - vCard file processing improvements
 

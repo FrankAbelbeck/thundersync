@@ -1,6 +1,6 @@
 /**
  * Preferences logic for ThunderSync.
- * Copyright (C) 2010 Frank Abelbeck <frank.abelbeck@googlemail.com>
+ * Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
  * 
  * This file is part of the Mozilla Thunderbird extension "ThunderSync."
  * 
@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * or see <http://www.gnu.org/licenses/>.
  *
- * @author Frank Abelbeck
- * @version 2010-01-07
+ * $Id$
  */
 
 var ThunderSyncPref = {
