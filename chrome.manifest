@@ -26,3 +26,8 @@ overlay chrome://messenger/content/addressbook/addressbook.xul chrome://thunders
 
 locale thundersync en locale/en/
 locale thundersync de locale/de/
+
+component   {f55a44cc-dabf-4390-8ec0-8898f3d646d0}  components/ThunderSyncStartup.js
+contract    @lucas.treffenstaedt.de/thundersync;1   {f55a44cc-dabf-4390-8ec0-8898f3d646d0}
+category    profile-after-change    ThunderSync     @lucas.treffenstaedt.de/thundersync;1
+

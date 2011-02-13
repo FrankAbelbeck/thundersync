@@ -182,6 +182,24 @@ var ThunderSyncPref = {
 				break;
 			}
 		}
+		
+		//
+		// read preference for startup auto-sync;
+		// added by Lucas Treffenstädt
+		//
+		var autosync = false;
+		try {
+			autosync = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefBranch)
+				.getBoolPref("extensions.ThunderSync.syncOnStartup");
+		}
+		catch(exception) {
+			Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefBranch)
+				.setBoolPref("extensions.ThunderSync.syncOnStartup",false);
+		}
+		var autosyncButton = document.getElementById("ThunderSyncPreferences.checkbox.syncOnStartup");
+		autosyncButton.checked = autosync;
 	},
 	
 	accept: function () {
@@ -214,6 +232,15 @@ var ThunderSyncPref = {
 			.setCharPref("importEncoding",
 				document.getElementById("ThunderSyncPreferences.menulist.importencoding")
 				.selectedItem.value);
+		//
+		// handle preference for startup auto-sync;
+		// added by Lucas Treffenstädt
+		//
+		Components.classes["@mozilla.org/preferences-service;1"]
+			.getService(Components.interfaces.nsIPrefBranch)
+			.setBoolPref("extensions.ThunderSync.syncOnStartup",
+				document.getElementById("ThunderSyncPreferences.checkbox.syncOnStartup")
+				.checked);
 		return true;
 	},
 	

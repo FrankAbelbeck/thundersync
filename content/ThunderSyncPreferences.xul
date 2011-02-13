@@ -289,6 +289,18 @@ $Id$
 					</menupopup>
 				</menulist>
 			</row>
+			<row>
+				<!--
+					preference for startup auto-sync
+					added by Lucas Treffenstädt
+				-->
+				<vbox valign="middle">
+					<label value="&ThunderSyncPreferences.label.syncOnStartup;"
+						control="ThunderSyncPreferences.checkbox.syncOnStartup"/>
+				</vbox>
+				<checkbox id="ThunderSyncPreferences.checkbox.syncOnStartup"
+					control="ThunderSyncPreferences.syncOnStartup" />
+			</row>
 		</rows>
 	</grid>
 

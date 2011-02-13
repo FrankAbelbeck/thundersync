@@ -280,7 +280,7 @@ var ThunderSyncVCardLib = {
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		converter.charset = encoding;
 		
-		vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF
+		var vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF;
 		
  		try {
 			var rev = card.getProperty("LastModifiedDate",0);
@@ -307,13 +307,13 @@ var ThunderSyncVCardLib = {
 			+ firstname + ";;;"
 			+ this.CRLF;
 		
-// 		var displayname = card.getProperty("DisplayName","");
-// 		if (displayname != "") {
-// 			vcfstr += "FN;CHARSET="+encoding+":" + displayname + this.CRLF;
-// 		}
-		vcfstr += "FN;CHARSET="+encoding+":" + card.lastName;
-		if (card.firstName != "") { vcfstr += ", " + card.firstName; }
-		vcfstr += this.CRLF;
+		var displayname = card.getProperty("DisplayName","");
+		if (displayname != "") {
+			vcfstr += "FN;CHARSET="+encoding+":" + displayname + this.CRLF;
+		}
+// 		vcfstr += "FN;CHARSET="+encoding+":" + card.lastName;
+// 		if (card.firstName != "") { vcfstr += ", " + card.firstName; }
+// 		vcfstr += this.CRLF;
 		
 		var email = card.getProperty("PrimaryEmail","");
 		if (email != "") {
@@ -503,11 +503,15 @@ var ThunderSyncVCardLib = {
 		var card = Components.classes["@mozilla.org/addressbook/cardproperty;1"]  
 			.createInstance(Components.interfaces.nsIAbCard);
 		try {
-			var lines = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/
-				.exec(datastr)[1]
- 				.replace(/=\r\n([^\r\n])/g,"$1")
-  				.replace(/\r\n[\t| ]/g," ")
-				.split(this.CRLF);
+// 			var lines = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/
+// 				.exec(datastr)[1]
+// 				.replace(/=\r\n([^\r\n])/g,"$1")
+// 				.replace(/\r\n[\t| ]/g," ")
+// 				.split(this.CRLF);
+			var tmp = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/.exec(datastr)[1];
+			tmp=tmp.replace(/=\r\n([^\r\n])/g,"$1");
+			tmp=tmp.replace(/\r\n[\t| ]/g," ");
+			var lines=tmp.split(this.CRLF);
 		} catch (exception) {
 			var lines = new Array();
 		}
@@ -515,12 +519,12 @@ var ThunderSyncVCardLib = {
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		var i = 0;
 		while (i < lines.length) {
-  			try {
+			var properties = Object();
+			try {
 				var posColon = lines[i].indexOf(":");
 				if (posColon == -1 ) { throw "undefined"; }
 				var property = lines[i].substr(0,posColon).split(";");
 				var value = lines[i].substr(posColon+1).split(";");
-				var properties = Object();
 				for (var k = 1; k < property.length; k++) {
 					var prop = property[k].split("=");
 					switch (prop.length) {
@@ -566,9 +570,9 @@ var ThunderSyncVCardLib = {
 			}
 			
 			switch (property[0]) {
-// 				case "FN":
-// 					if (value[0] != "") { card.setProperty("DisplayName",value[0]); }
-// 					break;
+				case "FN":
+					if (value[0] != "") { card.setProperty("DisplayName",value[0]); }
+					break;
 				case "N":
 					if (value[0] != "") { card.setProperty("LastName",value[0]); }
 					if (value[1] != "") { card.setProperty("FirstName",value[1]); }
@@ -688,12 +692,12 @@ var ThunderSyncVCardLib = {
 			}
 			i++;
 		}
-		if (card.firstName != "") {
-			card.displayName = card.lastName + ", " + card.firstName;
-		}
-		else {
-			card.displayName = card.lastName;
-		}
+// 		if (card.firstName != "") {
+// 			card.displayName = card.lastName + ", " + card.firstName;
+// 		}
+// 		else {
+// 			card.displayName = card.lastName;
+// 		}
 		return card;
 	},
 	

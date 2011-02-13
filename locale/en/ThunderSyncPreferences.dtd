@@ -71,3 +71,5 @@ $Id$
 <!ENTITY ThunderSyncPreferences.encoding.windows1258 "Vietnamese (Windows-1258)">
 
 <!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">
+
+<!ENTITY ThunderSyncPreferences.label.syncOnStartup "Sync on start-up">

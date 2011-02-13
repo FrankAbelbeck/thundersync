@@ -101,13 +101,22 @@ var ThunderSyncDialog = {
 	 *
 	 * @param addressBookURI addressbook URI
 	 * @param addressBookName addressbook display name
-	 * @param localName Thunderbird ressource display name of a contact
-	 * @param remoteName external ressource display name of a contact
-	 * @param filepath path to the external ressource file
+	 * @param localDisplayName Thunderbird resource display name of a contact
+	 * @param localFirstName Thunderbird resource first name of a contact
+	 * @param localLastName Thunderbird resource last name of a contact
+	 * @param remoteDisplayName Thunderbird resource display name of an external contact
+	 * @param filepath path to the external resource file
 	 * @param differences array of differing properties, or null
 	 * @return added treeitem element
 	 */
-	addTreeItem: function (addressBookURI,addressBookName,localName,remoteName,filePath,differences) {
+	addTreeItem: function (addressBookURI,
+			       addressBookName,
+			       localDisplayName,
+			       localFirstName,
+			       localLastName,
+			       remoteDisplayName,
+			       filePath,
+			       differences) {
 		var addressBookItem = document.getElementsByAttribute("addressBookURI",addressBookURI)[0];
 		if (addressBookItem == null) {
 			addressBookItem = document.createElementNS(
@@ -167,21 +176,23 @@ var ThunderSyncDialog = {
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 			"treecell"
 		);
-		cell.setAttribute("label",localName);
+		cell.setAttribute("label",localDisplayName);
 		cell.setAttribute("class","ThunderSyncDialog.treecell.local");
+		cell.setAttribute("firstName",localFirstName);
+		cell.setAttribute("lastName",localLastName);
 		row.appendChild(cell);
 		var cell = document.createElementNS(
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 			"treecell"
 		);
-		cell.setAttribute("label",this.getMode(localName,remoteName));
+		cell.setAttribute("label",this.getMode(localDisplayName,remoteDisplayName));
 		cell.setAttribute("class","ThunderSyncDialog.treecell.mode");
 		row.appendChild(cell);
 		var cell = document.createElementNS(
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 			"treecell"
 		);
-		cell.setAttribute("label",remoteName);
+		cell.setAttribute("label",remoteDisplayName);
 		cell.setAttribute("class","ThunderSyncDialog.treecell.remote");
 		if (filePath != null) {
 			cell.setAttribute("filePath",filePath);
@@ -303,7 +314,7 @@ var ThunderSyncDialog = {
 				photouri2 = "";
 				break;
 			case "file":
-				photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
+				photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
 				break;
 		}
 		if (photouri1  != photouri2) {
@@ -311,7 +322,6 @@ var ThunderSyncDialog = {
 			photouri2 = (photouri2 != "") ? "<Photo>" : "";
 			result.push([photouri1,photouri2,"Photo"]);
 		}
-		
 		return result;
 	},
 	
@@ -319,25 +329,36 @@ var ThunderSyncDialog = {
 	 * Create a file object using last name, first name, format string
 	 * and target directory
 	 *
-	 * Example (format="vcard"): dir/LastName_FirstName.vcf
+	 * Example (format="vcard"): dir/75298375928735.vcf
 	 *
-	 * @param lastName last name, used as first part of the filename
-	 * @param firstName first name, used as second part of the filename
 	 * @param format file format string, e.g. "vcard"
 	 * @param dir path to the target directory
 	 * @return nsIFile object pointing to constructed filename
 	 */
-	createFileName: function (lastName,firstName,format,dir) {
-		var file = Components.classes["@mozilla.org/file/local;1"]
-			.createInstance(Components.interfaces.nsILocalFile);
-		file.initWithPath(dir);
+	createFileName: function (format,dir) {
+		try {
+			var directory = Components.classes["@mozilla.org/file/local;1"]
+				.createInstance(Components.interfaces.nsILocalFile);
+			directory.initWithPath(dir);
+		}
+		catch (exception) {
+			return null;
+		}
+		
 		switch (format) {
 			case "vcard":
-				file.append(lastName + "_" + firstName + ".vcf");
+				var suffix = ".vcf";
 				break;
 			default:
-				file.append(lastName + "_" + firstName + ".txt");
+				var suffix = ".txt";
 		}
+		
+		do {
+			var filename = new String(Math.random()).replace("0.", "") + suffix;
+			var file = directory.clone();
+			file.append(filename);
+		} while (file.exists());
+		
 		return file;
 	},
 	
@@ -446,7 +467,7 @@ var ThunderSyncDialog = {
 	 *
 	 * Only returns the first match.
 	 *
-	 * @param addressBook nsIAbDirectory as contact ressource
+	 * @param addressBook nsIAbDirectory as contact resource
 	 * @param lastName last name string
 	 * @param firstName first name string
 	 * @return nsIAbCard or null
@@ -494,7 +515,20 @@ var ThunderSyncDialog = {
 		}
 		return null;
 	},
-						
+	
+	/**
+	 *
+	 */
+	createDisplayName: function (dn,fn,ln) {
+		var name = dn;
+		if (name == "") {
+			name += fn;
+			if (name != "") { name += " "; }
+			name += ln;
+		}
+		return name;
+	},
+	
 	/**
 	 *
 	 */
@@ -555,6 +589,11 @@ var ThunderSyncDialog = {
 				var remoteCard = this.toCard(file,format);
 				if (remoteCard == null) { continue; }
 				
+				var remoteName = this.createDisplayName(
+					remoteCard.displayName,
+					remoteCard.firstName,
+					remoteCard.lastName
+				);
 				var checked = false;
 				var localCard = this.retrieveCardFromAddressBook(
 					addressBook,
@@ -562,28 +601,35 @@ var ThunderSyncDialog = {
 					remoteCard.firstName
 				);
 				if (localCard instanceof Components.interfaces.nsIAbCard) {
+					var localName = this.createDisplayName(
+						localCard.displayName,
+						localCard.firstName,
+						localCard.lastName
+					);
 					var diff = this.cardDifferences(localCard,remoteCard);
 					if (diff.length > 0) {
 						this.addTreeItem(
 							addressBook.URI,
 							addressBook.dirName,
-							localCard.lastName + ", " + localCard.firstName,
-							remoteCard.lastName + ", " + remoteCard.firstName,
+							localName,
+							localCard.firstName,
+							localCard.lastName,
+							remoteName,
 							file.path,
 							diff
 						);
 					}
 					checked = true;
-					list_checked.push(
-						localCard.lastName + ", " + localCard.firstName
-					);
+					list_checked.push(localName);
 				}
 				if (!checked) {
 					this.addTreeItem(
 						addressBook.URI,
 						addressBook.dirName,
 						"",
-						remoteCard.lastName + ", " + remoteCard.firstName,
+						"",
+						"",
+						remoteName,
 						file.path,
 						null
 					);
@@ -599,12 +645,18 @@ var ThunderSyncDialog = {
 			while (cards.hasMoreElements()) {
 				var card = cards.getNext();
 				if (card instanceof Components.interfaces.nsIAbCard) {
-					var localName = card.lastName + ", " + card.firstName;
+					var localName = this.createDisplayName(
+						card.displayName,
+						card.firstName,
+						card.lastName
+					);
 					if (list_checked.indexOf(localName) == -1) {
 						this.addTreeItem(
 							addressBook.URI,
 							addressBook.dirName,
 							localName,
+							card.firstName,
+							card.lastName,
 							"",
 							null,
 							null
@@ -888,19 +940,20 @@ var ThunderSyncDialog = {
 				continue;
 			}
 			
-			contacts = addressBooks[i]
+			var contacts = addressBooks[i]
 				.getElementsByClassName("ThunderSyncDialog.treeitem.contact");
 			var cardsToDelete = Components.classes["@mozilla.org/array;1"]
 				.createInstance(Components.interfaces.nsIMutableArray);
 			for (var k = 0; k < contacts.length; k++) {
 				var localName = contacts[k]
 					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
-					.getAttribute("label")
-					.split(", ");
-				var remoteName = contacts[k]
-					.getElementsByClassName("ThunderSyncDialog.treecell.remote")[0]
-					.getAttribute("label")
-					.split(", ");
+					.getAttribute("label");
+				var localLastName = contacts[k]
+					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
+					.getAttribute("lastName");
+				var localFirstName = contacts[k]
+					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
+					.getAttribute("firstName");
 				var modecell = contacts[k]
 					.getElementsByClassName("ThunderSyncDialog.treecell.mode")[0];
 				var mode = modecell.getAttribute("label");
@@ -919,7 +972,9 @@ var ThunderSyncDialog = {
 						// process properties
 						//
 						var localCard = this.retrieveCardFromAddressBook(
-							addressBook,localName[0],localName[1]
+							addressBook,
+							localLastName,
+							localFirstName
 						);
 						if (localCard == null) { break; }
 						try {
@@ -978,28 +1033,13 @@ var ThunderSyncDialog = {
 							var rev = 0
 						}
 						else {
-							if (localCard.firstName != "") {
-								localCard.displayName = localCard.lastName + ", " + localCard.firstName;
-							}
-							else {
-								localCard.displayName = localCard.lastName;
-							}
 							addressBook.modifyCard(localCard);
 							var rev = localCard.getProperty("LastModifiedDate",0);
 						}
 						if (rev == 0) { rev = Date.parse(Date()) / 1000; }
 						
 						if (remoteCard.lastName != "") {
-							if (remoteCard.firstName != "") {
-								remoteCard.displayName = remoteCard.lastName + ", " + remoteCard.firstName;
-							}
-							else {
-								remoteCard.displayName = remoteCard.lastName;
-							}
-							remoteCard.setProperty(
-								"LastModifiedDate",
-								rev
-							);
+							remoteCard.setProperty("LastModifiedDate",rev);
 							this.fromCard(
 								remoteCard,
 								format,
@@ -1010,7 +1050,9 @@ var ThunderSyncDialog = {
 					
 					case this.modeFromLocal:
 						var localCard = this.retrieveCardFromAddressBook(
-							addressBook,localName[0],localName[1]
+							addressBook,
+							localLastName,
+							localFirstName
 						);
 						if (localCard == null) { break; }
 						
@@ -1038,17 +1080,17 @@ var ThunderSyncDialog = {
 								}
 								else {
 									var remoteFile = this.createFileName(
-										localCard.lastName,
-										localCard.firstName,
 										format,
 										dir
-									)
+									);
 								}
-								this.fromCard(
-									localCard,
-									format,
-									remoteFile
-								);
+								if (remoteFile != null) {
+									this.fromCard(
+										localCard,
+										format,
+										remoteFile
+									);
+								}
 							}
 						}
 						break;
