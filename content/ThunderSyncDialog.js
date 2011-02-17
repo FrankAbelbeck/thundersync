@@ -101,22 +101,76 @@ var ThunderSyncDialog = {
 	 *
 	 * @param addressBookURI addressbook URI
 	 * @param addressBookName addressbook display name
-	 * @param localDisplayName Thunderbird resource display name of a contact
-	 * @param localFirstName Thunderbird resource first name of a contact
-	 * @param localLastName Thunderbird resource last name of a contact
-	 * @param remoteDisplayName Thunderbird resource display name of an external contact
+	 * @param localCard local contact card
+	 * @param remoteCard external contact card
 	 * @param filepath path to the external resource file
-	 * @param differences array of differing properties, or null
 	 * @return added treeitem element
 	 */
-	addTreeItem: function (addressBookURI,
-			       addressBookName,
-			       localDisplayName,
-			       localFirstName,
-			       localLastName,
-			       remoteDisplayName,
-			       filePath,
-			       differences) {
+	addTreeItem: function (addressBookURI,addressBookName,localCard,remoteCard,filePath) {
+		
+		if (localCard instanceof Components.interfaces.nsIAbCard) {
+			var localUID = this.getUID(localCard);
+			if (localCard.displayName != "") {
+				var localDisplayName = localCard.displayName;
+			}
+			else {
+				if (localCard.lastName != "") {
+					var localDisplayName = localCard.lastName;
+					if (localCard.firstName != "") {
+						localDisplayName += ", " + localCard.firstName;
+					}
+				}
+				else {
+					if (localCard.firstName != "") {
+						var localDisplayName = localCard.firstName;
+					}
+					else {
+						if (localCard.primaryEmail != "") {
+							var localDisplayName = localCard.primaryEmail;
+						}
+						else {
+							var localDisplayName = localUID;
+						}
+					}
+				}
+			}
+		}
+		else {
+			var localUID = "";
+			var localDisplayName = "";
+		}
+		
+		if (remoteCard instanceof Components.interfaces.nsIAbCard) {
+			if (remoteCard.displayName != "") {
+				var remoteDisplayName = remoteCard.displayName;
+			}
+			else {
+				if (remoteCard.lastName != "") {
+					var remoteDisplayName = remoteCard.lastName;
+					if (remoteCard.firstName != "") {
+						remoteDisplayName += ", " + remoteCard.firstName;
+					}
+				}
+				else {
+					if (remoteCard.firstName != "") {
+						var remoteDisplayName = remoteCard.firstName;
+					}
+					else {
+						if (remoteCard.primaryEmail != "") {
+							var remoteDisplayName = remoteCard.primaryEmail;
+						}
+						else {
+							var remoteDisplayName = this.getUID(remoteCard);
+						}
+					}
+				}
+			}
+		}
+		else {
+			var remoteUID = "";
+			var remoteDisplayName = "";
+		}
+		
 		var addressBookItem = document.getElementsByAttribute("addressBookURI",addressBookURI)[0];
 		if (addressBookItem == null) {
 			addressBookItem = document.createElementNS(
@@ -178,8 +232,7 @@ var ThunderSyncDialog = {
 		);
 		cell.setAttribute("label",localDisplayName);
 		cell.setAttribute("class","ThunderSyncDialog.treecell.local");
-		cell.setAttribute("firstName",localFirstName);
-		cell.setAttribute("lastName",localLastName);
+		cell.setAttribute("UID",localUID);
 		row.appendChild(cell);
 		var cell = document.createElementNS(
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
@@ -199,6 +252,13 @@ var ThunderSyncDialog = {
 		}
 		row.appendChild(cell);
 		item.appendChild(row);
+		
+		if ((localCard instanceof Components.interfaces.nsIAbCard) && (remoteCard instanceof Components.interfaces.nsIAbCard)) {
+			var differences = this.cardDifferences(localCard,remoteCard);
+		}
+		else {
+			var differences = null;
+		}
 		
 		if (differences != null) {
 			var stringsBundle = document.getElementById("string-bundle");
@@ -472,45 +532,12 @@ var ThunderSyncDialog = {
 	 * @param firstName first name string
 	 * @return nsIAbCard or null
 	 */
-	retrieveCardFromAddressBook: function (addressBook,lastName,firstName) {
-		var cards = addressBook.getCardsFromProperty("LastName",lastName,false);
-		if (cards instanceof Components.interfaces.nsISimpleEnumerator) {
-			while (cards.hasMoreElements()) {
-				var card = cards.getNext();
-				if ((card instanceof Components.interfaces.nsIAbCard)
-					&& (firstName == card.firstName)) {
-					return card;
-				}
-			}
-		}
-		return null;
-	},
-	
-	/**
-	 * Retrieve contact from file with given format in given path
-	 * using last name and first name as matching properties.
-	 *
-	 * Only returns the first match.
-	 *
-	 * @param dir directory to look into
-	 * @param format format string of expected files (e.g. vcard)
-	 * @param lastName last name string
-	 * @param firstName first name string
-	 * @return [nsIFile,nsIAbCard] or null
-	 **/
-	retrieveCardFromPath: function (dir,format,lastName,firstName) {
-		var directory = Components.classes["@mozilla.org/file/local;1"]
-			.createInstance(Components.interfaces.nsILocalFile);
-		directory.initWithPath(dir);
-		var files = directory.directoryEntries;
-		while (files.hasMoreElements()) {
-			var file = files.getNext();
-			file.QueryInterface(Components.interfaces.nsIFile);
-			if (file.isFile()) {
-				var card = this.toCard(file,format);
-				if (card.lastName = lastName && card.firstName == firstName) {
-					return [file,card];
-				}
+	retrieveCardFromAddressBook: function (addressBook,uid) {
+		var cards = addressBook.childCards;
+		while (cards.hasMoreElements()) {
+			var card = cards.getNext();
+			if ((card instanceof Components.interfaces.nsIAbCard) && (this.getUID(card) == uid)) {
+				return card;
 			}
 		}
 		return null;
@@ -519,14 +546,16 @@ var ThunderSyncDialog = {
 	/**
 	 *
 	 */
-	createDisplayName: function (dn,fn,ln) {
-		var name = dn;
-		if (name == "") {
-			name += fn;
-			if (name != "") { name += " "; }
-			name += ln;
-		}
-		return name;
+	getUID: function (card) {
+		return card.getProperty("PhoneticLastName","");
+	},
+	
+	
+	/**
+	 *
+	 */
+	setUID: function (card,uid) {
+		card.setProperty("PhoneticLastName",uid);
 	},
 	
 	/**
@@ -544,6 +573,8 @@ var ThunderSyncDialog = {
 		}
 		catch (exception) { return; }
 		
+		uuidgenerator = Components.classes["@mozilla.org/uuid-generator;1"].getService(Components.interfaces.nsIUUIDGenerator)
+		
 		this.clearTree();
 		
 		var list_missing_local = new Array();
@@ -560,17 +591,28 @@ var ThunderSyncDialog = {
 		var ablist = document.getElementById("ThunderSyncPreferences.list.addressbook");
 		while (allAddressBooks.hasMoreElements()) {
 			var addressBook = allAddressBooks.getNext();
-			if (!(addressBook instanceof Components.interfaces.nsIAbDirectory)) {
-				continue;
-			}
+			if (!(addressBook instanceof Components.interfaces.nsIAbDirectory)) { continue; }
 			try {
-				var dir = prefs.getCharPref(
-					addressBook.fileName.replace(".mab","")
-				);
+				var dir = prefs.getCharPref(addressBook.fileName.replace(".mab",""));
 			} catch (exception) {
 				continue;
 			}
 			if (dir == "") { continue; }
+			
+			//
+			// make sure all addressbook entries have an UID
+			//
+			var cards = addressBook.childCards;
+			while (cards.hasMoreElements()) {
+				var card = cards.getNext();
+				if ((card instanceof Components.interfaces.nsIAbCard) && (this.getUID(card) == "")) {
+					this.setUID(
+						card,
+						uuidgenerator.generateUUID().toString().slice(1,37)
+					);
+					addressBook.modifyCard(card);
+				}
+			}
 			
 			//
 			// read all contacts from path
@@ -578,8 +620,7 @@ var ThunderSyncDialog = {
 			// add to list_diff if different,
 			// otherwise add to list_missing_local list
 			//
-			var directory = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsILocalFile);
+			var directory = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 			directory.initWithPath(dir);
 			var files = directory.directoryEntries;
 			while (files.hasMoreElements()) {
@@ -587,81 +628,97 @@ var ThunderSyncDialog = {
 				file.QueryInterface(Components.interfaces.nsIFile);
 				if (!file.isFile()) { continue; }
 				var remoteCard = this.toCard(file,format);
-				if (remoteCard == null) { continue; }
+				var remoteUID = this.getUID(remoteCard);
 				
-				var remoteName = this.createDisplayName(
-					remoteCard.displayName,
-					remoteCard.firstName,
-					remoteCard.lastName
-				);
-				var checked = false;
-				var localCard = this.retrieveCardFromAddressBook(
-					addressBook,
-					remoteCard.lastName,
-					remoteCard.firstName
-				);
+				// match remote contact to all local contacts
+				// matching UID terminates the process immediatly (match found)
+				// otherwise all matching, non-empty properties are counted
+				// contact with most matches wins
+				var n_max = 0;
+				var localCard = null;
+				var value = "";
+				var cards = addressBook.childCards;
+				while (cards.hasMoreElements()) {
+					var n = 0;
+					var card = cards.getNext();
+					if (!(card instanceof Components.interfaces.nsIAbCard)) { continue; }
+					if (remoteUID != "") {
+						if (remoteUID == this.getUID(card)) {
+							localCard = card;
+							break;
+						}
+					}
+					for (i=0; i<ThunderSyncVCardLib.baseProperties.length; i++) {
+						value = card.getProperty(ThunderSyncVCardLib.baseProperties[i],"");
+						if ((value != "") && (value == remoteCard.getProperty(ThunderSyncVCardLib.baseProperties[i],""))) {
+							n++;
+						}
+					}
+					if (n > n_max) {
+						n_max = n;
+						localCard = card;
+					}
+				}
 				if (localCard instanceof Components.interfaces.nsIAbCard) {
-					var localName = this.createDisplayName(
-						localCard.displayName,
-						localCard.firstName,
-						localCard.lastName
-					);
-					var diff = this.cardDifferences(localCard,remoteCard);
-					if (diff.length > 0) {
+					// match found!
+					localUID = this.getUID(card)
+					if (remoteUID != localUID) {
+						// UID unequal: collision or remote UID not set
+						// (all local UIDs are defined, remember?)
+						// => set remote UID to local value
+						remoteUID = localUID;
+						this.setUID(remoteCard,remoteUID);
+						this.fromCard(remoteCard,format,file);
+					}
+					// anyway, compare both contacts and add to tree if needed
+					var differences = this.cardDifferences(localCard,remoteCard);
+					if (differences.length > 0) {
 						this.addTreeItem(
 							addressBook.URI,
 							addressBook.dirName,
-							localName,
-							localCard.firstName,
-							localCard.lastName,
-							remoteName,
-							file.path,
-							diff
+							localCard,
+							remoteCard,
+							file.path
 						);
 					}
-					checked = true;
-					list_checked.push(localName);
 				}
-				if (!checked) {
+				else {
+					// no match found, seems to be a new external contact
+					if (remoteUID == "") {
+						// generate UID for contact and store it in file
+						remoteUID = uuidgenerator.generateUUID().toString().slice(1,37);
+						this.setUID(remoteCard,remoteUID);
+						this.fromCard(remoteCard,format,file);
+					}
 					this.addTreeItem(
 						addressBook.URI,
 						addressBook.dirName,
-						"",
-						"",
-						"",
-						remoteName,
-						file.path,
-						null
+						null,
+						remoteCard,
+						file.path
 					);
 				}
+				// register UID as checked
+				list_checked.push(remoteUID);
 			}
 			
 			//
-			// read all contacts from addressbook;
-			// if not yet checked (not in list_checked): store
-			// in list_missing_remote
+			// read all contacts from addressbook and process
+			// if not yet checked (not in list_checked)
 			//
 			var cards = addressBook.childCards;
 			while (cards.hasMoreElements()) {
 				var card = cards.getNext();
-				if (card instanceof Components.interfaces.nsIAbCard) {
-					var localName = this.createDisplayName(
-						card.displayName,
-						card.firstName,
-						card.lastName
+				if (!(card instanceof Components.interfaces.nsIAbCard)) { continue; }
+				localUID = this.getUID(card);
+				if (list_checked.indexOf(localUID) == -1) {
+					this.addTreeItem(
+						addressBook.URI,
+						addressBook.dirName,
+						card,
+						null,
+						null
 					);
-					if (list_checked.indexOf(localName) == -1) {
-						this.addTreeItem(
-							addressBook.URI,
-							addressBook.dirName,
-							localName,
-							card.firstName,
-							card.lastName,
-							"",
-							null,
-							null
-						);
-					}
 				}
 			}
 		}
@@ -924,10 +981,6 @@ var ThunderSyncDialog = {
 		}
 		catch (exception) { return; }
 		
- 		var progressCounter = 0;
- 		var progressMax = document.getElementsByClassName("ThunderSyncDialog.treeitem.contact").length;
- 		var progressMeter = document.getElementById("ThunderSyncDialog.progressmeter")
-		
 		var abManager = Components.classes["@mozilla.org/abmanager;1"]
 			.getService(Components.interfaces.nsIAbManager);
 		
@@ -948,22 +1001,13 @@ var ThunderSyncDialog = {
 				var localName = contacts[k]
 					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
 					.getAttribute("label");
-				var localLastName = contacts[k]
+				var localUID = contacts[k]
 					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
-					.getAttribute("lastName");
-				var localFirstName = contacts[k]
-					.getElementsByClassName("ThunderSyncDialog.treecell.local")[0]
-					.getAttribute("firstName");
+					.getAttribute("UID");
 				var modecell = contacts[k]
 					.getElementsByClassName("ThunderSyncDialog.treecell.mode")[0];
 				var mode = modecell.getAttribute("label");
 				var modeDeleted = modecell.getAttribute("properties") == "deleteItem";
-				
-				progressCounter++;
-				progressMeter.setAttribute(
-					"value",
-					(100*progressCounter/progressMax) + "%"
-				);
 				
 				switch (mode) {
 					case this.modeExchange:
@@ -973,8 +1017,7 @@ var ThunderSyncDialog = {
 						//
 						var localCard = this.retrieveCardFromAddressBook(
 							addressBook,
-							localLastName,
-							localFirstName
+							localUID
 						);
 						if (localCard == null) { break; }
 						try {
@@ -1028,14 +1071,8 @@ var ThunderSyncDialog = {
 								);
 							}
 						}
-						if (localCard.lastName == "") {
-							cardsToDelete.append(localCard,false);
-							var rev = 0
-						}
-						else {
-							addressBook.modifyCard(localCard);
-							var rev = localCard.getProperty("LastModifiedDate",0);
-						}
+						addressBook.modifyCard(localCard);
+						var rev = localCard.getProperty("LastModifiedDate",0);
 						if (rev == 0) { rev = Date.parse(Date()) / 1000; }
 						
 						if (remoteCard.lastName != "") {
@@ -1051,8 +1088,7 @@ var ThunderSyncDialog = {
 					case this.modeFromLocal:
 						var localCard = this.retrieveCardFromAddressBook(
 							addressBook,
-							localLastName,
-							localFirstName
+							localUID
 						);
 						if (localCard == null) { break; }
 						
@@ -1121,8 +1157,6 @@ var ThunderSyncDialog = {
 				addressBook.deleteCards(cardsToDelete);
 			}
 		}
-		
-		progressMeter.setAttribute("value","0%");
 		
 		//
 		// done: clear tree and disable sync button

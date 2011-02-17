@@ -75,8 +75,6 @@ $Id$
 		<treechildren id="ThunderSyncDialog.treechildren" />
 	</tree>
 	
-	<progressmeter id="ThunderSyncDialog.progressmeter" value="0%" mode="determined" />
-	
 	<hbox pack="end">
 <!--	
 		<button label="33%" oncommand="document.getElementById('ThunderSyncDialog.progressmeter').setAttribute('value','33%');" />

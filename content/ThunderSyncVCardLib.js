@@ -280,6 +280,8 @@ var ThunderSyncVCardLib = {
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		converter.charset = encoding;
 		
+		var value = "";
+		var tmpstr = "";
 		var vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF;
 		
  		try {
@@ -307,77 +309,65 @@ var ThunderSyncVCardLib = {
 			+ firstname + ";;;"
 			+ this.CRLF;
 		
-		var displayname = card.getProperty("DisplayName","");
-		if (displayname != "") {
-			vcfstr += "FN;CHARSET="+encoding+":" + displayname + this.CRLF;
-		}
-// 		vcfstr += "FN;CHARSET="+encoding+":" + card.lastName;
-// 		if (card.firstName != "") { vcfstr += ", " + card.firstName; }
-// 		vcfstr += this.CRLF;
-		
-		var email = card.getProperty("PrimaryEmail","");
-		if (email != "") {
-			vcfstr += "EMAIL;TYPE=INTERNET:" + email + this.CRLF;
+		value = card.getProperty("DisplayName","");
+		if (value != "") {
+			vcfstr += "FN;CHARSET="+encoding+":" + value + this.CRLF;
 		}
 		
-		var email = card.getProperty("SecondEmail","");
-		if (email != "") {
-			vcfstr += "EMAIL;TYPE=INTERNET:" + email + this.CRLF;
+		value = ThunderSyncDialog.getUID(card);
+		if (value != "") {
+			vcfstr += "UID:" + value + this.CRLF;
 		}
 		
-		var street  = card.getProperty("HomeAddress","");
-		var addr2   = card.getProperty("HomeAddress2","");
-		var city    = card.getProperty("HomeCity","");
-		var state   = card.getProperty("HomeState","");
-		var zipcode = card.getProperty("HomeZipCode","");
-		var country = card.getProperty("HomeCountry","");
-		if (street != "" || addr2 != "" || city != "" || state != ""
-			|| zipcode != "" || country != "") {
-			vcfstr += "ADR;TYPE=HOME;CHARSET="+encoding+":"
-				+ ";" + addr2+ ";"
-				+ street + ";"
-				+ city + ";"
-				+ state + ";"
-				+ zipcode + ";"
-				+ country + this.CRLF;
+		value = card.getProperty("PrimaryEmail","");
+		if (value != "") {
+			vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF;
 		}
 		
-		var street  = card.getProperty("WorkAddress","");
-		var addr2   = card.getProperty("WorkAddress2","");
-		var city    = card.getProperty("WorkCity","");
-		var state   = card.getProperty("WorkState","");
-		var zipcode = card.getProperty("WorkZipCode","");
-		var country = card.getProperty("WorkCountry","");
-		if (street != "" || addr2 != "" || city != "" || state != ""
-			|| zipcode != "" || country != "") {
-			vcfstr += "ADR;TYPE=WORK;CHARSET="+encoding+":"
-				+ ";" + addr2 + ";"
-				+ street + ";"
-				+ city + ";"
-				+ state + ";"
-				+ zipcode + ";"
-				+ country + this.CRLF;
+		value = card.getProperty("SecondEmail","");
+		if (value != "") {
+			vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF;
 		}
 		
-		var phone = card.getProperty("HomePhone","");
-		if (phone != "") {
-			vcfstr += "TEL;HOME;VOICE:" + phone + this.CRLF;
+		value = card.getProperty("HomeAddress2","");
+		value += ";" + card.getProperty("HomeAddress","");
+		value += ";" + card.getProperty("HomeCity","");
+		value += ";" + card.getProperty("HomeState","");
+		value += ";" + card.getProperty("HomeZipCode","");
+		value += ";" + card.getProperty("HomeCountry","");
+		if (value.length > 5) {
+			vcfstr += "ADR;TYPE=HOME;CHARSET="+ encoding +":" + ";" + value + this.CRLF;
 		}
 		
-		var phone = card.getProperty("WorkPhone","");
-		if (phone != "") {
-			vcfstr += "TEL;WORK;VOICE:" + phone + this.CRLF;
+		value = card.getProperty("WorkAddress2","");
+		value += ";" + card.getProperty("WorkAddress","");
+		value += ";" + card.getProperty("WorkCity","");
+		value += ";" + card.getProperty("WorkState","");
+		value += ";" + card.getProperty("WorkZipCode","");
+		value += ";" + card.getProperty("WorkCountry","");
+		if (value.length > 5) {
+			vcfstr += "ADR;TYPE=WORK;CHARSET="+ encoding +":" + ";" + value + this.CRLF;
 		}
 		
-		var phone = card.getProperty("FaxNumber","");
-		if (phone != "") { vcfstr += "TEL;FAX:" + phone + this.CRLF; }
+		value = card.getProperty("HomePhone","");
+		if (value != "") {
+			vcfstr += "TEL;HOME;VOICE:" + value + this.CRLF;
+		}
 		
-		var phone = card.getProperty("CellularNumber","");
-		if (phone != "") { vcfstr += "TEL;CELL:" + phone + this.CRLF; }
+		value = card.getProperty("WorkPhone","");
+		if (value != "") {
+			vcfstr += "TEL;WORK;VOICE:" + value + this.CRLF;
+		}
 		
-		var title = card.getProperty("JobTitle","");
-		if (title != "") {
-			vcfstr += "TITLE;CHARSET="+encoding+":" + title + this.CRLF;
+		value = card.getProperty("FaxNumber","");
+		if (value != "") { vcfstr += "TEL;FAX:" + value + this.CRLF; }
+		
+		value = card.getProperty("CellularNumber","");
+		if (value != "") { vcfstr += "TEL;CELL:" + value + this.CRLF; }
+		
+		value = card.getProperty("JobTitle","");
+		if (value != "") {
+			vcfstr += "TITLE;CHARSET="+encoding+":" + value + this.CRLF;
 		}
 		
 		var department = card.getProperty("Department","");
@@ -389,11 +379,11 @@ var ThunderSyncVCardLib = {
 				+ this.CRLF;
 		}
 
-		var url = card.getProperty("WebPage1","");
-		if (url != "") { vcfstr += "URL;TYPE=WORK:" + url + this.CRLF; }
+		value = card.getProperty("WebPage1","");
+		if (value != "") { vcfstr += "URL;TYPE=WORK:" + value + this.CRLF; }
 		
-		var url = card.getProperty("WebPage2","");
-		if (url != "") { vcfstr += "URL;TYPE=HOME:" + url + this.CRLF; }
+		value = card.getProperty("WebPage2","");
+		if (value != "") { vcfstr += "URL;TYPE=HOME:" + value + this.CRLF; }
 		
 		var year = card.getProperty("BirthYear","");
 		var month = card.getProperty("BirthMonth","");
@@ -421,19 +411,19 @@ var ThunderSyncVCardLib = {
 			}
 		}
 		
-		var notes = converter.ConvertFromUnicode(card.getProperty("Notes",""));
-		if (notes != "") {
-			var tmpstr = "NOTE;CHARSET="+encoding+";QUOTED-PRINTABLE:"
+		value = converter.ConvertFromUnicode(card.getProperty("Notes",""));
+		if (value != "") {
+			tmpstr = "NOTE;CHARSET="+encoding+";QUOTED-PRINTABLE:"
 			vcfstr += tmpstr + this.foldQuotedPrintable(
-					this.toQuotedPrintable(notes),
+					this.toQuotedPrintable(value),
 					tmpstr.length
 				) + this.CRLF;
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
-			var value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],""));
+			value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],""));
 			if (value != "") {
-				var tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";QUOTED-PRINTABLE:"
+				tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";QUOTED-PRINTABLE:"
 				vcfstr += tmpstr + this.foldQuotedPrintable(
 					this.toQuotedPrintable(
 						this.otherProperties[i] + ";" + value
@@ -689,15 +679,11 @@ var ThunderSyncVCardLib = {
 						card.setProperty(value[0],value[1]);
 					}
 					break;
+				case "UID":
+					ThunderSyncDialog.setUID(card,value[0]);
 			}
 			i++;
 		}
-// 		if (card.firstName != "") {
-// 			card.displayName = card.lastName + ", " + card.firstName;
-// 		}
-// 		else {
-// 			card.displayName = card.lastName;
-// 		}
 		return card;
 	},
 	
