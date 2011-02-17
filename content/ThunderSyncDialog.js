@@ -393,9 +393,10 @@ var ThunderSyncDialog = {
 	 *
 	 * @param format file format string, e.g. "vcard"
 	 * @param dir path to the target directory
+	 * @param uid UID, used as main file name component
 	 * @return nsIFile object pointing to constructed filename
 	 */
-	createFileName: function (format,dir) {
+	createFileName: function (format,dir,uid) {
 		try {
 			var directory = Components.classes["@mozilla.org/file/local;1"]
 				.createInstance(Components.interfaces.nsILocalFile);
@@ -413,12 +414,16 @@ var ThunderSyncDialog = {
 				var suffix = ".txt";
 		}
 		
-		do {
-			var filename = new String(Math.random()).replace("0.", "") + suffix;
-			var file = directory.clone();
-			file.append(filename);
-		} while (file.exists());
+		// create random number filename
+// 		do {
+// 			var filename = new String(Math.random()).replace("0.", "") + suffix;
+// 			var file = directory.clone();
+// 			file.append(filename);
+// 		} while (file.exists());
 		
+		// use UID as filename
+		var file = directory.clone();
+		file.append(uid+suffix);
 		return file;
 	},
 	
@@ -1117,7 +1122,8 @@ var ThunderSyncDialog = {
 								else {
 									var remoteFile = this.createFileName(
 										format,
-										dir
+										dir,
+										localUID
 									);
 								}
 								if (remoteFile != null) {

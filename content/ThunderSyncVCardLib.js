@@ -81,7 +81,7 @@ var ThunderSyncVCardLib = {
 	
 	// list of string properties stored as X-MOZILLA-PROPERTY-STR
 	otherProperties: new Array(
-		"PhoneticFirstName", "PhoneticLastName", "NickName",
+		"NickName", "PhoneticFirstName", // "PhoneticLastName",
 		"SpouseName", "FamilyName",
 		"AnniversaryDay", "AnniversaryMonth", "AnniversaryYear",
 		"HomePhoneType", "WorkPhoneType", "FaxNumberType",
