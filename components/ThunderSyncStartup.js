@@ -4,6 +4,8 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 // Start up routines
 // by Lucas Treffenstädt
 //
+// $Id$
+//
 
 function ThunderSync() {
   // constructor

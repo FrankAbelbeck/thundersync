@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zip -r thundersync-1.1.xpi \
+zip -r thundersync-1.2.xpi \
 	chrome.manifest \
 	README \
 	COPYING \
@@ -21,5 +21,5 @@ zip -r thundersync-1.1.xpi \
 	locale/de/ThunderSyncDialog.dtd \
 	locale/de/ThunderSyncPreferences.properties \
 	locale/de/ThunderSyncDialog.properties \
-	locale/de/ThunderSyncPreferences.dtd
-
+	locale/de/ThunderSyncPreferences.dtd \
+	components/ThunderSyncStartup.js
