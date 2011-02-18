@@ -566,7 +566,7 @@ var ThunderSyncDialog = {
 	/**
 	 *
 	 */
-	compare: function () {
+	compare: function (onload) {
 		try {
 			var prefs = Components.classes["@mozilla.org/preferences-service;1"]
 				.getService(Components.interfaces.nsIPrefService)
@@ -729,14 +729,24 @@ var ThunderSyncDialog = {
 		}
 		
 		if (document.getElementsByClassName("ThunderSyncDialog.treecell.mode").length == 0) {
-			var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-				.getService(Components.interfaces.nsIPromptService);
-			var stringsBundle = document.getElementById("string-bundle");
-			promptService.alert(
-				null,
-				stringsBundle.getString("informationDialogTitle"),
-				stringsBundle.getString("alreadySyncText")
-			);
+			try {
+				var autostartup = window.arguments[0];
+			} catch (exception) {
+				var autostartup = false;
+			}
+			if (autostartup == false) {
+				var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+					.getService(Components.interfaces.nsIPromptService);
+				var stringsBundle = document.getElementById("string-bundle");
+				promptService.alert(
+					null,
+					stringsBundle.getString("informationDialogTitle"),
+					stringsBundle.getString("alreadySyncText")
+				);
+			}
+			if (onload == true || autostartup == false) {
+				document.getElementById("ThunderSync.dialog.sync").acceptDialog();
+			}
 		}
 		else {
 			this.checkIfSyncReady();

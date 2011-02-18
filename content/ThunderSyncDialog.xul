@@ -31,7 +31,7 @@ $Id$
 	title="&ThunderSyncDialog.title;"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	orient="vertical"
-	onload="ThunderSyncDialog.compare();"
+	onload="ThunderSyncDialog.compare(true);"
 	buttons=",">
 	
 	<script type="application/x-javascript"
@@ -84,7 +84,7 @@ $Id$
 -->
 		<button id="ThunderSyncDialog.button.compare"
 			label="&ThunderSyncDialog.button.compare;"
-			oncommand="ThunderSyncDialog.compare()" />
+			oncommand="ThunderSyncDialog.compare(false)" />
 		<button id="ThunderSyncDialog.button.sync"
 			label="&ThunderSyncDialog.button.sync;"
 			oncommand="ThunderSyncDialog.sync()" disabled="true" />

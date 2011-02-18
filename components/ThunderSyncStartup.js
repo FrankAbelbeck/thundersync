@@ -32,7 +32,7 @@ ThunderSync.prototype = {
   sync: function() {
     try {
       var window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].getService(Components.interfaces.nsIWindowWatcher);
-      var dialog = window.openWindow(null,'chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen,alwaysRaised,dialog',null);
+      var dialog = window.openWindow(null,'chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen,modal,alwaysRaised,dialog',[true]);
     } catch(err) {
       var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
       prompts.alert(null, "Something went wrong", err);
