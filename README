@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
 ThunderSync, a Mozilla Thunderbird v3 extension
+$Id$
 --------------------------------------------------------------------------------
 
 Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
@@ -24,7 +25,9 @@ or see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
 
 Author.....: Frank Abelbeck
-Version....: 2011-01-12 (1.1)
+Supporters.: Lucas Treffenstädt (testing, code contribution auto-start),
+             Yair Lanz (feedback regarding charsets)
+Version....: 2011-02-18 (1.2)
 Licence....: GNU General Public License version 2
 
 Description: Allows to synchronise Thunderbird's addressbook with external
@@ -59,6 +62,13 @@ Future synchronisation operations will use this directory for file storage.
 Prior to closing this dialog make sure that vCard is selected as file format.
 Of course, at the moment this is the only format you can choose. Perhaps
 more will follow in future times...
+
+Starting with Version 1.1 the file encoding für vCards can be chosen. This tries
+to tackle a problem with third-party programs like Outlook which ignore parts of
+the vCard standard.
+
+Version 1.2 added another option. Now you can choose whether ThunderSync is
+executed when Thunderbird is starting.
 
 --------------------------------------------------------------------------------
 
@@ -102,3 +112,11 @@ Changelog:
    - added support for various charsets (thanks to Yair Lanz for feedback)
    - vCard file processing improvements
 
+1.2 (2011-02-18)
+   - added option for automatic execution at start (thanks to Lucas Treffenstädt)
+   - changed behaviour: contacts are compared when ThunderSync dialog is opened
+   - internal code revision: contact identification base on unique identifier (UID)
+        - any other property can be changed
+	- multiple contacts with same name (e.g. John Smith) are allowed as long
+          as they differ in at least one property
+   - filenames: new files will be named using the UID
