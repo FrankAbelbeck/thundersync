@@ -63,7 +63,7 @@ $Id$
 				sort="?ThunderSyncDialog.treecol.mode"
 				label="&ThunderSyncDialog.header.mode;"
 				style="text-align:center"
-				flex="1" />
+				flex="0" />
 			<treecol id="ThunderSyncDialog.treecol.remote"
 				sort="?ThunderSyncDialog.treecol.remote"
 				label="&ThunderSyncDialog.header.remote;"

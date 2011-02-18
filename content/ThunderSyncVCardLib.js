@@ -81,7 +81,7 @@ var ThunderSyncVCardLib = {
 	
 	// list of string properties stored as X-MOZILLA-PROPERTY-STR
 	otherProperties: new Array(
-		"NickName", "PhoneticFirstName", // "PhoneticLastName",
+		"NickName", "PhoneticFirstName", "PhoneticLastName",
 		"SpouseName", "FamilyName",
 		"AnniversaryDay", "AnniversaryMonth", "AnniversaryYear",
 		"HomePhoneType", "WorkPhoneType", "FaxNumberType",
@@ -314,10 +314,12 @@ var ThunderSyncVCardLib = {
 			vcfstr += "FN;CHARSET="+encoding+":" + value + this.CRLF;
 		}
 		
-		value = ThunderSyncDialog.getUID(card);
-		if (value != "") {
-			vcfstr += "UID:" + value + this.CRLF;
-		}
+		try {
+			value = card.getProperty("UID","");
+			if (value != "") {
+				vcfstr += "UID:" + value + this.CRLF;
+			}
+		} catch (exception) {}
 		
 		value = card.getProperty("PrimaryEmail","");
 		if (value != "") {
@@ -477,6 +479,18 @@ var ThunderSyncVCardLib = {
 		
 		vcfstr += "END:VCARD" + this.CRLF;
 		return vcfstr;
+	},
+	
+	/**
+	 *
+	 */
+	readUID: function(datastr) {
+		try {
+			var uid = /BEGIN:VCARD[\S\s]*UID:(.*)\r\n[\S\s]*END:VCARD/.exec(datastr)[1];
+		} catch (exception) {
+			var uid = "";
+		}
+		return uid;
 	},
 	
 	
@@ -680,7 +694,8 @@ var ThunderSyncVCardLib = {
 					}
 					break;
 				case "UID":
-					ThunderSyncDialog.setUID(card,value[0]);
+					card.setProperty("UID",value[0]);
+					break;
 			}
 			i++;
 		}
