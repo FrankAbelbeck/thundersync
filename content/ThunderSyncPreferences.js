@@ -23,6 +23,9 @@
  */
 
 var ThunderSyncPref = {
+	/**
+	 * Called when preferences dialog is loaded: fill dialog elements
+	 */
 	load: function () {
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
 			.getService(Components.interfaces.nsIPrefService)
@@ -202,6 +205,9 @@ var ThunderSyncPref = {
 		autosyncButton.checked = autosync;
 	},
 	
+	/**
+	 * When user acknowledges changes (i.e. accepts dialog), all preferences get set
+	 */
 	accept: function () {
 		var items = document.getElementById("ThunderSyncPreferences.list.addressbook")
 			.getElementsByClassName("ThunderSyncPreferences.cell.addressbookpath");
@@ -244,6 +250,9 @@ var ThunderSyncPref = {
 		return true;
 	},
 	
+	/**
+	 * User wants to delete the path of an addressbook he selected: do it
+	 */
 	clearPath: function () {
 		var row = document.getElementById("ThunderSyncPreferences.list.addressbook")
 			.getSelectedItem(0);
@@ -253,6 +262,10 @@ var ThunderSyncPref = {
 		path.setAttribute("label","");
 	},
 	
+	/**
+	 * User changed the export format: show additional options
+	 * (for now this apply for vCard only)
+	 */
 	updateExportFormat: function () {
 		if (document.getElementById("ThunderSyncPreferences.menulist.format").selectedItem.value == "vcard") {
 			document.getElementById("ThunderSyncPreferences.gridrow.importencoding")
@@ -268,16 +281,24 @@ var ThunderSyncPref = {
 		}
 	},
 	
+	/**
+	 * Open a file picker dialog which only allows a directory selection.
+	 * Set path of addressbook in the dialog's list.
+	 */
 	openPathDialog: function () {
+		// create and execute file selection dialog
 		var nsIFilePicker = Components.interfaces.nsIFilePicker;
 		var fp = Components.classes["@mozilla.org/filepicker;1"]
 			.createInstance(nsIFilePicker);
 		fp.init(window, "Dialog Title", nsIFilePicker.modeGetFolder);
 		var rv = fp.show();
+		
+		// process selected path if file selection dialog returned with success
 		if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
 			var paths = document
 				.getElementById("ThunderSyncPreferences.list.addressbook")
 				.getElementsByClassName("ThunderSyncPreferences.cell.addressbook");
+			// check all addressbooks in dialog for path collisions
 			var doublette = false;
 			for (var i = 0; i < paths.length; i++) {
 				if (paths[i].getAttribute("label") == fp.file.path) {
@@ -286,6 +307,8 @@ var ThunderSyncPref = {
 				}
 			}
 			if (!doublette) {
+				// path seems to be unique with regard to addressbooks
+				// apply in list
 				var row = document
 					.getElementById("ThunderSyncPreferences.list.addressbook")
 					.getSelectedItem(0);
@@ -297,6 +320,8 @@ var ThunderSyncPref = {
 				);
 			}
 			else {
+				// path already assigned to another addressbook:
+				// show an error message
 				var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 					.getService(Components.interfaces.nsIPromptService);
 				var stringsBundle = document.getElementById("string-bundle");

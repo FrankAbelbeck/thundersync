@@ -60,6 +60,7 @@ var ThunderSyncVCardLib = {
 	},
 	
 	// list of properties stored as native vCard properties
+	// LastModifiedDate is not added because we calculate it at every sync
 	baseProperties: new Array(
 // 		"LastModifiedDate",
 		"LastName", "FirstName",
@@ -75,11 +76,9 @@ var ThunderSyncVCardLib = {
 	),
 	
 	// list of photo properties
-	photoProperties: new Array(
-		"PhotoName", "PhotoType", "PhotoURI"
-	),
+	photoProperties: new Array("PhotoName", "PhotoType", "PhotoURI"),
 	
-	// list of string properties stored as X-MOZILLA-PROPERTY-STR
+	// list of string properties stored as X-MOZILLA-PROPERTY
 	otherProperties: new Array(
 		"NickName", "PhoneticFirstName", "PhoneticLastName",
 		"SpouseName", "FamilyName",
@@ -482,7 +481,11 @@ var ThunderSyncVCardLib = {
 	},
 	
 	/**
+	 * Extract the UID from a vCard data string. If this fails, an empty
+	 * string is returned.
 	 *
+	 * @param datastr data string
+	 * @return UID string, might be empty
 	 */
 	readUID: function(datastr) {
 		try {
@@ -499,30 +502,46 @@ var ThunderSyncVCardLib = {
 	 * a photo is stored in vCardPhotoData/vCardPhotoType for post-processing
 	 * Quoted-printable as well as Base64 encoding are decoded.
 	 *
-	 * @param datastr
-	 * @param encoding
-	 * @return nsIAbCard
+	 * if the datastring is not recognized as vCard content, null is returned.
+	 *
+	 * @param datastr content string of vCard file
+	 * @param encoding user-defined encoding of this string
+	 * @return nsIAbCard or null if conversion failed
 	 */
 	toCard: function (datastr,encoding) {
-		var card = Components.classes["@mozilla.org/addressbook/cardproperty;1"]  
-			.createInstance(Components.interfaces.nsIAbCard);
+		// do some regular expression magic
 		try {
 // 			var lines = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/
 // 				.exec(datastr)[1]
 // 				.replace(/=\r\n([^\r\n])/g,"$1")
 // 				.replace(/\r\n[\t| ]/g," ")
 // 				.split(this.CRLF);
+			// make sure file begins with BEGIN:VCARD and ends with END:VCARD
 			var tmp = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/.exec(datastr)[1];
-			tmp=tmp.replace(/=\r\n([^\r\n])/g,"$1");
-			tmp=tmp.replace(/\r\n[\t| ]/g," ");
-			var lines=tmp.split(this.CRLF);
+			// replace lines ending with a "=" and followed by another
+			// line break with just a line break; fixes remaining
+			// filling characters of a Base64 encoding
+			tmp = tmp.replace(/=\r\n([^\r\n])/g,"$1");
+			// replace all linebreaks followed by a tab or space by
+			// a single space; this implements the "folding"
+			// technique specified in the vCard standard
+			tmp = tmp.replace(/\r\n[\t| ]/g," ");
+			// finally, split the datastring at \r\n line breaks
+			var lines = tmp.split(this.CRLF);
 		} catch (exception) {
-			var lines = new Array();
+			// regular expression failed: no vCard? return null
+			return null;
+// 			var lines = new Array();
 		}
+		var card = Components.classes["@mozilla.org/addressbook/cardproperty;1"]  
+			.createInstance(Components.interfaces.nsIAbCard);
 		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		var i = 0;
 		while (i < lines.length) {
+			// process each vCard property line
+			// expected: name;name;...:value;value;...
+			// results are stored in an object as a dictionary mapping name to value
 			var properties = Object();
 			try {
 				var posColon = lines[i].indexOf(":");
@@ -547,17 +566,21 @@ var ThunderSyncVCardLib = {
 				var charset = properties["CHARSET"].toUpperCase();
 			}
 			catch (exception) {
+				// fall back to default encoding
 				var charset = encoding;
 			}
 			
+			// values seem to be encoded as quoted printable: decode
 			if (properties["ENCODING"] == "QUOTED-PRINTABLE" || properties["QUOTED-PRINTABLE"]) {
 				for (var k = 0; k < value.length; k++) {
 					value[k] = this.fromQuotedPrintable(value[k]);
 				}
 			}
+			// values seem to be encoded as Base64: decode
 			if (properties["ENCODING"] == "BASE64" || properties["BASE64"]) {
 				for (var k = 0; k < value.length; k++) {
 					try {
+						// eliminate spaces that might be remainders of line breaks
 						value[k] = window.atob(value[k].replace(/ /g,""));
 					} catch (exception) {
 						value[k] = "";
@@ -573,6 +596,7 @@ var ThunderSyncVCardLib = {
 				}
 			}
 			
+			// process vCard properties and set corresponding nsIAbCard properties
 			switch (property[0]) {
 				case "FN":
 					if (value[0] != "") { card.setProperty("DisplayName",value[0]); }
