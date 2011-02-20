@@ -42,7 +42,7 @@ var ThunderSyncDialog = {
 	 * @param remoteValue string value of remote resource
 	 * @return mode character
 	 */
-	getMode: function (localValue1,remoteValue) {
+	getMode: function (localValue,remoteValue) {
 		if ( (localValue != "") && (remoteValue == "") ) {
 			return this.modeFromLocal;
 		}
