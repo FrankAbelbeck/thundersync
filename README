@@ -27,7 +27,7 @@ or see <http://www.gnu.org/licenses/>.
 Author.....: Frank Abelbeck
 Supporters.: Lucas Treffenstädt (testing, code contribution auto-start),
              Yair Lanz (feedback regarding charsets)
-Version....: 2011-02-20 (1.2)
+Version....: 2011-02-22 (1.2)
 Licence....: GNU General Public License version 2
 
 Description: Allows to synchronise Thunderbird's addressbook with external
@@ -112,7 +112,7 @@ Changelog:
    - added support for various charsets (thanks to Yair Lanz for feedback)
    - vCard file processing improvements
 
-1.2 (2011-02-20)
+1.2 (2011-02-22)
    - added option for automatic execution at start (thanks to Lucas Treffenstädt)
    - changed behaviour: contacts are compared when ThunderSync dialog is opened
    - internal code revision: contact identification base on unique identifier (UID)

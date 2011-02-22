@@ -700,7 +700,7 @@ var ThunderSyncDialog = {
 				// create contact object from file
 				// if contact could not be read: skip it
 				var remoteCard = this.toCard(file,format);
-				if (!(card instanceof Components.interfaces.nsIAbCard)) { continue; }
+				if (!(remoteCard instanceof Components.interfaces.nsIAbCard)) { continue; }
 				
 				// make sure UID property is defined, even if empty
 				try {
