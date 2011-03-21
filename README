@@ -27,7 +27,7 @@ or see <http://www.gnu.org/licenses/>.
 Author.....: Frank Abelbeck
 Supporters.: Lucas Treffenstädt (testing, code contribution auto-start),
              Yair Lanz (feedback regarding charsets)
-Version....: 2011-02-22 (1.2)
+Version....: 2011-03-21 (1.2.1)
 Licence....: GNU General Public License version 2
 
 Description: Allows to synchronise Thunderbird's addressbook with external
@@ -70,6 +70,7 @@ the vCard standard.
 Version 1.2 added another option. Now you can choose whether ThunderSync is
 executed when Thunderbird is starting.
 
+Version 1.2.1 is a bugfix release fixing a typo in the photo URL export routine.
 --------------------------------------------------------------------------------
 
 Quick Start Guide #1: Usage
@@ -120,3 +121,7 @@ Changelog:
 	- multiple contacts with same name (e.g. John Smith) are allowed as long
           as they differ in at least one property
    - filenames: new files will be named using the UID
+
+1.2.1 (2011-03-21)
+   - fixed typo in photo URL export routine
+

@@ -436,7 +436,7 @@ var ThunderSyncVCardLib = {
 		
 		switch (card.getProperty("PhotoType","")) {
 			case "web":
-				var photoURI  = card.getProperty("PhotoFile","");
+				var photoURI  = card.getProperty("PhotoURI","");
 				vcfstr += "PHOTO;VALUE=URL:"
 					+ photoURI
 					+ this.CRLF;
