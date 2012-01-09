@@ -46,7 +46,7 @@ var ThunderSyncPref = {
 		var formatPrefs          = prefs.getBranch("extensions.ThunderSync.exportFormat.");
 		var vCardExpPrefs        = prefs.getBranch("extensions.ThunderSync.vCard.exportEncoding.");
 		var vCardImpPrefs        = prefs.getBranch("extensions.ThunderSync.vCard.importEncoding.");
-		var vCardUID             = prefs.getBranch("extensions.ThunderSync.vCard.UIDinNote.");
+		var vCardUID             = prefs.getBranch("extensions.ThunderSync.vCard.hideUID.");
 		var vCardQuotedPrintable = prefs.getBranch("extensions.ThunderSync.vCard.quotedPrintable.");
 		var vCardFolding         = prefs.getBranch("extensions.ThunderSync.vCard.folding.");
 		var startUpPrefs         = prefs.getBranch("extensions.ThunderSync.startUp.");
@@ -312,7 +312,7 @@ var ThunderSyncPref = {
 		var format          = this.ConfigFormat[abItem.value];
 		var impEnc          = this.ConfigVCardImpEnc[abItem.value];
 		var expEnc          = this.ConfigVCardExpEnc[abItem.value];
-		var UIDinNote       = this.ConfigVCardUID[abItem.value];
+		var hideUID         = this.ConfigVCardUID[abItem.value];
 		var quotedPrintable = this.ConfigVCardQuotedPrintable[abItem.value];
 		var folding         = this.ConfigVCardFolding[abItem.value];
 		var syncMode        = this.ConfigSyncMode[abItem.value];
@@ -367,7 +367,7 @@ var ThunderSyncPref = {
 				//
 				// set UID as Note option
 				//
-				document.getElementById("ThunderSyncPreferences.checkbox.UID").checked = UIDinNote;
+				document.getElementById("ThunderSyncPreferences.checkbox.UID").checked = hideUID;
 				//
 				// set quoted-printable encoding option
 				//
@@ -385,15 +385,15 @@ var ThunderSyncPref = {
 		switch (format) {
 			case "vCardDir":
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = true;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = true;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = true;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = false;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = false;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = false;
 				break;
 			case "vCardFile":
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = false;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = false;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = false;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = true;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = true;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = true;
 				break;
 		}
 		
@@ -466,7 +466,7 @@ var ThunderSyncPref = {
 		var formatPrefs          = prefs.getBranch("extensions.ThunderSync.exportFormat.");
 		var vCardExpPrefs        = prefs.getBranch("extensions.ThunderSync.vCard.exportEncoding.");
 		var vCardImpPrefs        = prefs.getBranch("extensions.ThunderSync.vCard.importEncoding.");
-		var vCardUID             = prefs.getBranch("extensions.ThunderSync.vCard.UIDinNote.");
+		var vCardUID             = prefs.getBranch("extensions.ThunderSync.vCard.hideUID.");
 		var vCardQuotedPrintable = prefs.getBranch("extensions.ThunderSync.vCard.quotedPrintable.");
 		var vCardFolding         = prefs.getBranch("extensions.ThunderSync.vCard.folding.");
 		var startUpPrefs         = prefs.getBranch("extensions.ThunderSync.startUp.");
@@ -524,15 +524,15 @@ var ThunderSyncPref = {
 		switch (format) {
 			case "vCardDir":
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = true;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = true;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = true;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = false;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = false;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = false;
 				break;
 			case "vCardFile":
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = false;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = false;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = false;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = true;
-				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = true;
+// 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = true;
 				break;
 		}
 	},

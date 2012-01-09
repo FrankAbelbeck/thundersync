@@ -86,7 +86,7 @@ $Id$
 <!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Aktion beim Beenden">
 
 <!ENTITY ThunderSyncPreferences.label.advancedOptions "Einstellungen für Fortgeschrittene">
-<!ENTITY ThunderSyncPreferences.label.UID "UID in Kommentarfeld kodieren">
+<!ENTITY ThunderSyncPreferences.label.UID "UID zusätzlich als Mozilla-Eigenschaft kodieren">
 <!ENTITY ThunderSyncPreferences.label.quotedPrintable "Quoted-Printable-Kodierung verwenden">
 <!ENTITY ThunderSyncPreferences.label.folding "Zeilen mit mehr als 76 Zeichen falten">
 

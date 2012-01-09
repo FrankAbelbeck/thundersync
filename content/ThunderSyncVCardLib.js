@@ -269,9 +269,12 @@ var ThunderSyncVCardLib = {
 	 *
 	 * @param card nsIAbCard
 	 * @param encoding
+	 * @param hideUID
+	 * @param useQPE
+	 * @param doFolding
 	 * @return ASCII string with vCard content
 	 */
-	createVCardString: function (card,encoding) {
+	createVCardString: function (card,encoding,hideUID,useQPE,doFolding) {
 		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		converter.charset = encoding;
@@ -314,6 +317,10 @@ var ThunderSyncVCardLib = {
 			value = card.getProperty("UID","");
 			if (value != "") {
 				vcfstr += "UID:" + value + this.CRLF;
+				if (hideUID) {
+					vcfstr += "X-MOZILLA-PROPERTY:UID;"
+						+ value + this.CRLF;
+				}
 			}
 		} catch (exception) {}
 		
@@ -411,23 +418,70 @@ var ThunderSyncVCardLib = {
 		
 		value = converter.ConvertFromUnicode(card.getProperty("Notes",""));
 		if (value != "") {
-			tmpstr = "NOTE;CHARSET="+encoding+";QUOTED-PRINTABLE:"
-			vcfstr += tmpstr + this.foldQuotedPrintable(
-					this.toQuotedPrintable(value),
-					tmpstr.length
-				) + this.CRLF;
+// 			tmpstr = "NOTE;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
+// 			vcfstr += tmpstr + this.foldQuotedPrintable(
+// 					this.toQuotedPrintable(value),
+// 					tmpstr.length
+// 				) + this.CRLF;
+			if (useQPE) {
+				if (doFolding) {
+					vcfstr += "NOTE;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
+						+ this.foldQuotedPrintable(
+							this.toQuotedPrintable(value),
+							tmpstr.length
+						) + this.CRLF;
+				} else {
+					vcfstr += "NOTE;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
+						+ this.toQuotedPrintable(value) + this.CRLF;
+				}
+			} else {
+				if (doFolding) {
+					vcfstr += "NOTE;CHARSET=" + encoding + ":"
+						+ this.foldBase64(value,tmpstr.length) + this.CRLF;
+				} else {
+					vcfstr += "NOTE;CHARSET=" + encoding + ":" + value + this.CRLF;
+				}
+			}
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
 			value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],""));
 			if (value != "") {
-				tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";QUOTED-PRINTABLE:"
-				vcfstr += tmpstr + this.foldQuotedPrintable(
-					this.toQuotedPrintable(
-						this.otherProperties[i] + ";" + value
-					),
-					tmpstr.length
-				) + this.CRLF;
+// 				tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
+// 				vcfstr += tmpstr + this.foldQuotedPrintable(
+// 					this.toQuotedPrintable(
+// 						this.otherProperties[i] + ";" + value
+// 					),
+// 					tmpstr.length
+// 				) + this.CRLF;
+				if (useQPE) {
+					if (doFolding) {
+						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
+							+ this.foldQuotedPrintable(
+								this.toQuotedPrintable(
+									this.otherProperties[i] + ";" + value
+								),
+								tmpstr.length
+							) + this.CRLF;
+					} else {
+						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
+							+ this.toQuotedPrintable(
+								this.otherProperties[i] + ";" + value
+							) + this.CRLF;
+					}
+				} else {
+					if (doFolding) {
+						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ":"
+							+ this.foldBase64(
+								this.otherProperties[i] + ";" + value,
+			 					tmpstr.length
+							) + this.CRLF;
+					} else {
+						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ":"
+							+ this.otherProperties[i] + ";" + value
+							+ this.CRLF;
+					}
+				}
 			}
 		}
 		
@@ -445,13 +499,19 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;BASE64;TYPE="
+					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
 						+ suffix + ":";
-					vcfstr += photostr
-						+ this.foldBase64(
-							window.btoa(photoData),
-							photostr.length
-						) + this.CRLF + this.CRLF;
+					if (doFolding) {
+						vcfstr += photostr
+							+ this.foldBase64(
+								window.btoa(photoData),
+								photostr.length
+							) + this.CRLF + this.CRLF;
+					} else {
+						vcfstr += photostr
+							+ window.btoa(photoData)
+							+ this.CRLF;
+					}
 				}
 				break;
 			case "file":
@@ -462,13 +522,19 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;BASE64;TYPE="
+					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
 						+ suffix + ":";
-					vcfstr += photostr
-						+ this.foldBase64(
-							window.btoa(photoData),
-							photostr.length
-						) + this.CRLF + this.CRLF;
+					if (doFolding) {
+						vcfstr += photostr
+							+ this.foldBase64(
+								window.btoa(photoData),
+								photostr.length
+							) + this.CRLF + this.CRLF;
+					} else {
+						vcfstr += photostr
+							+ window.btoa(photoData)
+							+ this.CRLF;
+					}
 				}
 				break;
 		}
