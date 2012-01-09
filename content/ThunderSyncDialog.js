@@ -92,11 +92,14 @@ var ThunderSyncDialog = {
 		while (tree.hasChildNodes()) {
 			tree.removeChild(tree.firstChild);
 		}
-		this.CardDB   = new Object();
-		this.ModDB    = new Array();
-		this.ExpEncDB = new Object();
-		this.ImpEncDB = new Object();
-		this.FormatDB = new Object();
+		this.CardDB      = new Object();
+		this.ModDB       = new Array();
+		this.ExpEncDB    = new Object();
+		this.ImpEncDB    = new Object();
+		this.FormatDB    = new Object();
+		this.HideUIDDB   = new Object();
+		this.UseQPEDB    = new Object();
+		this.DoFoldingDB = new Object();
 	},
 	
 	/**
@@ -484,6 +487,15 @@ var ThunderSyncDialog = {
 			var vcfImpEncPrefs = Components.classes["@mozilla.org/preferences-service;1"]
 				.getService(Components.interfaces.nsIPrefService)
 				.getBranch("extensions.ThunderSync.vCard.importEncoding.");
+			var vcfHideUIDPrefs = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefService)
+				.getBranch("extensions.ThunderSync.vCard.hideUID.");
+			var vcfUseQPEPrefs = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefService)
+				.getBranch("extensions.ThunderSync.vCard.quotedPrintable.");
+			var vcfDoFoldingPrefs = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefService)
+				.getBranch("extensions.ThunderSync.vCard.folding.");
 		}
 		catch (exception) {
 			// error, not properly configured: inform user!
@@ -544,6 +556,27 @@ var ThunderSyncDialog = {
 				this.ImpEncDB[addressBook.URI] = "UTF-8";
 			}
 			if (this.ImpEncDB[addressBook.URI] == "Standard") { this.ImpEncDB[addressBook.URI] = "ISO-8859-1"; }
+			
+			// read addressbook-specific vCard preference: encode as Mozilla property?
+			try {
+				this.HideUIDDB[addressBook.URI] = vcfHideUIDPrefs.getBoolPref(abName);
+			} catch (exception) {
+				this.HideUIDDB[addressBook.URI] = false;
+			}
+			
+			// read addressbook-specific vCard preference: use quoted-printable encoding?
+			try {
+				this.UseQPEDB[addressBook.URI] = vcfUseQPEPrefs.getBoolPref(abName);
+			} catch (exception) {
+				this.UseQPEDB[addressBook.URI] = true;
+			}
+			
+			// read addressbook-specific vCard preference: do line folding?
+			try {
+				this.DoFoldingDB[addressBook.URI] = vcfDoFoldingPrefs.getBoolPref(abName);
+			} catch (exception) {
+				this.DoFoldingDB[addressBook.URI] = true;
+			}
 			
 			// no path defined? skip this addressbook
 			if (remoteRessource == "") { continue; }
@@ -963,6 +996,9 @@ var ThunderSyncDialog = {
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
 		photoDir.append("Photos");
+		if (!photoDir.exists()) {
+			photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
+		}
 		try {
 			if (!photoDir.isDirectory()) { throw "undefined"; }
 		}
@@ -1306,7 +1342,10 @@ var ThunderSyncDialog = {
 							if (dataString.length > 0) { dataString += ThunderSyncVCardLib.CRLF; }
 							dataString += ThunderSyncVCardLib.createVCardString(
 								this.CardDB[abURI][path][k],
-								this.ExpEncDB[abURI]
+								this.ExpEncDB[abURI],
+								this.HideUIDDB[abURI],
+								this.UseQPEDB[abURI],
+								this.DoFoldingDB[abURI]
 							)
 							break;
 					}
@@ -1336,7 +1375,10 @@ var ThunderSyncDialog = {
 									if (dataString.length > 0) { dataString += ThunderSyncVCardLib.CRLF; }
 									dataString += ThunderSyncVCardLib.createVCardString(
 										this.CardDB[abURI][path][k],
-										"UTF-8"
+										"UTF-8",
+										this.HideUID[abURI],
+										this.UseQPEDB[abURI],
+										this.DoFoldingDB[abURI]
 									)
 								}
 							}

@@ -1,0 +1,21 @@
+diff -u content/ThunderSyncVCardLib.js content/ThunderSyncVCardLib.js
+--- content/ThunderSyncVCardLib.js	2011-03-21 08:39:31.000000000 +0100
++++ content/ThunderSyncVCardLib.js	2011-12-31 16:09:44.172824803 +0100
+@@ -448,7 +448,7 @@
+ 						photoData.substr(0,8)
+ 					).toUpperCase()];
+ 				if (suffix != undefined) {
+-					var photostr = "PHOTO;BASE64;TYPE="
++					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
+ 						+ suffix + ":";
+ 					vcfstr += photostr
+ 						+ this.foldBase64(
+@@ -465,7 +465,7 @@
+ 						photoData.substr(0,8)
+ 					).toUpperCase()];
+ 				if (suffix != undefined) {
+-					var photostr = "PHOTO;BASE64;TYPE="
++					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
+ 						+ suffix + ":";
+ 					vcfstr += photostr
+ 						+ this.foldBase64(

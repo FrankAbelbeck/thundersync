@@ -1,0 +1,15 @@
+diff -u content/ThunderSyncDialog.js content/ThunderSyncDialog.js
+--- content/ThunderSyncDialog.js	2011-02-22 20:52:24.000000000 +0100
++++ content/ThunderSyncDialog.js	2011-12-31 16:08:05.156829218 +0100
+@@ -1071,6 +1071,11 @@
+ 			.getService(Components.interfaces.nsIProperties)
+ 			.get("ProfD", Components.interfaces.nsIFile);
+ 		photoDir.append("Photos");
++		
++		if (!photoDir.exists()) {
++			photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
++		}
++		
+ 		try {
+ 			if (!photoDir.isDirectory()) { throw "undefined"; }
+ 		}

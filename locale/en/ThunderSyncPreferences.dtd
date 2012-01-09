@@ -86,7 +86,7 @@ $Id$
 <!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Shutdown action">
 
 <!ENTITY ThunderSyncPreferences.label.advancedOptions "Options for Advanced Users">
-<!ENTITY ThunderSyncPreferences.label.UID "Encode UID as comment">
+<!ENTITY ThunderSyncPreferences.label.UID "Additionally, encode UID as Mozilla property">
 <!ENTITY ThunderSyncPreferences.label.quotedPrintable "use quoted-printable encoding">
 <!ENTITY ThunderSyncPreferences.label.folding "fold lines containing more than 76 characters">
 
