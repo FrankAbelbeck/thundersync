@@ -22,20 +22,29 @@ $Id$
 -->
 
 <!ENTITY ThunderSyncPreferences.title "ThunderSync Settings">
+<!ENTITY ThunderSyncPreferences.dialog.title "Synchronisation Preferences">
 
-<!ENTITY ThunderSyncPreferences.local "Addressbook">
-<!ENTITY ThunderSyncPreferences.remote "Sync path">
-<!ENTITY ThunderSyncPreferences.choose "choose path">
-<!ENTITY ThunderSyncPreferences.clear "clear path">
+<!ENTITY ThunderSyncPreferences.tab.general "General">
+<!ENTITY ThunderSyncPreferences.tab.format "Export Format">
+<!ENTITY ThunderSyncPreferences.tab.filter "Filter">
 
-<!ENTITY ThunderSyncPreferences.dialog.title "Synchronisation Paths">
-<!ENTITY ThunderSyncPreferences.dialog.description "Hint: use context menu.">
+<!ENTITY ThunderSyncPreferences.label.path "External resource">
+<!ENTITY ThunderSyncPreferences.button.clearPath "Clear">
+<!ENTITY ThunderSyncPreferences.button.choosePath "Choose...">
+<!ENTITY ThunderSyncPreferences.button.chooseFile "File">
+<!ENTITY ThunderSyncPreferences.button.chooseDir "Directory">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPMsg "IMAP message">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPFolder "IMAP folder">
+
+<!ENTITY ThunderSyncPreferences.addressbook "Addressbook">
 
 <!ENTITY ThunderSyncPreferences.label.format "Export format">
 <!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
+<!ENTITY ThunderSyncPreferences.format.vCardDir "vCard v2.1 (*.vcf, files in a directory)">
+<!ENTITY ThunderSyncPreferences.format.vCardFile "vCard v2.1 (*.vcf, single file)">
 
-<!ENTITY ThunderSyncPreferences.label.importencoding "File charset (Import)">
-<!ENTITY ThunderSyncPreferences.label.exportencoding "File charset (Export)">
+<!ENTITY ThunderSyncPreferences.label.importEncoding "File charset (Import)">
+<!ENTITY ThunderSyncPreferences.label.exportEncoding "File charset (Export)">
 
 <!ENTITY ThunderSyncPreferences.encoding.standard "vCard standard">
 
@@ -72,4 +81,37 @@ $Id$
 
 <!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">
 
-<!ENTITY ThunderSyncPreferences.label.syncOnStartup "Sync on start-up">
+<!ENTITY ThunderSyncPreferences.label.syncOnStartUp "Start-up action">
+<!ENTITY ThunderSyncPreferences.label.syncMode "Standard action">
+<!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Shutdown action">
+
+<!ENTITY ThunderSyncPreferences.label.advancedOptions "Options for Advanced Users">
+<!ENTITY ThunderSyncPreferences.label.UID "Encode UID as comment">
+<!ENTITY ThunderSyncPreferences.label.quotedPrintable "use quoted-printable encoding">
+<!ENTITY ThunderSyncPreferences.label.folding "fold lines containing more than 76 characters">
+
+<!ENTITY ThunderSyncPreferences.autoSync.no "No synchronisation">
+<!ENTITY ThunderSyncPreferences.autoSync.export "Export from Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.import "Import in Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.ask "Interactive synchronisation">
+
+<!ENTITY ThunderSyncPreferences.property "Property">
+<!ENTITY ThunderSyncPreferences.action "Action">
+
+<!ENTITY ThunderSyncPreferences.filterAction.ignore "Ignore">
+<!ENTITY ThunderSyncPreferences.filterAction.import "Import into addressbook">
+<!ENTITY ThunderSyncPreferences.filterAction.export "Export from addressbook">
+<!ENTITY ThunderSyncPreferences.filterAction.ask "Ask">
+<!ENTITY ThunderSyncPreferences.filterAction.clear "Reset">
+
+<!ENTITY ThunderSyncPreferences.IMAP.title "ThunderSync IMAP Preferences">
+<!ENTITY ThunderSyncPreferences.IMAP.dialog.title "IMAP Selector">
+<!ENTITY ThunderSyncPreferences.IMAP.description "The following messages were identified by ThunderSync as possible ressources:">
+<!ENTITY ThunderSyncPreferences.IMAP.accounts "IMAP Accounts">
+
+<!ENTITY ThunderSyncPreferences.IMAP.path "Account/Folder">
+<!ENTITY ThunderSyncPreferences.IMAP.date "Date">
+<!ENTITY ThunderSyncPreferences.IMAP.attachment "Attachment">
+<!ENTITY ThunderSyncPreferences.IMAP.size "Size">
+<!ENTITY ThunderSyncPreferences.IMAP.subject "Subject">
+

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "chrome://thundersync/locale/ThunderSyncPreferences.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!--
+ThunderSync Preferences Dialog for IMAP Options
+Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+$Id:$
+-->
+
+
+<dialog id="ThunderSyncPreferences.dialog.IMAP"
+	title="&ThunderSyncPreferences.IMAP.title;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	buttons="accept,cancel"
+	onload="ThunderSyncPrefIMAP.load();"
+	ondialogaccept="return ThunderSyncPrefIMAP.accept();">
+	
+	<script type="application/x-javascript"
+		src="chrome://thundersync/content/ThunderSyncPreferencesIMAP.js" />
+	
+	<dialogheader title="&ThunderSyncPreferences.IMAP.dialog.title;" />
+	
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="string-bundle" src="chrome://thundersync/locale/ThunderSyncPreferences.properties" />
+	</stringbundleset>
+	
+	<vbox flex="1">
+		<label value="&ThunderSyncPreferences.IMAP.description;" />
+		
+		<listbox id="ThunderSyncPreferences.IMAP.list"
+			seltype="single"
+			onselect="ThunderSyncPrefIMAP.selectItem(this);"
+			hidden="true"
+			flex="1">
+			<listcols>
+				<listcol flex="2" />
+				<listcol flex="3"/>
+			</listcols>
+			<listhead>
+				<listheader label="&ThunderSyncPreferences.IMAP.path;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.subject;" />
+			</listhead>
+<!--
+			<listcols>
+				<listcol flex="3"/>
+				<listcol flex="1" />
+				<listcol flex="1" />
+			</listcols>
+			<listhead>
+				<listheader label="&ThunderSyncPreferences.IMAP.path;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.date;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.size;" />
+			</listhead>
+-->
+		</listbox>
+		<splitter />
+		<textbox id="ThunderSyncPreferences.IMAP.details" multiline="true" flex="1" />
+	</vbox>
+</dialog>

@@ -91,12 +91,9 @@ var ThunderSyncVCardLib = {
 		"Custom1", "Custom2", "Custom3", "Custom4"	// base64?
 	),
 	
-	// list of all properties, union of aforementioned lists
-	allProperties: Array.concat(
-		this.baseProperties,
-		this.photoProperties,
-		this.otherProperties
-	),
+	allProperties: function () {
+		return this.baseProperties.concat(this.photoProperties).concat(this.otherProperties);
+	},
 	
 	/**
 	 * Analyse unencoded binary string and determine image file format.
@@ -274,7 +271,7 @@ var ThunderSyncVCardLib = {
 	 * @param encoding
 	 * @return ASCII string with vCard content
 	 */
-	fromCard: function (card,encoding) {
+	createVCardString: function (card,encoding) {
 		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		converter.charset = encoding;
@@ -481,21 +478,42 @@ var ThunderSyncVCardLib = {
 	},
 	
 	/**
-	 * Extract the UID from a vCard data string. If this fails, an empty
-	 * string is returned.
+	 * Extract the UIDs from a vCard data string. If this fails, an empty
+	 * array is returned.
 	 *
 	 * @param datastr data string
-	 * @return UID string, might be empty
+	 * @return UID Array, might be empty or might contain empty strings
 	 */
 	readUID: function(datastr) {
 		try {
-			var uid = /BEGIN:VCARD[\S\s]*UID:(.*)\r\n[\S\s]*END:VCARD/.exec(datastr)[1];
+			var uid = /BEGIN:VCARD[\S\s]*UID:(.*)\r\n[\S\s]*END:VCARD/.exec(cardstr)[1];
 		} catch (exception) {
 			var uid = "";
 		}
 		return uid;
 	},
 	
+	/**
+	 * 
+	 */
+	interpretVCardString: function (datastr,encoding) {
+		// split data string into separate vCards
+		// this takes care of vCards carrying vCards
+		var retval = new Array();
+		var cardstr = datastr.split("END:VCARD");
+		for (i = 0; i < cardstr.length-1; i++) {
+			// interpret individual strings (stripped of leading or
+			// trailing line breaks; reconstructed END tag)
+			var vCardStr = cardstr[i].replace(/^[\r\n]*/,"").replace(/[\r\n]*$/,"\r\n").concat("END:VCARD");
+			// interpret single vCard string
+			var card = this.interpretSingleVCardString(vCardStr,encoding);
+			// if interpretation leads indeed to a nsIAbCard, add to array
+			if (card instanceof Components.interfaces.nsIAbCard) {
+				retval.push(card);
+			}
+		}
+		return retval;
+	},
 	
 	/**
 	 * Converts a vCard content string to an addressbook card;
@@ -504,18 +522,15 @@ var ThunderSyncVCardLib = {
 	 *
 	 * if the datastring is not recognized as vCard content, null is returned.
 	 *
-	 * @param datastr content string of vCard file
+	 * @param datastr vCard content string
 	 * @param encoding user-defined encoding of this string
 	 * @return nsIAbCard or null if conversion failed
 	 */
-	toCard: function (datastr,encoding) {
+	interpretSingleVCardString: function (datastr,encoding) {
+
 		// do some regular expression magic
+		
 		try {
-// 			var lines = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/
-// 				.exec(datastr)[1]
-// 				.replace(/=\r\n([^\r\n])/g,"$1")
-// 				.replace(/\r\n[\t| ]/g," ")
-// 				.split(this.CRLF);
 			// make sure file begins with BEGIN:VCARD and ends with END:VCARD
 			var tmp = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/.exec(datastr)[1];
 			// replace lines ending with a "=" and followed by another
@@ -531,13 +546,14 @@ var ThunderSyncVCardLib = {
 		} catch (exception) {
 			// regular expression failed: no vCard? return null
 			return null;
-// 			var lines = new Array();
 		}
+		
 		var card = Components.classes["@mozilla.org/addressbook/cardproperty;1"]  
 			.createInstance(Components.interfaces.nsIAbCard);
 		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 		var i = 0;
+		
 		while (i < lines.length) {
 			// process each vCard property line
 			// expected: name;name;...:value;value;...
