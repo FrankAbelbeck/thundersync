@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "chrome://thundersync/locale/ThunderSyncPreferences.dtd">
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!--
+ThunderSync Preferences Dialog for IMAP Options
+Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+$Id:$
+-->
+
+
+<dialog id="ThunderSyncPreferences.dialog.IMAP"
+	title="&ThunderSyncPreferences.IMAP.title;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	buttons="accept,cancel"
+	onload="ThunderSyncPrefIMAP.load();"
+	ondialogaccept="return ThunderSyncPrefIMAP.accept();">
+	
+	<script type="application/x-javascript"
+		src="chrome://thundersync/content/ThunderSyncPreferencesIMAP.js" />
+	
+	<dialogheader title="&ThunderSyncPreferences.IMAP.dialog.title;"/>
+	
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="string-bundle" src="chrome://thundersync/locale/ThunderSyncPreferences.properties" />
+	</stringbundleset>
+	
+	<vbox>
+		<progressmeter id="ThunderSyncPreferences.IMAP.progress"
+			mode="undeterminded"
+			hidden="false"
+			value="50"/>
+		<textbox id="ThunderSyncPreferences.IMAP.progresstext"
+			multiline="true"
+			readonly="true"
+			hidden="false"
+			flex="1"
+			value="&ThunderSyncPreferences.IMAP.progress;"/>
+	</vbox>
+	<hbox>
+		<tree id="ThunderSyncPreferences.IMAP.tree"
+			rows="12"
+			hidecolumnpicker="true"
+			seltype="single"
+			treelines="true"
+			minwidth="200"
+			onselect="ThunderSyncPrefIMAP.folderSelect();"
+			hidden="true"
+			flex="1">
+			<treecols>
+				<treecol label="&ThunderSyncPreferences.IMAP.accounts;" flex="1" primary="true" />
+			</treecols>
+			<treechildren id="ThunderSyncPreferences.IMAP.treechildren" />
+		</tree>
+		
+		<splitter />
+		
+		<textbox id="ThunderSyncPreferences.IMAP.text"
+			readonly="true"
+			multiline="true"
+			minwidth="400"
+			hidden="true"
+			flex="2" />
+		
+		<listbox id="ThunderSyncPreferences.IMAP.list"
+			rows="12"
+			seltype="single"
+			minwidth="400"
+			hidden="true"
+			flex="2">
+			<listcols>
+				<listcol flex="3"/>
+				<listcol flex="1" />
+				<listcol flex="1" />
+				<listcol flex="2" />
+			</listcols>
+			<listhead>
+				<listheader label="&ThunderSyncPreferences.IMAP.subject;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.from;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.date;" />
+				<listheader label="&ThunderSyncPreferences.IMAP.attachment;" />
+			</listhead>
+		</listbox>
+	</hbox>
+</dialog>

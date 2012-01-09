@@ -1,0 +1,68 @@
+// <!-- <mdb:mork:z v="1.4"/> -->
+< <(a=c)> // (f=iso-8859-1)
+  (B8=LastModifiedDate)(B9=RecordKey)(BA=AddrCharSet)(BB=LastRecordKey)
+  (BC=ns:addrbk:db:table:kind:pab)(BD=ListName)(BE=ListNickName)
+  (BF=ListDescription)(C0=ListTotalAddresses)(C1=LowercaseListName)
+  (C2=ns:addrbk:db:table:kind:deleted)(C3=PhotoURI)(C4=PhotoType)
+  (C5=DbRowID)(C6=UID)(80=ns:addrbk:db:row:scope:card:all)
+  (81=ns:addrbk:db:row:scope:list:all)
+  (82=ns:addrbk:db:row:scope:data:all)(83=FirstName)(84=LastName)
+  (85=PhoneticFirstName)(86=PhoneticLastName)(87=DisplayName)
+  (88=NickName)(89=PrimaryEmail)(8A=LowercasePrimaryEmail)
+  (8B=SecondEmail)(8C=PreferMailFormat)(8D=PopularityIndex)
+  (8E=AllowRemoteContent)(8F=WorkPhone)(90=HomePhone)(91=FaxNumber)
+  (92=PagerNumber)(93=CellularNumber)(94=WorkPhoneType)(95=HomePhoneType)
+  (96=FaxNumberType)(97=PagerNumberType)(98=CellularNumberType)
+  (99=HomeAddress)(9A=HomeAddress2)(9B=HomeCity)(9C=HomeState)
+  (9D=HomeZipCode)(9E=HomeCountry)(9F=WorkAddress)(A0=WorkAddress2)
+  (A1=WorkCity)(A2=WorkState)(A3=WorkZipCode)(A4=WorkCountry)
+  (A5=JobTitle)(A6=Department)(A7=Company)(A8=_AimScreenName)
+  (A9=AnniversaryYear)(AA=AnniversaryMonth)(AB=AnniversaryDay)
+  (AC=SpouseName)(AD=FamilyName)(AE=WebPage1)(AF=WebPage2)(B0=BirthYear)
+  (B1=BirthMonth)(B2=BirthDay)(B3=Custom1)(B4=Custom2)(B5=Custom3)
+  (B6=Custom4)(B7=Notes)>
+
+<(92=5)(81=)(95=1305612900)(82=Medion Guthaben)(83=*100#)(84
+    =chrome://messenger/skin/addressbook/icons/contact-generic.png)
+  (80=0)(85=generic)(86=1)(94=ac8d5443-3c7a-496a-a5c6-db10cb169be2)
+  (87=Medion Hotline)(88=1157)(89=2)(96
+    =68042b21-197c-4e90-922e-eda70e49000d)(8A=Medion Konto)(8B=1155)
+  (8C=3)(97=65632ba6-a890-4c11-a6d4-ece8ba233a89)(8D=Medion Mailbox)
+  (8E=+491779911)(8F=4)(98=2a5b1e83-0f89-4eed-8cac-2c28670d7dad)(90
+    =Sperrnotruf)(91=+49116116)>
+{1:^80 {(k^BC:c)(s=9)} 
+  [1:^82(^BB=5)]
+  [1(^B0=)(^B7=)(^B6=)(^B8^95)(^88=)(^AE=)(^A6=)(^87^82)(^B3=)(^A8=)
+    (^84^82)(^9F=)(^9E=)(^9C=)(^90=)(^8F^83)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=1)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=1)(^C6^94)]
+  [2(^B0=)(^B7=)(^B6=)(^B8^95)(^88=)(^AE=)(^A6=)(^87^87)(^B3=)(^A8=)
+    (^84^87)(^9F=)(^9E=)(^9C=)(^90=)(^8F^88)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=2)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=2)(^C6^96)]
+  [3(^B0=)(^B7=)(^B6=)(^B8^95)(^88=)(^AE=)(^A6=)(^87^8A)(^B3=)(^A8=)
+    (^84^8A)(^9F=)(^9E=)(^9C=)(^90=)(^8F^8B)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=3)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=3)(^C6^97)]
+  [4(^B0=)(^B7=)(^B6=)(^B8^95)(^88=)(^AE=)(^A6=)(^87^8D)(^B3=)(^A8=)
+    (^84^8D)(^9F=)(^9E=)(^9C=)(^90=)(^8F^8E)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=4)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=4)(^C6^98)]
+  [5(^B0=)(^B7=)(^B6=)(^B8=0)(^88=)(^AE=)(^A6=)(^87^90)(^B3=)(^A8=)
+    (^84^90)(^9F=)(^9E=)(^9C=)(^90=)(^8F^91)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=5)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=5)]}
+
+@$${8{@
+<(99=3af079cf-2a9b-416d-b125-a60bdd4edddc)>
+[-5:^80(^B0=)(^B7=)(^B6=)(^B8^95)(^88=)(^AE=)(^A6=)(^87^90)(^B3=)(^A8=)
+    (^84^90)(^9F=)(^9E=)(^9C=)(^90=)(^8F^91)(^89=)(^85=)(^A1=)(^C3^84)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^85)(^93=)(^8C=0)(^83=)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=5)(^A5=)(^A7=)(^AF=)(^8A=)(^B9=5)(^C6^99)]
+@$$}8}@

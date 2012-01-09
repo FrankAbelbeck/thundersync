@@ -22,20 +22,29 @@ $Id$
 -->
 
 <!ENTITY ThunderSyncPreferences.title "ThunderSync-Einstellungen">
+<!ENTITY ThunderSyncPreferences.dialog.title "Synchronisationseinstellungen">
 
-<!ENTITY ThunderSyncPreferences.local "Adressbuch">
-<!ENTITY ThunderSyncPreferences.remote "Sync-Pfad">
-<!ENTITY ThunderSyncPreferences.choose "Pfad wählen">
-<!ENTITY ThunderSyncPreferences.clear "Pfad löschen">
+<!ENTITY ThunderSyncPreferences.tab.general "Allgemein">
+<!ENTITY ThunderSyncPreferences.tab.format "Exportformat">
+<!ENTITY ThunderSyncPreferences.tab.filter "Filter">
 
-<!ENTITY ThunderSyncPreferences.dialog.title "Synchronisationspfade">
-<!ENTITY ThunderSyncPreferences.dialog.description "Tip: Kontextmenu nutzen.">
+<!ENTITY ThunderSyncPreferences.label.path "Externe Ressource">
+<!ENTITY ThunderSyncPreferences.button.clearPath "Zurücksetzen">
+<!ENTITY ThunderSyncPreferences.button.choosePath "Wählen...">
+<!ENTITY ThunderSyncPreferences.button.chooseFile "Datei">
+<!ENTITY ThunderSyncPreferences.button.chooseDir "Verzeichnis">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPMsg "IMAP-Nachricht">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPFolder "IMAP-Ordner">
+
+<!ENTITY ThunderSyncPreferences.addressbook "Adressbuch">
 
 <!ENTITY ThunderSyncPreferences.label.format "Exportformat">
 <!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
+<!ENTITY ThunderSyncPreferences.format.vCardDir "vCard v2.1 (*.vcf, Dateien in einem Verzeichnis)">
+<!ENTITY ThunderSyncPreferences.format.vCardFile "vCard v2.1 (*.vcf, einzelne Datei)">
 
-<!ENTITY ThunderSyncPreferences.label.importencoding "Dateizeichensatz (Import)">
-<!ENTITY ThunderSyncPreferences.label.exportencoding "Dateizeichensatz (Export)">
+<!ENTITY ThunderSyncPreferences.label.importEncoding "Dateizeichensatz (Import)">
+<!ENTITY ThunderSyncPreferences.label.exportEncoding "Dateizeichensatz (Export)">
 
 <!ENTITY ThunderSyncPreferences.encoding.standard "vCard-Standard">
 
@@ -72,5 +81,37 @@ $Id$
 
 <!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">
 
+<!ENTITY ThunderSyncPreferences.label.syncOnStartUp "Aktion beim Starten">
+<!ENTITY ThunderSyncPreferences.label.syncMode "Standardaktion">
+<!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Aktion beim Beenden">
 
-<!ENTITY ThunderSyncPreferences.label.syncOnStartup "Beim Starten synchronisieren">
+<!ENTITY ThunderSyncPreferences.label.advancedOptions "Einstellungen für Fortgeschrittene">
+<!ENTITY ThunderSyncPreferences.label.UID "UID in Kommentarfeld kodieren">
+<!ENTITY ThunderSyncPreferences.label.quotedPrintable "Quoted-Printable-Kodierung verwenden">
+<!ENTITY ThunderSyncPreferences.label.folding "Zeilen mit mehr als 76 Zeichen falten">
+
+<!ENTITY ThunderSyncPreferences.autoSync.no "Kein Abgleich">
+<!ENTITY ThunderSyncPreferences.autoSync.export "Export aus Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.import "Import in Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.ask "interaktiver Abgleich">
+
+<!ENTITY ThunderSyncPreferences.property "Eigenschaft">
+<!ENTITY ThunderSyncPreferences.action "Aktion">
+
+<!ENTITY ThunderSyncPreferences.filterAction.ignore "Ignorieren">
+<!ENTITY ThunderSyncPreferences.filterAction.import "in Adressbuch importieren">
+<!ENTITY ThunderSyncPreferences.filterAction.export "aus Adressbuch exportieren">
+<!ENTITY ThunderSyncPreferences.filterAction.ask "Nachfragen">
+<!ENTITY ThunderSyncPreferences.filterAction.clear "Zurücksetzen">
+
+<!ENTITY ThunderSyncPreferences.IMAP.title "ThunderSync-IMAP-Einstellungen">
+<!ENTITY ThunderSyncPreferences.IMAP.dialog.title "IMAP-Auswahl">
+<!ENTITY ThunderSyncPreferences.IMAP.description "ThunderSync hat folgende Nachrichten als mögliche Resourcen identifiziert:">
+<!ENTITY ThunderSyncPreferences.IMAP.accounts "IMAP-Konten">
+
+<!ENTITY ThunderSyncPreferences.IMAP.path "Konto/Ordner">
+<!ENTITY ThunderSyncPreferences.IMAP.date "Datum">
+<!ENTITY ThunderSyncPreferences.IMAP.attachment "Anhang">
+<!ENTITY ThunderSyncPreferences.IMAP.size "Größe">
+<!ENTITY ThunderSyncPreferences.IMAP.subject "Betreff">
+

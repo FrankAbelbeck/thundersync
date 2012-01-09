@@ -1,0 +1,237 @@
+// <!-- <mdb:mork:z v="1.4"/> -->
+< <(a=c)> // (f=iso-8859-1)
+  (B8=LastModifiedDate)(B9=RecordKey)(BA=AddrCharSet)(BB=LastRecordKey)
+  (BC=ns:addrbk:db:table:kind:pab)(BD=ListName)(BE=ListNickName)
+  (BF=ListDescription)(C0=ListTotalAddresses)(C1=LowercaseListName)
+  (C2=ns:addrbk:db:table:kind:deleted)(C3=DbRowID)(C4=PalmRecId)
+  (C5=PhotoType)(C6=PhotoURI)(80=ns:addrbk:db:row:scope:card:all)
+  (81=ns:addrbk:db:row:scope:list:all)
+  (82=ns:addrbk:db:row:scope:data:all)(83=FirstName)(84=LastName)
+  (85=PhoneticFirstName)(86=PhoneticLastName)(87=DisplayName)
+  (88=NickName)(89=PrimaryEmail)(8A=LowercasePrimaryEmail)
+  (8B=SecondEmail)(8C=PreferMailFormat)(8D=PopularityIndex)
+  (8E=AllowRemoteContent)(8F=WorkPhone)(90=HomePhone)(91=FaxNumber)
+  (92=PagerNumber)(93=CellularNumber)(94=WorkPhoneType)(95=HomePhoneType)
+  (96=FaxNumberType)(97=PagerNumberType)(98=CellularNumberType)
+  (99=HomeAddress)(9A=HomeAddress2)(9B=HomeCity)(9C=HomeState)
+  (9D=HomeZipCode)(9E=HomeCountry)(9F=WorkAddress)(A0=WorkAddress2)
+  (A1=WorkCity)(A2=WorkState)(A3=WorkZipCode)(A4=WorkCountry)
+  (A5=JobTitle)(A6=Department)(A7=Company)(A8=_AimScreenName)
+  (A9=AnniversaryYear)(AA=AnniversaryMonth)(AB=AnniversaryDay)
+  (AC=SpouseName)(AD=FamilyName)(AE=WebPage1)(AF=WebPage2)(B0=BirthYear)
+  (B1=BirthMonth)(B2=BirthDay)(B3=Custom1)(B4=Custom2)(B5=Custom3)
+  (B6=Custom4)(B7=Notes)>
+
+<(179=49)(9B=3)(9C=)(80=0)(9D=info@apartmentcenter.de)(9E=2)(B7=5)(B8
+    =DieterFranzen@BWB.org)(BA=1)(BB=1287561701)(B9=dieterfranzen@bwb.org)
+  (9F=4)(BC=6)(BD=fragen_de@lenovo.com)(BE=Shop)(BF=7)(C0=Weddix Shop)
+  (C1=shop@weddix.de)(C2=Weddix)(C4=1288167870)(C5=8)(C6
+    =support_de@uk.ibm.com)(CD=1289314596)(C7=9)(C8
+    =saffe-juergen@t-online.de)(CB=10)(CC=hamstermann@gmx.de)(CE
+    =1289408689)(CF=Lange)(D0=11)(D1=Jan Lange)(D2=Hamstermann@gmx.de)
+  (D3=Jan)(D4=a)(D6=13)(DD=Yair lanz)(D7=yairlanz@gmail.com)(FC=1295196260)
+  (FD=1907)(DA=lanz)(DC=Yair)(EC=Stock)(ED=14)(EE=Andreas Stock)(EF
+    =Andreas.Stock@ita.uni-hannover.de)(F0=Andreas)(F1
+    =andreas.stock@ita.uni-hannover.de)(F2=c)(F3=15)(F4
+    =anfrage@prfotoagentur.de)(F5=d)(F6=16)(F7
+    =information@zum-wilden-schwein.de)(F8=e)(F9=17)(FA
+    =bahncard-service@bahn.de)(FB=f)(FE=18)(FF=EwaldErnst)(100
+    =EwaldErnst@aol.com)(101=ewaldernst@aol.com)(102=19)(103
+    =FrankZoellner@bwb.org)(11C=1297850318)(104=frankzoellner@bwb.org)
+  (105=20)(106=lucas@treffenstaedt.de)(107=12)(108=Treffenst$C3$A4dt)
+  (109=21)(10A=Lucas Treffenst$C3$A4dt)(10B=ltreffenstaedt@googlemail.com)
+  (10C=Lucas)(127=1298360054)(128=775)(10D=22)(10E=info@prandmore.de)
+  (18E=1308689416)(18D=80)(10F=Fender)(110=23)(111=Franz Fender)(112
+    =franz.fender@franzfender.de)(113=Franz)(117=24)(118
+    =MarkusKrupke@t-online.de)(119=markuskrupke@t-online.de)(116=25)
+  (11A=Info@Voyage-hannover.de)(11B=info@voyage-hannover.de)(129=26)
+  (12A=gueneshochzeit)(12B=gueneshochzeit@aol.com)(1EB=1314087797)(150=36)
+  (12C=27)(12D=bmvgruev5@bmvg.bund.de)(12E=1299066436)(12F=28)(130=Urbisch)
+  (131=urbisch@hotmail.de)(132=1a)(133=29)(134
+    =SarahWassmann@googlemail.com)(135=sarahwassmann@googlemail.com)
+  (136=1b)(137=30)(138=uta.lach@t-online.de)(139=1c)(13A=31)(141
+    =MM Wanadoo)(13B=mmarengo@wanadoo.fr)(13D=1303910123)(13F=41)(13E
+    =Wanadoo)(140=MM)(81=Anja)(142=32)(143=Abelbeck, Anja)(144
+    =Anja.Abelbeck@lotto-niedersachsen.de)(145=Abelbeck,)(146
+    =anja.abelbeck@lotto-niedersachsen.de)(147=1e)(148=33)(84
+    =Anja.Uhde@lotto-niedersachsen.de)(14A=1304497548)(86
+    =anja.uhde@lotto-niedersachsen.de)(14B=34)(14C=amo-editors@mozilla.org)
+  (14D=35)(14E=melanie.scatturin@wangerooge.de)(14F=Wagner)(151
+    =Hanna Wagner)(152=hannasavanna@gmx.de)(153=Hanna)(18A=1308506404)
+  (18B=52)(154=37)(155=hallmannarne@gmx.net)(156=Williamson)(157=38)
+  (158=Andrew Williamson)(159=awilliamson@mozilla.com)(15A=Andrew)(15B=39)
+  (15C=christian1herzog@bwb.org)(15D=Oheimb)(15E=40)(15F=David von Oheimb)
+  (160=David@von-Oheimb.de)(161=David von)(162=david@von-oheimb.de)
+  (163=res@delta-park.bestwestern.de)(164=42)(165
+    =markuskrupke@instantemail.t-mobile.de)(183=1307605750)(182=100)
+  (167=43)(168=marcorahner@hotmail.de)(169=44)(16A
+    =pmx-auto-approve+d1d0d907a768ea035f83bd2d9796955f@pmx-db1.rrzn.uni-hannov\
+er.de)(16B=2a)(16C=45)(16D
+    =pmx-auto-approve+d1588c6acef4d2b0a652940d72c0df5b@pmx-db1.rrzn.uni-hannov\
+er.de)(16E=2b)(16F=46)(170
+    =pmx-auto-approve+d2b28132669912f3c88ae05b67ed58bb@pmx-db1.rrzn.uni-hannov\
+er.de)(171=2c)(172=47)(173
+    =pmx-auto-approve+4f0d8345671ae187be82a574b977ab49@pmx-db1.rrzn.uni-hannov\
+er.de)(174=2d)(176=48)(177=hochzeit@bfeld.eu)(178=2e)(17A
+    =pmx-auto-approve+6d842375769b49aa7722231dfd844cbe@pmx-db1.rrzn.uni-hannov\
+er.de)(17B=2f)(17D=50)(17E
+    =pmx-auto-approve+bcc926c78d46e4eab73e198b59910448@pmx-db1.rrzn.uni-hannov\
+er.de)(184=DS-PC/SVW\))(185=51)(186
+    =EXTERNAL Ludwig Kay (Fa. Ferchau, DS-PC/SVW\))(187
+    =external.Kay.Ludwig@de.bosch.com)(188
+    =EXTERNAL Ludwig Kay (Fa. Ferchau,)(189
+    =external.kay.ludwig@de.bosch.com)(1C4=Anja Abelbeck)(18F
+    =anja.abelbeck@googlemail.com)(21B=1318265300)(21C=1630892051)(1C2
+    =Abelbeck)(191=53)(192=ludger.overmeyer@ita.uni-hannover.de)(194=Klomp)
+  (195=54)(196=Sven Klomp)(197=sven@klomp.eu)(198=Sven)(1E5=1313328687)
+  (1E6=25606)(1A0=55)(1A1
+    =pmx-auto-approve+14dd0354eccc6dc29235c2ca6ca64b2a@pmx-db1.rrzn.uni-hannov\
+er.de)(1A4=56)(1A5
+    =pmx-auto-approve+96305e4fbcac0acef08390cb1f3e967b@pmx-db1.rrzn.uni-hannov\
+er.de)(1B0=Freund)(1B1=57)(1B2=Matthias Freund)(1B3=matthias.freund@web.de)
+  (1B4=Matthias)(1B5=58)(1BC=Petra Freund)(1B6=pfreund@freenet.de)(1E9
+    =1314087684)(1EA=308)(1BB=Petra)(1B7=59)(1B8
+    =pmx-auto-approve+d0609cade362ae36c2b5ce604d60fac4@pmx-db1.rrzn.uni-hannov\
+er.de)(1D6=Ro$C3$9Fmann)(1D7=60)(1D8=Anna Ro$C3$9Fmann)(1D9
+    =annarossmann@gmx.net)(1DA=Anna)(1DB=3a)(1E0=61)(1E1
+    =stephan-koerner@gmx.de)(1E2=3b)(1EC=62)(1F7=Wiebke Enke)(1ED
+    =info@rietzel-plexi.de)(1F8=1314256505)(1F5=96)(1F4=Enke)(1F6=Wiebke)
+  (1EF=63)(1F0=AndreasTessin@bundeswehr.org)(1F1
+    =andreastessin@bundeswehr.org)(1F2=3d)(1F9=64)(1FA
+    =Dennis.Huehn@ramada.de)(1FB=dennis.huehn@ramada.de)(1FC=3e)(1FF=65)
+  (207=Frank Abelbeck)(200=frank.abelbeck@stud.uni-hannover.de)(210
+    =1316672680)(211=2085)(206=Frank)(202=66)(203
+    =frank13@stud.uni-hannover.de)(20E=1316670961)(20A=67)(20B
+    =postmaster@rrzn.uni-hannover.de)(212=68)(213=hibiscus@willuhn.de)
+  (214=69)(215=martin@aqbanking.de)(22E=1318594729)(216=70)(217
+    =service@vgh.de)(226=1318427266)(218=71)(219=Mueller8@GMX-Topmail.de)
+  (21A=mueller8@gmx-topmail.de)(21D=72)(21E=shop-koblenz@lhd-shop.de)
+  (21F=Ganz/LHD/LHBW)(220=73)(221=Heidi Ganz/LHD/LHBW)(222
+    =Heidi.Ganz@lhd-shop.de)(223=Heidi)(225=1318410724)(224
+    =heidi.ganz@lhd-shop.de)(227=74)(228=aqbanking-user@lists.aqbanking.de)
+  (229=Thinay)(22A=75)(22B=Dominik Thinay)(22C
+    =dominik@informatik.uni-siegen.de)(22D=Dominik)>
+{1:^80 {(k^BC:c)(s=9)} 
+  [1:^82(^BB=49)]
+  [3(^C3=3)(^87=)(^8E=0)(^89^9D)(^8D=0)(^8C=0)(^B8=0)(^8A^9D)(^B9=2)]
+  [5(^C3=5)(^87=)(^8E=0)(^89^B8)(^8D=1)(^8C=0)(^B8^BB)(^8A^B9)(^B9=4)]
+  [6(^C3=6)(^87=)(^8E=0)(^89^BD)(^8D=0)(^8C=0)(^B8=0)(^8A^BD)(^B9=5)]
+  [7(^84^BE)(^C3=7)(^87^C0)(^8E=0)(^89^C1)(^8D=2)(^83^C2)(^8C=0)(^B8^C4)
+    (^8A^C1)(^B9=6)]
+  [8(^C3=8)(^87=)(^8E=0)(^89^C6)(^8D=3)(^8C=0)(^B8^CD)(^8A^C6)(^B9=7)]
+  [9(^C3=9)(^87=)(^8E=0)(^89^C8)(^8D=0)(^8C=0)(^B8=0)(^8A^C8)(^B9=8)]
+  [A(^C3=10)(^87=)(^8E=0)(^89^CC)(^8D=1)(^8C=0)(^B8^CE)(^8A^CC)(^B9=9)]
+  [B(^84^CF)(^C3=11)(^87^D1)(^8E=0)(^89^D2)(^8D=0)(^83^D3)(^8C=0)(^B8=0)
+    (^8A^CC)(^B9=a)]
+  [D(^C3=13)(^87^DD)(^8E=0)(^89^D7)(^8D=9)(^8C=0)(^B8^FC)(^8A^D7)(^B9^FD)
+    (^84^DA)(^83^DC)]
+  [E(^84^EC)(^C3=14)(^87^EE)(^8E=0)(^89^EF)(^8D=0)(^83^F0)(^8C=0)(^B8=0)
+    (^8A^F1)(^B9=c)]
+  [F(^C3=15)(^87=)(^8E=0)(^89^F4)(^8D=0)(^8C=0)(^B8=0)(^8A^F4)(^B9=d)]
+  [10(^C3=16)(^87=)(^8E=0)(^89^F7)(^8D=0)(^8C=0)(^B8=0)(^8A^F7)(^B9=e)]
+  [11(^C3=17)(^87=)(^8E=0)(^89^FA)(^8D=0)(^8C=0)(^B8=0)(^8A^FA)(^B9=f)]
+  [12(^C3=18)(^87=)(^A8^FF)(^8E=0)(^89^100)(^8D=0)(^8C=0)(^B8=0)(^8A^101)
+    (^B9=10)]
+  [13(^C3=19)(^87=)(^8E=0)(^89^103)(^8D=1)(^8C=0)(^B8^11C)(^8A^104)
+    (^B9=17)]
+  [14(^C3=20)(^87=)(^8E=0)(^89^106)(^8D=0)(^8C=0)(^B8=0)(^8A^106)(^B9=12)]
+  [15(^84^108)(^C3=21)(^87^10A)(^8E=0)(^89^10B)(^8D=8)(^83^10C)(^8C=0)
+    (^B8^127)(^8A^10B)(^B9=775)]
+  [16(^C3=22)(^87=)(^8E=0)(^89^10E)(^8D=4)(^8C=0)(^B8^18E)(^8A^10E)
+    (^B9=80)]
+  [17(^84^10F)(^C3=23)(^87^111)(^8E=0)(^89^112)(^8D=0)(^83^113)(^8C=0)
+    (^B8=0)(^8A^112)(^B9=15)]
+  [18(^C3=24)(^87=)(^8E=0)(^89^118)(^8D=0)(^8C=0)(^B8=0)(^8A^119)(^B9=16)]
+  [19(^C3=25)(^87=)(^8E=0)(^89^11A)(^8D=0)(^8C=0)(^B8=0)(^8A^11B)(^B9=17)]
+  [1A(^C3=26)(^87=)(^A8^12A)(^8E=0)(^89^12B)(^8D=2)(^8C=0)(^B8^1EB)
+    (^8A^12B)(^B9=36)]
+  [1B(^C3=27)(^87=)(^8E=0)(^89^12D)(^8D=1)(^8C=0)(^B8^12E)(^8A^12D)
+    (^B9=25)]
+  [1C(^C3=28)(^87^130)(^8E=0)(^89^131)(^8D=0)(^8C=0)(^B8=0)(^8A^131)
+    (^B9=1a)]
+  [1D(^C3=29)(^87=)(^8E=0)(^89^134)(^8D=0)(^8C=0)(^B8=0)(^8A^135)(^B9=1b)]
+  [1E(^C3=30)(^87=)(^8E=0)(^89^138)(^8D=0)(^8C=0)(^B8=0)(^8A^138)(^B9=1c)]
+  [1F(^C3=31)(^87^141)(^8E=0)(^89^13B)(^8D=1)(^8C=0)(^B8^13D)(^8A^13B)
+    (^B9=41)(^84^13E)(^83=MM)]
+  [20(^84^81)(^C3=32)(^87^143)(^8E=0)(^89^144)(^8D=0)(^83^145)(^8C=0)
+    (^B8=0)(^8A^146)(^B9=1e)]
+  [21(^84^81)(^C3=33)(^87^143)(^8E=0)(^89^84)(^8D=1)(^83^145)(^8C=0)
+    (^B8^14A)(^8A^86)(^B9=31)]
+  [22(^C3=34)(^87=)(^8E=0)(^89^14C)(^8D=0)(^8C=0)(^B8=0)(^8A^14C)(^B9=20)]
+  [23(^C3=35)(^87=)(^8E=0)(^89^14E)(^8D=0)(^8C=0)(^B8=0)(^8A^14E)(^B9=21)]
+  [24(^84^14F)(^C3=36)(^87^151)(^8E=0)(^89^152)(^8D=2)(^83^153)(^8C=0)
+    (^B8^18A)(^8A^152)(^B9=52)]
+  [25(^C3=37)(^87=)(^8E=0)(^89^155)(^8D=0)(^8C=0)(^B8=0)(^8A^155)(^B9=23)]
+  [26(^84^156)(^C3=38)(^87^158)(^8E=0)(^89^159)(^8D=0)(^83^15A)(^8C=0)
+    (^B8=0)(^8A^159)(^B9=24)]
+  [27(^C3=39)(^87=)(^8E=0)(^89^15C)(^8D=0)(^8C=0)(^B8=0)(^8A^15C)(^B9=25)]
+  [28(^84^15D)(^C3=40)(^87^15F)(^8E=0)(^89^160)(^8D=0)(^83^161)(^8C=0)
+    (^B8=0)(^8A^162)(^B9=26)]
+  [29(^C3=41)(^87=)(^8E=0)(^89^163)(^8D=0)(^8C=0)(^B8=0)(^8A^163)(^B9=27)]
+  [2A(^C3=42)(^87=)(^8E=0)(^89^165)(^8D=3)(^8C=0)(^B8^183)(^8A^165)
+    (^B9=100)]
+  [2B(^C3=43)(^87=)(^8E=0)(^89^168)(^8D=0)(^8C=0)(^B8=0)(^8A^168)(^B9=29)]
+  [2C(^C3=44)(^87=)(^8E=0)(^89^16A)(^8D=0)(^8C=0)(^B8=0)(^8A^16A)(^B9=2a)]
+  [2D(^C3=45)(^87=)(^8E=0)(^89^16D)(^8D=0)(^8C=0)(^B8=0)(^8A^16D)(^B9=2b)]
+  [2E(^C3=46)(^87=)(^8E=0)(^89^170)(^8D=0)(^8C=0)(^B8=0)(^8A^170)(^B9=2c)]
+  [2F(^C3=47)(^87=)(^8E=0)(^89^173)(^8D=0)(^8C=0)(^B8=0)(^8A^173)(^B9=2d)]
+  [30(^C3=48)(^87=)(^8E=0)(^89^177)(^8D=0)(^8C=0)(^B8=0)(^8A^177)(^B9=2e)]
+  [31(^C3=49)(^87=)(^8E=0)(^89^17A)(^8D=0)(^8C=0)(^B8=0)(^8A^17A)(^B9=2f)]
+  [32(^C3=50)(^87=)(^8E=0)(^89^17E)(^8D=0)(^8C=0)(^B8=0)(^8A^17E)(^B9=30)]
+  [33(^84^184)(^C3=51)(^87^186)(^8E=0)(^89^187)(^8D=0)(^83^188)(^8C=0)
+    (^B8=0)(^8A^189)(^B9=31)]
+  [34(^C3=52)(^87^1C4)(^8E=0)(^89^18F)(^8D=20)(^8C=0)(^B8^21B)(^8A^18F)
+    (^B9^21C)(^84^1C2)(^83^81)]
+  [35(^C3=53)(^87=)(^8E=0)(^89^192)(^8D=0)(^8C=0)(^B8=0)(^8A^192)(^B9=33)]
+  [36(^84^194)(^C3=54)(^87^196)(^8E=0)(^89^197)(^8D=8)(^83^198)(^8C=0)
+    (^B8^1E5)(^8A^197)(^B9^1E6)]
+  [37(^C3=55)(^87=)(^8E=0)(^89^1A1)(^8D=0)(^8C=0)(^B8=0)(^8A^1A1)(^B9=35)]
+  [38(^C3=56)(^87=)(^8E=0)(^89^1A5)(^8D=0)(^8C=0)(^B8=0)(^8A^1A5)(^B9=36)]
+  [39(^84^1B0)(^C3=57)(^87^1B2)(^8E=0)(^89^1B3)(^8D=0)(^83^1B4)(^8C=0)
+    (^B8=0)(^8A^1B3)(^B9=37)]
+  [3A(^C3=58)(^87^1BC)(^8E=0)(^89^1B6)(^8D=3)(^8C=0)(^B8^1E9)(^8A^1B6)
+    (^B9=308)(^84^1B0)(^83^1BB)]
+  [3B(^C3=59)(^87=)(^8E=0)(^89^1B8)(^8D=0)(^8C=0)(^B8=0)(^8A^1B8)(^B9=39)]
+  [3C(^84^1D6)(^C3=60)(^87^1D8)(^8E=0)(^89^1D9)(^8D=0)(^83^1DA)(^8C=0)
+    (^B8=0)(^8A^1D9)(^B9=3a)]
+  [3D(^C3=61)(^87=)(^8E=0)(^89^1E1)(^8D=0)(^8C=0)(^B8=0)(^8A^1E1)(^B9=3b)]
+  [3E(^C3=62)(^87^1F7)(^8E=0)(^89^1ED)(^8D=1)(^8C=0)(^B8^1F8)(^8A^1ED)
+    (^B9=96)(^84^1F4)(^83^1F6)]
+  [3F(^C3=63)(^87=)(^8E=0)(^89^1F0)(^8D=0)(^8C=0)(^B8=0)(^8A^1F1)(^B9=3d)]
+  [40(^C3=64)(^87=)(^8E=0)(^89^1FA)(^8D=0)(^8C=0)(^B8=0)(^8A^1FB)(^B9=3e)]
+  [41(^C3=65)(^87^207)(^8E=0)(^89^200)(^8D=5)(^8C=0)(^B8^210)(^8A^200)
+    (^B9^211)(^84^1C2)(^83^206)]
+  [42(^C3=66)(^87=)(^8E=0)(^89^203)(^8D=2)(^8C=0)(^B8^20E)(^8A^203)
+    (^B9=100)]
+  [43(^C3=67)(^87=)(^8E=0)(^89^20B)(^8D=0)(^8C=0)(^B8=0)(^8A^20B)(^B9=41)]
+  [44(^C3=68)(^87=)(^8E=0)(^89^213)(^8D=0)(^8C=0)(^B8=0)(^8A^213)(^B9=42)]
+  [45(^C3=69)(^87=)(^8E=0)(^89^215)(^8D=1)(^8C=0)(^B8^22E)(^8A^215)
+    (^B9=67)]
+  [46(^C3=70)(^87=)(^8E=0)(^89^217)(^8D=1)(^8C=0)(^B8^226)(^8A^217)
+    (^B9=68)]
+  [47(^84^15D)(^C3=71)(^87^15F)(^8E=0)(^89^219)(^8D=0)(^83^161)(^8C=0)
+    (^B8=0)(^8A^21A)(^B9=45)]
+  [48(^C3=72)(^87=)(^8E=0)(^89^21E)(^8D=0)(^8C=0)(^B8=0)(^8A^21E)(^B9=46)]
+  [49(^84^21F)(^C3=73)(^87^221)(^8E=0)(^89^222)(^8D=1)(^83^223)(^8C=0)
+    (^B8^225)(^8A^224)(^B9=71)]
+  [4A(^C3=74)(^87=)(^8E=0)(^89^228)(^8D=0)(^8C=0)(^B8=0)(^8A^228)(^B9=48)]
+  [4B(^84^229)(^C3=75)(^87^22B)(^8E=0)(^89^22C)(^8D=0)(^83^22D)(^8C=0)
+    (^B8=0)(^8A^22C)(^B9=49)]}
+
+<(85=Uhde,)(83=Uhde, Anja)(9A=4cb41e48)(AA=G$C3$BCnter)(A4=Tschammer)
+  (A3=G$C3$BCnter Tschammer)(A0=GuenterTschammer@bwb.org)(A1
+    =guentertschammer@bwb.org)(D5=4ce66530)>
+{2:^80 {(k^C2:c)(s=9u)} 
+  [2(^83^85)(^84^81)(^87^83)(^89^84)(^8A^86)(^B8^9A)]
+  [C(^83^AA)(^84^A4)(^87^A3)(^89^A0)(^8A^A1)(^B8^D5)]}
+
+@$${2A{@
+<(232=Martin Preuss)(230=103)(22F=Preuss)(231=Martin)>
+[-45:^80(^C3=69)(^87^232)(^8E=0)(^89^215)(^8D=1)(^8C=0)(^B8^22E)(^8A^215)
+    (^B9=103)(^84^22F)(^83^231)]
+@$$}2A}@
+
+@$${2B{@
+<(233=1318596489)>[-4A:^80(^C3=74)(^87=)(^8E=0)(^89^228)(^8D=1)(^8C=0)
+    (^B8^233)(^8A^228)(^B9=72)]
+@$$}2B}@

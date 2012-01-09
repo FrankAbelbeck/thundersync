@@ -1,0 +1,123 @@
+// <!-- <mdb:mork:z v="1.4"/> -->
+< <(a=c)> // (f=iso-8859-1)
+  (B8=LastModifiedDate)(B9=RecordKey)(BA=AddrCharSet)(BB=LastRecordKey)
+  (BC=ns:addrbk:db:table:kind:pab)(BD=ListName)(BE=ListNickName)
+  (BF=ListDescription)(C0=ListTotalAddresses)(C1=LowercaseListName)
+  (C2=ns:addrbk:db:table:kind:deleted)(C3=PhotoURI)(C4=PhotoType)
+  (C5=DbRowID)(C6=PhotoName)(C7=UID)(80=ns:addrbk:db:row:scope:card:all)
+  (81=ns:addrbk:db:row:scope:list:all)
+  (82=ns:addrbk:db:row:scope:data:all)(83=FirstName)(84=LastName)
+  (85=PhoneticFirstName)(86=PhoneticLastName)(87=DisplayName)
+  (88=NickName)(89=PrimaryEmail)(8A=LowercasePrimaryEmail)
+  (8B=SecondEmail)(8C=PreferMailFormat)(8D=PopularityIndex)
+  (8E=AllowRemoteContent)(8F=WorkPhone)(90=HomePhone)(91=FaxNumber)
+  (92=PagerNumber)(93=CellularNumber)(94=WorkPhoneType)(95=HomePhoneType)
+  (96=FaxNumberType)(97=PagerNumberType)(98=CellularNumberType)
+  (99=HomeAddress)(9A=HomeAddress2)(9B=HomeCity)(9C=HomeState)
+  (9D=HomeZipCode)(9E=HomeCountry)(9F=WorkAddress)(A0=WorkAddress2)
+  (A1=WorkCity)(A2=WorkState)(A3=WorkZipCode)(A4=WorkCountry)
+  (A5=JobTitle)(A6=Department)(A7=Company)(A8=_AimScreenName)
+  (A9=AnniversaryYear)(AA=AnniversaryMonth)(AB=AnniversaryDay)
+  (AC=SpouseName)(AD=FamilyName)(AE=WebPage1)(AF=WebPage2)(B0=BirthYear)
+  (B1=BirthMonth)(B2=BirthDay)(B3=Custom1)(B4=Custom2)(B5=Custom3)
+  (B6=Custom4)(B7=Notes)>
+
+<(10F=9)(81=)(112=1305612900)(8B=http://www.bwb.org)(AC=Z4.5)(F9
+    =Breuer, Dietmar)(83=Breuer)(8D=Ferdinand-Sauerbruch-Stra$C3$9Fe 1)
+  (84=+492614003626)(8E=dietmar1breuer@bwb.org)(8F=Koblenz)(E2
+    =file:///home/frank/dokumente/adressbuecher/photos/breuer.jpg)(80=0)
+  (90=+492614003896)(91=Deutschland)(E0=file)(88=Dietmar)(92
+    =Rheinland-Pfalz)(93=56073)(89=1)(94=TORR)(95
+    =Bundesamt f$C3$BCr Wehrtechnik und Beschaffung)(106
+    =36940655381530574.jpg)(113=b2cdd437-b072-470a-a8ce-1b086a7c17b0)
+  (F7=Hutmacher, Lydia)(97=Hutmacher)(98=+492614003623)(99
+    =lydiahutmacher@bwb.org)(86
+    =chrome://messenger/skin/addressbook/icons/contact-generic.png)
+  (87=generic)(9A=Lydia)(9B=2)(114=b707fc86-ca82-4bfe-a974-5a8b8070ec1b)
+  (FD=Oster, Susanne)(9D=Oster)(9E=+492614003614)(9F=susanneoster@bwb.org)
+  (A0=Susanne)(A1=3)(A2=RHS)(A3=Bundesamt f$C3$BCr Whertechnik und Beschaffung)
+  (115=79b4a3ec-5adc-4ecd-985b-f0f9fa3efb96)(F3=Wagner, J$C3$BCrgen)
+  (A5=Wagner)(A6=Ferdinand-Suaerbruch-Stra$C3$9Fe 1)(A7=+492614003599)
+  (A8=juergen1wagner@bwb.org)(A9=J$C3$BCrgen)(AA=4)(116
+    =33558aff-52df-45cf-85b0-37e5593c40a0)(D8=1976)(B0=AF 113)(F6
+    =Fiedler, Christian)(B2=Fiedler)(B9=Niedersachsen)(B3=+494421492120)
+  (B4=christian3fiedler@bwb.org)(B5=Wilhelmshaven)(E3
+    =file:///home/frank/dokumente/adressbuecher/photos/fiedler.jpg)
+  (D9=R$C3$BCstringer Stra$C3$9Fe 67)(B6=+494421493578)(DE=01)(DB=26452)
+  (DC=Sande)(B7=+491717240422)(B8=Christian)(DD=29)(BA=26379)(BB
+    =Postfach 2752)(BC=5)(BD=Marinearsenal Wilhelmshaven)(109
+    =8673345948960118.jpg)(117=bb7a0c3d-49b0-4783-831f-9c5e77d06f5b)
+  (BE=AF 913)(FE=Boldt, Sandra)(C0=Boldt)(C6=+494421492913)(C2=Sandra)
+  (C3=6)(C4=TRAR)(118=ae7e659c-3da4-420d-a3a6-cce67dc04577)(C7=1951)
+  (C8=Tschammer)(CB=7)(FC=Tschammer, G$C3$BCnter)(D5=+492614006067)
+  (CF=guentertschammer@bwb.org)(CE=Werntgenstra$C3$9Fe 6)(D0=56075)
+  (D1=G$C3$BCnter)(D2=12)(D3=U3.4)(D4=07)(D7=+4917646500811)(119
+    =03a84757-4dbd-412e-8555-93917817d9af)(FA=Oberd$C3$B6rfer, Alois)
+  (EA=Oberd$C3$B6rfer)(EB=AloisOberdoerfer@bwb.org)(EC=+491743928691)
+  (ED=Alois)(EE=8)(EF=aloisoberdoerfer@bwb.org)(11A
+    =64d56570-8dbb-4e28-8d3d-846dc0ab8723)(10B=Kosubek, Peter)(10C=Kosubek)
+  (10D=file:///home/frank/dokumente/adressbuecher/photos/kosubek.jpg)
+  (10E=Peter)(110=LTRDir)(111=8766115735921035.jpg)(11B
+    =bfad8dd3-dd36-4c56-9ba2-b3b26f6ec2af)>
+{1:^80 {(k^BC:c)(s=9)} 
+  [1:^82(^BB=9)]
+  [1(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^AC)(^87^F9)(^B3=)
+    (^A8=)(^84^83)(^9F^8D)(^9E=)(^9C=)(^90=)(^8F^84)(^89^8E)(^85=)(^A1^8F)
+    (^C3^E2)(^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91^90)(^B1=)(^A4^91)(^9D=)
+    (^9B=)(^92=)(^C4^E0)(^93=)(^8C=0)(^83^88)(^A2^92)(^B2=)(^9A=)(^B4=)
+    (^A3^93)(^86=)(^A0=)(^C5=1)(^A5^94)(^A7^95)(^AF=)(^8A^8E)(^B9=1)
+    (^C6^106)(^C7^113)]
+  [2(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^AC)(^87^F7)(^B3=)
+    (^A8=)(^84^97)(^9F^8D)(^9E=)(^9C=)(^90=)(^8F^98)(^89^99)(^85=)(^A1^8F)
+    (^C3^86)(^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4^91)(^9D=)
+    (^9B=)(^92=)(^C4^87)(^93=)(^8C=0)(^83^9A)(^A2^92)(^B2=)(^9A=)(^B4=)
+    (^A3^93)(^86=)(^A0=)(^C5=2)(^A5=)(^A7^95)(^AF=)(^8A^99)(^B9=2)(^C7^114)]
+  [3(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^AC)(^87^FD)(^B3=)
+    (^A8=)(^84^9D)(^9F^8D)(^9E=)(^9C=)(^90=)(^8F^9E)(^89^9F)(^85=)(^A1^8F)
+    (^C3^86)(^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4^91)(^9D=)
+    (^9B=)(^92=)(^C4^87)(^93=)(^8C=0)(^83^A0)(^A2^92)(^B2=)(^9A=)(^B4=)
+    (^A3^93)(^86=)(^A0=)(^C5=3)(^A5^A2)(^A7^A3)(^AF=)(^8A^9F)(^B9=3)
+    (^C7^115)]
+  [4(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^AC)(^87^F3)(^B3=)
+    (^A8=)(^84^A5)(^9F^A6)(^9E=)(^9C=)(^90=)(^8F^A7)(^89^A8)(^85=)(^A1^8F)
+    (^C3^86)(^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4^91)(^9D=)
+    (^9B=)(^92=)(^C4^87)(^93=)(^8C=0)(^83^A9)(^A2^92)(^B2=)(^9A=)(^B4=)
+    (^A3^93)(^86=)(^A0=)(^C5=4)(^A5^A2)(^A7^95)(^AF=)(^8A^A8)(^B9=4)
+    (^C7^116)]
+  [5(^B0^D8)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^B0)(^87^F6)(^B3=)
+    (^A8=)(^84^B2)(^9F=)(^9E^91)(^9C^B9)(^90=)(^8F^B3)(^89^B4)(^85=)
+    (^A1^B5)(^C3^E3)(^99^D9)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91^B6)(^B1=01)
+    (^A4^91)(^9D^DB)(^9B^DC)(^92=)(^C4^E0)(^93^B7)(^8C=0)(^83^B8)(^A2^B9)
+    (^B2=29)(^9A=)(^B4=)(^A3^BA)(^86=)(^A0^BB)(^C5=5)(^A5^94)(^A7^BD)
+    (^AF=)(^8A^B4)(^B9=5)(^C6^109)(^C7^117)]
+  [6(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE^8B)(^A6^BE)(^87^FE)(^B3=)
+    (^A8=)(^84^C0)(^9F=)(^9E=)(^9C=)(^90=)(^8F^C6)(^89=)(^85=)(^A1^B5)
+    (^C3^86)(^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4^91)(^9D=)
+    (^9B=)(^92=)(^C4^87)(^93=)(^8C=0)(^83^C2)(^A2^B9)(^B2=)(^9A=)(^B4=)
+    (^A3^BA)(^86=)(^A0^BB)(^C5=6)(^A5^C4)(^A7^BD)(^AF=)(^8A=)(^B9=6)
+    (^C7^118)]
+  [7(^B0^C7)(^84^C8)(^B8^112)(^B9=7)(^87^FC)(^A3^93)(^8D=0)(^9F^8D)
+    (^C5=7)(^8F^D5)(^89^CF)(^99^CE)(^8A^CF)(^A1^8F)(^8E=0)(^9D^D0)(^C4^87)
+    (^9B^8F)(^8C=0)(^83^D1)(^C3^86)(^B2=12)(^A6^D3)(^A5^C4)(^A7^95)
+    (^B1=07)(^B6=)(^B4=)(^AE^8B)(^88=)(^85=)(^B3=)(^A8=)(^9A=)(^A0=)
+    (^9C^92)(^B5=)(^8B=)(^91=)(^92=)(^93^D7)(^A2^92)(^90=)(^9E^91)(^86=)
+    (^B7=)(^A4^91)(^AF=)(^C7^119)]
+  [8(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE=)(^A6=)(^87^FA)(^B3=)(^A8=)
+    (^84^EA)(^9F=)(^9E=)(^9C=)(^90=)(^8F=)(^89^EB)(^85=)(^A1=)(^C3^86)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^87)(^93^EC)(^8C=0)(^83^ED)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=8)(^A5=)(^A7=)(^AF=)(^8A^EF)(^B9=8)(^C7^11A)]
+  [9(^B0=)(^B7=)(^B6=)(^B8^112)(^88=)(^AE=)(^A6=)(^87^10B)(^B3=)(^A8=)
+    (^84^10C)(^9F=)(^9E=)(^9C=)(^90=)(^8F=)(^89=)(^85=)(^A1=)(^C3^10D)
+    (^99=)(^8E=0)(^8B=)(^8D=0)(^B5=)(^91=)(^B1=)(^A4=)(^9D=)(^9B=)(^92=)
+    (^C4^E0)(^93=)(^8C=0)(^83^10E)(^A2=)(^B2=)(^9A=)(^B4=)(^A3=)(^86=)
+    (^A0=)(^C5=9)(^A5^110)(^A7=)(^AF=)(^C6^111)(^8A=)(^B9=9)(^C7^11B)]}
+
+@$${1{@
+<(11C=1309179071)>[-7:^80(^B0^C7)(^84^C8)(^B8^11C)(^B9=7)(^87^FC)(^A3^93)
+    (^8D=1)(^9F^8D)(^C5=7)(^8F^D5)(^89^CF)(^99^CE)(^8A^CF)(^A1^8F)(^8E=0)
+    (^9D^D0)(^C4^87)(^9B^8F)(^8C=0)(^83^D1)(^C3^86)(^B2=12)(^A6^D3)
+    (^A5^C4)(^A7^95)(^B1=07)(^B6=)(^B4=)(^AE^8B)(^88=)(^85=)(^B3=)(^A8=)
+    (^9A=)(^A0=)(^9C^92)(^B5=)(^8B=)(^91=)(^92=)(^93^D7)(^A2^92)(^90=)
+    (^9E^91)(^86=)(^B7=)(^A4^91)(^AF=)(^C7^119)]
+@$$}1}@
