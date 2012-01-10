@@ -260,57 +260,21 @@ var ThunderSyncVCardLib = {
 	},
 	
 	/**
-	 * Create an entry of a vCard contact:
-	 *    names[0];names[1];...CHARSET=charset;ENCODING=encoding:values[0];values[1];...;values[n]<CR><LF>
-	 * 
-	 * Parameter encoding may be equal to QUOTED-PRINTABLE or BASE64 and
-	 * will be ignored if null or empty.
-	 * 
-	 * Parameter charset may be equal to any valid charset and will be
-	 * ignored if null or empty.
-	 * 
-	 * @param names Array of names, i.e. BEGIN, END, VERSION, TYPE=INTERNET...
-	 * @param values Array of values, i.e. the data itself (name, phone number...)
-	 * @param charset string or null
-	 * @param encoding string or null
-	 * @param doFolding boolean signaling whether line folding should be applied
-	 * @return string a vCard contact entry line of text
+	 * Insert soft line break "\r\n " at word boundaries to limit line length.
+	 *
+	 * @param textstr original string
+	 * @return folded string
 	 */
-	vCardEntry: function (names,values,charset,encoding,doFolding) {
-		vcfline = names.join(";");
-		if ((charset != null) && (charset.length > 0)) {
-			vcfline += ";CHARSET=" + charset;
+	foldText: function (textstr) {
+		foldedstr = "";
+		while (textstr.length > 76) {
+			var pos = 75;
+			while (("\f\n\t\v ".indexOf(textstr.charAt(pos)) == -1) && (pos >= 0)) { pos--; }
+			foldedstr += textstr.substr(0,pos) + this.CRLF;
+			textstr = textstr.substr(pos)
 		}
-		switch (encoding) {
-			case "QPE":
-			case "QUOTED-PRINTABLE":
-				vcfline += ";ENCODING=QUOTED-PRINTABLE:";
-				for (i=0;i<values.length;i++) {
-					values[i] = this.toQuotedPrintable(values[i]);
-				}
-				vcfline += values.join(";") + this.CRLF;
-				if (doFolding) {
-				} else {
-				}
-				break;
-			case "B64":
-			case "BASE64":
-				vcfline += ";ENCODING=BASE64:"
-				for (i=0;i<values.length;i++) {
-					values[i] = window.btoa(values[i]);
-				}
-				vcfline += values.join(";") + this.CRLF;
-				if (doFolding) {
-				} else {
-				}
-				break;
-			default:
-				vcfline += ":" + values.join(";") + this.CRLF;
-				if (doFolding) {
-				} else {
-				}
-		}
-		return vcfstr;
+		foldedstr += textstr;		
+		return foldedstr;
 	},
 	
 	/**
@@ -322,21 +286,27 @@ var ThunderSyncVCardLib = {
 	 * encountered, charset UTF-8 is set.
 	 *
 	 * @param card nsIAbCard
-	 * @param encoding
+	 * @param charset
 	 * @param hideUID
 	 * @param useQPE
 	 * @param doFolding
 	 * @return ASCII string with vCard content
 	 */
-	createVCardString: function (card,encoding,hideUID,useQPE,doFolding) {
+	createVCardString: function (card,charset,hideUID,useQPE,doFolding) {
 		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
 			.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-		converter.charset = encoding;
-		
+		converter.charset = charset;
 		var value = "";
 		var tmpstr = "";
+		
+		//
+		// start a new vCard with the BEGIN property
+		//
 		var vcfstr = "BEGIN:VCARD" + this.CRLF + "VERSION:2.1" + this.CRLF;
 		
+		//
+		// revision ("last modified date")
+		//
  		try {
 			var rev = card.getProperty("LastModifiedDate",0);
 			if (rev > 0) {
@@ -355,18 +325,25 @@ var ThunderSyncVCardLib = {
  		}
  		catch (exception) {}
 		
-		var lastname = card.getProperty("LastName","");
-		var firstname = card.getProperty("FirstName","");
-		vcfstr += "N;CHARSET="+encoding+":"
-			+ lastname + ";"
-			+ firstname + ";;;"
-			+ this.CRLF;
+		//
+		// name: LastName,FirstName
+		// (compound property value, semicolons have to be escaped)
+		//
+		var lastname  = converter.ConvertFromUnicode(card.getProperty("LastName","")).replace(/;/g,"\\;");
+		var firstname = converter.ConvertFromUnicode(card.getProperty("FirstName","")).replace(/;/g,"\\;");
+		vcfstr += "N;CHARSET="+charset+":"+lastname+";"+firstname+";;;"+this.CRLF;
 		
+		//
+		// display name
+		//
 		value = card.getProperty("DisplayName","");
 		if (value != "") {
-			vcfstr += "FN;CHARSET="+encoding+":" + value + this.CRLF;
+			vcfstr += "FN;CHARSET="+charset+":" + value + this.CRLF;
 		}
 		
+		//
+		// UID
+		//
 		try {
 			value = card.getProperty("UID","");
 			if (value != "") {
@@ -378,72 +355,81 @@ var ThunderSyncVCardLib = {
 			}
 		} catch (exception) {}
 		
+		//
+		// e-mail
+		//
 		value = card.getProperty("PrimaryEmail","");
-		if (value != "") {
-			vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF;
-		}
-		
+		if (value != "") { vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF; }
 		value = card.getProperty("SecondEmail","");
-		if (value != "") {
-			vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF;
-		}
+		if (value != "") { vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF; }
 		
-		value = card.getProperty("HomeAddress2","");
-		value += ";" + card.getProperty("HomeAddress","");
-		value += ";" + card.getProperty("HomeCity","");
-		value += ";" + card.getProperty("HomeState","");
-		value += ";" + card.getProperty("HomeZipCode","");
-		value += ";" + card.getProperty("HomeCountry","");
+		//
+		// home address
+		//
+		value = converter.ConvertFromUnicode(card.getProperty("HomeAddress2","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("HomeAddress","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("HomeCity","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("HomeState","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("HomeZipCode","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("HomeCountry","")).replace(/;/g,"\\;");
 		if (value.length > 5) {
-			vcfstr += "ADR;TYPE=HOME;CHARSET="+ encoding +":" + ";" + value + this.CRLF;
+			vcfstr += "ADR;TYPE=HOME;CHARSET="+ charset +":" + ";" + value + this.CRLF;
 		}
 		
-		value = card.getProperty("WorkAddress2","");
-		value += ";" + card.getProperty("WorkAddress","");
-		value += ";" + card.getProperty("WorkCity","");
-		value += ";" + card.getProperty("WorkState","");
-		value += ";" + card.getProperty("WorkZipCode","");
-		value += ";" + card.getProperty("WorkCountry","");
+		//
+		// work address
+		//
+		value = converter.ConvertFromUnicode(card.getProperty("WorkAddress2","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("WorkAddress","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("WorkCity","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("WorkState","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("WorkZipCode","")).replace(/;/g,"\\;");
+		value += ";" + converter.ConvertFromUnicode(card.getProperty("WorkCountry","")).replace(/;/g,"\\;");
 		if (value.length > 5) {
-			vcfstr += "ADR;TYPE=WORK;CHARSET="+ encoding +":" + ";" + value + this.CRLF;
+			vcfstr += "ADR;TYPE=WORK;CHARSET="+ charset +":" + ";" + value + this.CRLF;
 		}
 		
+		//
+		// phone number, home/work/fax/cell
+		//
 		value = card.getProperty("HomePhone","");
-		if (value != "") {
-			vcfstr += "TEL;HOME;VOICE:" + value + this.CRLF;
-		}
-		
+		if (value != "") { vcfstr += "TEL;HOME;VOICE:" + value + this.CRLF; }
 		value = card.getProperty("WorkPhone","");
-		if (value != "") {
-			vcfstr += "TEL;WORK;VOICE:" + value + this.CRLF;
-		}
-		
+		if (value != "") { vcfstr += "TEL;WORK;VOICE:" + value + this.CRLF; }
 		value = card.getProperty("FaxNumber","");
 		if (value != "") { vcfstr += "TEL;FAX:" + value + this.CRLF; }
-		
 		value = card.getProperty("CellularNumber","");
 		if (value != "") { vcfstr += "TEL;CELL:" + value + this.CRLF; }
 		
-		value = card.getProperty("JobTitle","");
-		if (value != "") {
-			vcfstr += "TITLE;CHARSET="+encoding+":" + value + this.CRLF;
-		}
+		//
+		// job title
+		//
+		value = converter.ConvertFromUnicode(card.getProperty("JobTitle",""));
+		if (value != "") { vcfstr += "TITLE;CHARSET="+charset+":" + value + this.CRLF; }
 		
-		var department = card.getProperty("Department","");
-		var company = card.getProperty("Company","");
+		//
+		// department
+		//
+		var department = converter.ConvertFromUnicode(card.getProperty("Department","")).replace(/;/g,"\\;");
+		var company = converter.ConvertFromUnicode(card.getProperty("Company","")).replace(/;/g,"\\;");
 		if (department != "" || company != "") {
-			vcfstr += "ORG;CHARSET="+encoding+":"
+			vcfstr += "ORG;CHARSET="+charset+":"
 				+ company + ";"
 				+ department
 				+ this.CRLF;
 		}
-
+		
+		//
+		// webpages
+		//
 		value = card.getProperty("WebPage1","");
 		if (value != "") { vcfstr += "URL;TYPE=WORK:" + value + this.CRLF; }
-		
 		value = card.getProperty("WebPage2","");
 		if (value != "") { vcfstr += "URL;TYPE=HOME:" + value + this.CRLF; }
 		
+		//
+		// birthday
+		//
 		var year = card.getProperty("BirthYear","");
 		var month = card.getProperty("BirthMonth","");
 		var day = card.getProperty("BirthDay","");
@@ -457,83 +443,109 @@ var ThunderSyncVCardLib = {
 		else {
 			// incomplete date: store as X-MOZILLA properties
 			if (year != "") {
-				vcfstr += "X-MOZILLA-PROPERTY:BirthYear;"
-					+ year + this.CRLF;
+				vcfstr += "X-MOZILLA-PROPERTY:BirthYear;" + year + this.CRLF;
 			}
 			if (month != "") {
-				vcfstr += "X-MOZILLA-PROPERTY:BirthMonth;"
-					+ month + this.CRLF;
+				vcfstr += "X-MOZILLA-PROPERTY:BirthMonth;" + month + this.CRLF;
 			}
 			if (month != "") {
-				vcfstr += "X-MOZILLA-PROPERTY:BirthDay;"
-					+ day + this.CRLF;
+				vcfstr += "X-MOZILLA-PROPERTY:BirthDay;" + day + this.CRLF;
 			}
 		}
 		
+		//
+		// notes; single value of a contact which might hold a line
+		// break and might create a rather long line if not folded
+		//
 		value = converter.ConvertFromUnicode(card.getProperty("Notes",""));
 		if (value != "") {
-// 			tmpstr = "NOTE;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
-// 			vcfstr += tmpstr + this.foldQuotedPrintable(
-// 					this.toQuotedPrintable(value),
-// 					tmpstr.length
-// 				) + this.CRLF;
-			if (useQPE) {
-				if (doFolding) {
-					vcfstr += "NOTE;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
-						+ this.foldQuotedPrintable(
-							this.toQuotedPrintable(value),
-							tmpstr.length
-						) + this.CRLF;
+			if (value.indexOf("\n") != -1) {
+				// at least one line break is present: encoding needed
+				if (useQPE) {
+					// the user allows quoted printable: use it
+					tmpstr = "NOTE;CHARSET=" + charset + ";ENCODING=QUOTED-PRINTABLE:";
+					if (doFolding) {
+						// ...and folding is allowed, too!
+						vcfstr += tmpstr + this.foldQuotedPrintable(
+								this.toQuotedPrintable(value),
+								tmpstr.length
+							) + this.CRLF;
+					} else {
+						// ...but don't fold the line
+						vcfstr += tmpstr
+							+ this.toQuotedPrintable(value)
+							+ this.CRLF;
+					}
 				} else {
-					vcfstr += "NOTE;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
-						+ this.toQuotedPrintable(value) + this.CRLF;
+					// fall back to base64 encoding
+					tmpstr = "NOTE;CHARSET=" + charset + ";ENCODING=BASE64:"
+					if (doFolding) {
+						// ...and folding is allowed, too!
+						vcfstr += tmpstr + this.foldBase64(
+								window.btoa(value),
+								tmpstr.length
+							) + this.CRLF;
+					} else {
+						// ...but don't fold the line
+						vcfstr += tmpstr + window.btoa(value) + this.CRLF;
+					}
 				}
 			} else {
+				// encoding not needed
 				if (doFolding) {
-					vcfstr += "NOTE;CHARSET=" + encoding + ":"
-						+ this.foldBase64(value,tmpstr.length) + this.CRLF;
+					// ...but we are allowed to fold it!
+					tmpstr = "NOTE;CHARSET=" + charset + ":" + value;
+					vcfstr += this.foldText(tmpstr) + this.CRLF;
 				} else {
-					vcfstr += "NOTE;CHARSET=" + encoding + ":" + value + this.CRLF;
+					// ...but don't fold the line
+					vcfstr += "NOTE;CHARSET=" + charset + ":" + value + this.CRLF;
 				}
 			}
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
-			value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],""));
+			value = converter.ConvertFromUnicode(card.getProperty(this.otherProperties[i],"")).replace(/;/g,"\\;");
 			if (value != "") {
-// 				tmpstr = "X-MOZILLA-PROPERTY;CHARSET="+encoding+";ENCODING=QUOTED-PRINTABLE:"
-// 				vcfstr += tmpstr + this.foldQuotedPrintable(
-// 					this.toQuotedPrintable(
-// 						this.otherProperties[i] + ";" + value
-// 					),
-// 					tmpstr.length
-// 				) + this.CRLF;
-				if (useQPE) {
-					if (doFolding) {
-						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
-							+ this.foldQuotedPrintable(
-								this.toQuotedPrintable(
-									this.otherProperties[i] + ";" + value
-								),
-								tmpstr.length
-							) + this.CRLF;
+				if (value.indexOf("\n") != -1) {
+					// at least one line break is present: encoding needed
+					if (useQPE) {
+						// the user allows quoted printable: use it
+						tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ";ENCODING=QUOTED-PRINTABLE:";
+						if (doFolding) {
+							// ...and folding is allowed, too!
+							vcfstr += tmpstr + this.foldQuotedPrintable(
+									this.toQuotedPrintable(value),
+									tmpstr.length
+								) + this.CRLF;
+						} else {
+							// ...but don't fold the line
+							vcfstr += tmpstr
+								+ this.toQuotedPrintable(value)
+								+ this.CRLF;
+						}
 					} else {
-						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ";ENCODING=QUOTED-PRINTABLE:"
-							+ this.toQuotedPrintable(
-								this.otherProperties[i] + ";" + value
-							) + this.CRLF;
+						// fall back to base64 encoding
+						tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ";ENCODING=BASE64:";
+						if (doFolding) {
+							// ...and folding is allowed, too!
+							vcfstr += tmpstr + this.foldBase64(
+									window.btoa(value),
+									tmpstr.length
+								) + this.CRLF;
+						} else {
+							// ...but don't fold the line
+							vcfstr += tmpstr + window.btoa(value) + this.CRLF;
+						}
 					}
 				} else {
+					// encoding not needed
 					if (doFolding) {
-						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ":"
-							+ this.foldBase64(
-								this.otherProperties[i] + ";" + value,
-			 					tmpstr.length
-							) + this.CRLF;
+						// ...but we are allowed to fold it!
+						tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + value;
+						vcfstr += this.foldText(tmpstr) + this.CRLF;
 					} else {
-						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + encoding + ":"
-							+ this.otherProperties[i] + ";" + value
-							+ this.CRLF;
+						// ...but don't fold the line
+						vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + value + this.CRLF;
 					}
 				}
 			}
@@ -542,9 +554,7 @@ var ThunderSyncVCardLib = {
 		switch (card.getProperty("PhotoType","")) {
 			case "web":
 				var photoURI  = card.getProperty("PhotoURI","");
-				vcfstr += "PHOTO;VALUE=URL:"
-					+ photoURI
-					+ this.CRLF;
+				vcfstr += "PHOTO;VALUE=URL:" + photoURI + this.CRLF;
 				break;
 			case "binary":
 				var photoData = card.getProperty("PhotoURI","");
@@ -553,8 +563,7 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
-						+ suffix + ":";
+					var photostr = "PHOTO;ENCODING=BASE64;TYPE=" + suffix + ":";
 					if (doFolding) {
 						vcfstr += photostr
 							+ this.foldBase64(
@@ -576,8 +585,7 @@ var ThunderSyncVCardLib = {
 						photoData.substr(0,8)
 					).toUpperCase()];
 				if (suffix != undefined) {
-					var photostr = "PHOTO;ENCODING=BASE64;TYPE="
-						+ suffix + ":";
+					var photostr = "PHOTO;ENCODING=BASE64;TYPE=" + suffix + ":";
 					if (doFolding) {
 						vcfstr += photostr
 							+ this.foldBase64(
