@@ -30,6 +30,7 @@ $Id$
 <dialog id="ThunderSyncPreferences.dialog.preferences"
 	title="&ThunderSyncPreferences.title;"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
 	buttons="accept,cancel"
 	onload="ThunderSyncPref.load();"
 	ondialogaccept="return ThunderSyncPref.accept();">
@@ -445,6 +446,9 @@ $Id$
 								id="ThunderSyncPreferences.checkbox.UID"
 								checked="false"
 								oncommand="ThunderSyncPref.optionUID();" />
+							<label width="20em">
+								<html:b>&ThunderSyncPreferences.label.warning;</html:b>
+							</label>
 							<checkbox label="&ThunderSyncPreferences.label.quotedPrintable;"
 								id="ThunderSyncPreferences.checkbox.quotedPrintable"
 								checked="true"

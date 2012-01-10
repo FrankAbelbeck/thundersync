@@ -260,6 +260,60 @@ var ThunderSyncVCardLib = {
 	},
 	
 	/**
+	 * Create an entry of a vCard contact:
+	 *    names[0];names[1];...CHARSET=charset;ENCODING=encoding:values[0];values[1];...;values[n]<CR><LF>
+	 * 
+	 * Parameter encoding may be equal to QUOTED-PRINTABLE or BASE64 and
+	 * will be ignored if null or empty.
+	 * 
+	 * Parameter charset may be equal to any valid charset and will be
+	 * ignored if null or empty.
+	 * 
+	 * @param names Array of names, i.e. BEGIN, END, VERSION, TYPE=INTERNET...
+	 * @param values Array of values, i.e. the data itself (name, phone number...)
+	 * @param charset string or null
+	 * @param encoding string or null
+	 * @param doFolding boolean signaling whether line folding should be applied
+	 * @return string a vCard contact entry line of text
+	 */
+	vCardEntry: function (names,values,charset,encoding,doFolding) {
+		vcfline = names.join(";");
+		if ((charset != null) && (charset.length > 0)) {
+			vcfline += ";CHARSET=" + charset;
+		}
+		switch (encoding) {
+			case "QPE":
+			case "QUOTED-PRINTABLE":
+				vcfline += ";ENCODING=QUOTED-PRINTABLE:";
+				for (i=0;i<values.length;i++) {
+					values[i] = this.toQuotedPrintable(values[i]);
+				}
+				vcfline += values.join(";") + this.CRLF;
+				if (doFolding) {
+				} else {
+				}
+				break;
+			case "B64":
+			case "BASE64":
+				vcfline += ";ENCODING=BASE64:"
+				for (i=0;i<values.length;i++) {
+					values[i] = window.btoa(values[i]);
+				}
+				vcfline += values.join(";") + this.CRLF;
+				if (doFolding) {
+				} else {
+				}
+				break;
+			default:
+				vcfline += ":" + values.join(";") + this.CRLF;
+				if (doFolding) {
+				} else {
+				}
+		}
+		return vcfstr;
+	},
+	
+	/**
 	 * Converts an addressbook contact ("card") to a vCard string.
 	 * Properties which cannot be mapped to vCard properties are
 	 * encoded as X-MOZILLA-PROPERTY:PropertyName;PropertyValue.

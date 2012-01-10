@@ -86,9 +86,10 @@ $Id$
 <!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Shutdown action">
 
 <!ENTITY ThunderSyncPreferences.label.advancedOptions "Options for Advanced Users">
-<!ENTITY ThunderSyncPreferences.label.UID "Additionally, encode UID as Mozilla property">
-<!ENTITY ThunderSyncPreferences.label.quotedPrintable "use quoted-printable encoding">
-<!ENTITY ThunderSyncPreferences.label.folding "fold lines containing more than 76 characters">
+<!ENTITY ThunderSyncPreferences.label.UID "Additionally encode UID as Mozilla property">
+<!ENTITY ThunderSyncPreferences.label.quotedPrintable "Use quoted-printable encoding (default value: activated)">
+<!ENTITY ThunderSyncPreferences.label.folding "Fold lines containing more than 76 characters (default value: activated)">
+<!ENTITY ThunderSyncPreferences.label.warning "Warning! The next two preferences should only be changed if third-party software cannot process quoted-printable encoding and/or line folding!">
 
 <!ENTITY ThunderSyncPreferences.autoSync.no "No synchronisation">
 <!ENTITY ThunderSyncPreferences.autoSync.export "Export from Thunderbird">

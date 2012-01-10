@@ -87,8 +87,9 @@ $Id$
 
 <!ENTITY ThunderSyncPreferences.label.advancedOptions "Einstellungen für Fortgeschrittene">
 <!ENTITY ThunderSyncPreferences.label.UID "UID zusätzlich als Mozilla-Eigenschaft kodieren">
-<!ENTITY ThunderSyncPreferences.label.quotedPrintable "Quoted-Printable-Kodierung verwenden">
-<!ENTITY ThunderSyncPreferences.label.folding "Zeilen mit mehr als 76 Zeichen falten">
+<!ENTITY ThunderSyncPreferences.label.quotedPrintable "Quoted-Printable-Kodierung verwenden (Voreinstellung: aktiviert)">
+<!ENTITY ThunderSyncPreferences.label.folding "Zeilen mit mehr als 76 Zeichen falten (Voreinstellung: aktiviert)">
+<!ENTITY ThunderSyncPreferences.label.warning "Warnung! Die nächsten beiden Einstellungen sollten nur geändert werden, wenn Software Dritter nicht mit Quoted-Printable-Kodierung oder Zeilenfaltung umgehen kann!">
 
 <!ENTITY ThunderSyncPreferences.autoSync.no "Kein Abgleich">
 <!ENTITY ThunderSyncPreferences.autoSync.export "Export aus Thunderbird">
