@@ -100,6 +100,7 @@ var ThunderSyncDialog = {
 		this.HideUIDDB   = new Object();
 		this.UseQPEDB    = new Object();
 		this.DoFoldingDB = new Object();
+		this.FilterDB    = new Object();
 	},
 	
 	/**
@@ -322,7 +323,6 @@ var ThunderSyncDialog = {
 				"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 				"treechildren"
 			);
-			
 			for (var i = 0; i < differences.length; i++) {
 				var propitem = document.createElementNS(
 					"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
@@ -389,9 +389,10 @@ var ThunderSyncDialog = {
 	 *
 	 * @param card1 card to compare (nsIAbCard)
 	 * @param card2 card to compare (nsIAbCard)
+	 * @param filters object of associative array with filtered properties (filters[name]=value)
 	 * @return array of differences [value_card1,value_card2,propertyname], compatible with addTreeItem()
 	 */
-	cardDifferences: function (card1,card2) {
+	cardDifferences: function (card1,card2,filters) {
 		// create array of property names: all properties except photo
 		var properties = ThunderSyncVCardLib.baseProperties.concat(
 			ThunderSyncVCardLib.otherProperties
@@ -404,57 +405,93 @@ var ThunderSyncDialog = {
 		var prop1 = "";
 		var prop2 = "";
 		for (var i = 0; i < properties.length; i++) {
-			prop1 = card1.getProperty(properties[i],"");
-			prop2 = card2.getProperty(properties[i],"");
-			if (prop1 == 0) { prop1 = ""; }
-			if (prop2 == 0) { prop2 = ""; }
-			if (prop1 != prop2) { result.push([prop1,prop2,properties[i]]); }
+			switch filters[properties[i]]) {
+				case "ignore":
+					continue;
+					break;
+				case "export":
+					prop1 = card1.getProperty(properties[i],"");
+					if (prop1 == 0) { prop1 = ""; }
+					result.push([prop1,"",properties[i]]);
+					break;
+				case "import":
+					prop2 = card2.getProperty(properties[i],"");
+					if (prop2 == 0) { prop2 = ""; }
+					result.push(["",prop2,properties[i]]);
+					break;
+				default:
+					prop1 = card1.getProperty(properties[i],"");
+					prop2 = card2.getProperty(properties[i],"");
+					if (prop1 == 0) { prop1 = ""; }
+					if (prop2 == 0) { prop2 = ""; }
+					if (prop1 != prop2) { result.push([prop1,prop2,properties[i]]); }
+			}
 		}
-		
-		// prepare contact photo for comparison: if it's a file, read
-		// contents and store them as string
-		var photoname1 = card1.getProperty("PhotoName","");
-		var phototype1 = card1.getProperty("PhotoType","");
-		var photouri1 = card1.getProperty("PhotoURI","");
-		switch (phototype1) {
-			case "generic":
-				photouri1 = "";
-				break;
-			case "file":
-				photouri1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
-				break;
-		}
-		
-		// prepare other contact photo for comparison: if it's a file,
-		// read contents and store them as string
-		var photoname2 = card2.getProperty("PhotoName","");
-		var phototype2 = card2.getProperty("PhotoType","");
-		var photouri2 = card2.getProperty("PhotoURI","");
-		switch (phototype2) {
-			case "generic":
-				photouri2 = "";
-				break;
-			case "file":
-				photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
-				break;
-		}
-		
-		// compare photos; push (append) to result array if differing
-		if (photouri1  != photouri2) {
+		if (filters["Photo"] != "ignore") {
+			if (filters["Photo"] != "import") {
+				// prepare contact photo for comparison: if it's a file, read
+				// contents and store them as string
+				var photoname1 = card1.getProperty("PhotoName","");
+				var phototype1 = card1.getProperty("PhotoType","");
+				var photouri1 = card1.getProperty("PhotoURI","");
+				switch (phototype1) {
+					case "generic":
+						photouri1 = "";
+						break;
+					case "file":
+						photouri1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
+						break;
+				}
+			}
+			
+			if (filters["Photo"] != "export") {
+				// prepare other contact photo for comparison: if it's a file,
+				// read contents and store them as string
+				var photoname2 = card2.getProperty("PhotoName","");
+				var phototype2 = card2.getProperty("PhotoType","");
+				var photouri2 = card2.getProperty("PhotoURI","");
+				switch (phototype2) {
+					case "generic":
+						photouri2 = "";
+						break;
+					case "file":
+						photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
+						break;
+				}
+			}
+			
+			// compare photos; push (append) to result array if differing
 			var stringsBundle = document.getElementById("string-bundle");
-			if (photouri1 != "") {
-				photouri1 = stringsBundle.getString("Photo");
-			} else {
-				photouri1 = "";
+			switch (filters["Photo"]) {
+				case "ignore":
+					// do nothing (should not happen as it is caught above)
+					break;
+				case "export":
+					// plain export: card1 ---> empty string
+					result.push([stringsBundle.getString("Photo"),"","Photo"]);
+					break;
+				case "import":
+					// plain import: empty string <--- card2
+					result.push(["",stringsBundle.getString("Photo"),"Photo"]);
+					break;
+				default:
+					// comparison of uris...
+					// perhaps results in card1 <---> card2
+					if ((photouri1  != photouri2)) {
+						if (photouri1 != "") {
+							photouri1 = stringsBundle.getString("Photo");
+						} else {
+							photouri1 = "";
+						}
+						if (photouri2 != "") {
+							photouri2 = stringsBundle.getString("Photo");
+						} else {
+							photouri2 = "";
+						}
+						result.push([photouri1,photouri2,"Photo"]);
+					}
 			}
-			if (photouri2 != "") {
-				photouri2 = stringsBundle.getString("Photo");
-			} else {
-				photouri2 = "";
-			}
-			result.push([photouri1,photouri2,"Photo"]);
 		}
-		
 		return result;
 	},
 	
@@ -462,13 +499,10 @@ var ThunderSyncDialog = {
 	 * Perform a comparison of all specified addressbooks and store results
 	 * in ThunderSync's dialog window as tree items.
 	 *
+	 * @param mode string, signaling "startUp", "shutdown" or otherwise normal operation
 	 * @param autoclose boolean variable, if true: close dialog if no differences are found.
 	 */
-	compare: function (autoclose) {
-		//
-		// todo: integrate different modes ("no","ask","import","export")
-		//
-		
+	compare: function (mode,autoclose) {
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 					.getService(Components.interfaces.nsIPromptService);
 		var stringsBundle = document.getElementById("string-bundle");
@@ -496,6 +530,25 @@ var ThunderSyncDialog = {
 			var vcfDoFoldingPrefs = Components.classes["@mozilla.org/preferences-service;1"]
 				.getService(Components.interfaces.nsIPrefService)
 				.getBranch("extensions.ThunderSync.vCard.folding.");
+			var filterPrefs = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefService)
+				.getBranch("extensions.ThunderSync.filter.");
+			switch (mode) {
+				case "startUp":
+					var modePrefs = Components.classes["@mozilla.org/preferences-service;1"]
+						.getService(Components.interfaces.nsIPrefService)
+						.getBranch("extensions.ThunderSync.startUp.");
+					break;
+				case "shutdown":
+					var modePrefs = Components.classes["@mozilla.org/preferences-service;1"]
+						.getService(Components.interfaces.nsIPrefService)
+						.getBranch("extensions.ThunderSync.shutdown.");
+					break;
+				default:
+					var modePrefs = Components.classes["@mozilla.org/preferences-service;1"]
+						.getService(Components.interfaces.nsIPrefService)
+						.getBranch("extensions.ThunderSync.syncMode.");
+			}
 		}
 		catch (exception) {
 			// error, not properly configured: inform user!
@@ -526,7 +579,7 @@ var ThunderSyncDialog = {
 			// fetch desired path of addressbook from preferences
 			// if this fails, no path was configured: skip addressbook
 			try {
-				var remoteRessource = abPrefs.getCharPref(abName);
+				var remoteResource = abPrefs.getCharPref(abName);
 			} catch (exception) {
 				continue;
 			}
@@ -578,8 +631,22 @@ var ThunderSyncDialog = {
 				this.DoFoldingDB[addressBook.URI] = true;
 			}
 			
-			// no path defined? skip this addressbook
-			if (remoteRessource == "") { continue; }
+			// read addressbook-specific filters preference
+			try {
+				filters = filterPrefs.getCharPref(abName);
+			} catch (exception) {
+				filters = "";
+			}
+			
+			// read addressbook-specific comparison mode: no, ask, export, import
+			try {
+				var syncMode = modePrefs.getCharPref(abName);
+			} catch (exception) {
+				var syncMode = "ask";
+			}
+			
+			// no path defined or no sync desired? skip this addressbook...
+			if ((remoteResource == "") || (syncMode == "no")) { continue; }
 			
 			// make sure all addressbook entries have an UID:
 			//   iterate over all entries and look for UIDs;
@@ -602,151 +669,193 @@ var ThunderSyncDialog = {
 					addressBook.modifyCard(card);
 				}
 			}
-			// read all contacts associated with given dir
-			this.read(addressBook.URI,remoteRessource);
 			
-			// if no entry in database was created: skip addressbook
-			if (!this.CardDB[addressBook.URI]) { continue; }
-			
-			// iterate over path and contacts...
-			for (var path in this.CardDB[addressBook.URI]) {
-				for (i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
-					//
-					// this.CardDB[abURI][path][i] is an nsIAbCard, compare!
-					//
-					// make sure UID property is defined, even if empty
-					// if UID is set: register modification for later use...
-					try {
-						var remoteUID = this.getProperty(addressBook.URI,path,i,"UID","");
-					} catch (exception) {
-						var remoteUID = "";
-						this.setProperty(addressBook.URI,path,i,"UID","");
-					}
-					
-					//
-					// look for addressbook contacts that might match
-					// first matching property: UID, if not empty
-					var localCard = null;
-					var value = "";
-					if (remoteUID != "") {
-						localCard = addressBook.getCardFromProperty("UID",remoteUID,false);
-					}
-					else {
-						//
-						// no UID is set, therefore remote contact is
-						// matched to all local contacts:
-						// count matching properties and calculate propability
-						// (number of matches/total number of properties)
-						//
-						// matching is democratic, i.e. the card with
-						// the greatest propability > 2/3 wins
-						//
-						var matches = 0;
-						var total = 0;
-						var propability_max = 0.665;
-						var propability = 0;
-						var cards = addressBook.childCards;
-						while (cards.hasMoreElements()) {
-							// get next item in list; skip if it's not a contact
-							var card = cards.getNext();
-							if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) == -1)) { continue; }
-							matches = 0;
-							total = 0;
-							for (k=0; k<ThunderSyncVCardLib.baseProperties.length; k++) {
-								// compare all base properties
-								try {
-									value = this.getProperty(
-											addressBook.URI,path,i,
-											ThunderSyncVCardLib.baseProperties[k],""
-									);
-								} catch (exception) {
-								}
-								
-								if (value != "") {
-									total++;
-									if (value == card.getProperty(ThunderSyncVCardLib.baseProperties[k],"")) {
-										matches++;
-									}
-								}
-							}
-							try {
-								// try to calculate propability
-								propability = matches/total;
-							} catch (exception) {
-								// total=0, set propability to zero
-								probability = 0;
-							}
-							if (propability > propability_max) {
-								// new greatest propability found...
-								propability_max = propability;
-								localCard = card;
-							}
-						}
-					}
-					//
-					// process results:
-					//   if a local contact was found: calculate differences
-					//   if no contact was found: define a "from-remote" tree item
-					//
-					if (localCard instanceof Components.interfaces.nsIAbCard) {
-						// match found! Add to tree
-						// local UID overwrites remote UID
-						remoteUID = localCard.getProperty("UID","");
-						this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
-						var differences = this.cardDifferences(localCard,this.CardDB[addressBook.URI][path][i]);
-						if (differences.length > 0) {
-							// differences found:
-							// add entry: "local name" <--> "external name"
-							this.addTreeItem(
-								addressBook.URI,
-								addressBook.dirName,
-								localCard,
-								path,
-								i,
-								differences
-							);
-						}
-					}
-					else {
-						// no match found, seems to be a new external contact
-						if (remoteUID == "") {
-							// generate UID for contact
-							remoteUID = uuidgenerator.generateUUID().toString().slice(1,37);
-							this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
-						}
-						// add entry: "" <-- "external name"
+			if (syncMode == "export") {
+				// just export all Thunderbird contacts to given resource
+				// i.e. iterate over all local contacts and
+				// populate tree with plain exports
+				var cards = addressBook.childCards;
+				while (cards.hasMoreElements()) {
+					var card = cards.getNext();
+					if (card instanceof Components.interfaces.nsIAbCard) {
+						// add entry: "local name" --> ""
 						this.addTreeItem(
 							addressBook.URI,
 							addressBook.dirName,
+							card,
 							null,
-							path,
-							i,
+							null,
 							[]
 						);
 					}
-					// register UID as checked so it's skipped
-					// when all addressbook items are processed
-					list_checked.push(remoteUID);
+				}
+				continue;
+			}
+			// now, only modes import or ask should be possible,
+			// so we need to read all external contacts
+			this.read(addressBook.URI,remoteResource);
+// 			// if no entry in database was created: skip addressbook
+// 			if (!this.CardDB[addressBook.URI]) { continue; }
+			
+			// iterate over path and contacts...
+			if (syncMode != "export") {
+				for (var path in this.CardDB[addressBook.URI]) {
+					for (var i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
+						//
+						// this.CardDB[abURI][path][i] is an nsIAbCard, compare!
+						//
+						// make sure UID property is defined, even if empty
+						// if UID is set: register modification for later use...
+						try {
+							var remoteUID = this.getProperty(addressBook.URI,path,i,"UID","");
+						} catch (exception) {
+							var remoteUID = "";
+							this.setProperty(addressBook.URI,path,i,"UID","");
+						}
+						
+						var localCard = null;
+						
+						if (syncMode != "import") {
+							//
+							// no import mode is specified:
+							// look for addressbook contacts that might match
+							//
+							// first matching property: UID, if not empty
+							var value = "";
+							if (remoteUID != "") {
+								localCard = addressBook.getCardFromProperty("UID",remoteUID,false);
+							}
+							else {
+								//
+								// no UID is set, therefore remote contact is
+								// matched to all local contacts:
+								// count matching properties and calculate propability
+								// (number of matches/total number of properties)
+								//
+								// matching is democratic, i.e. the card with
+								// the greatest propability > 2/3 wins
+								//
+								var matches = 0;
+								var total = 0;
+								var propability_max = 0.665;
+								var propability = 0;
+								var cards = addressBook.childCards;
+								while (cards.hasMoreElements()) {
+									// get next item in list; skip if it's not a contact
+									var card = cards.getNext();
+									if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) == -1)) { continue; }
+									matches = 0;
+									total = 0;
+									for (k=0; k<ThunderSyncVCardLib.baseProperties.length; k++) {
+										// compare all base properties
+										try {
+											value = this.getProperty(
+													addressBook.URI,path,i,
+													ThunderSyncVCardLib.baseProperties[k],""
+											);
+										} catch (exception) {
+										}
+										
+										if (value != "") {
+											total++;
+											if (value == card.getProperty(ThunderSyncVCardLib.baseProperties[k],"")) {
+												matches++;
+											}
+										}
+									}
+									try {
+										// try to calculate propability
+										propability = matches/total;
+									} catch (exception) {
+										// total=0, set propability to zero
+										probability = 0;
+									}
+									if (propability > propability_max) {
+										// new greatest propability found...
+										propability_max = propability;
+										localCard = card;
+									}
+								}
+							}
+						}
+						
+						//
+						// process results:
+						//   if a local contact was found: calculate differences
+						//   if no contact was found: define a "from-remote" tree item
+						//
+						//   if syncMode==import: localCard is null and therefore
+						//   a "from-remote" tree item is defined, too.
+						//
+						if (localCard instanceof Components.interfaces.nsIAbCard) {
+							// match found! Add to tree
+							// local UID overwrites remote UID
+							remoteUID = localCard.getProperty("UID","");
+							this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
+							// compute differences
+							var differences = this.cardDifferences(
+								localCard,
+								this.CardDB[addressBook.URI][path][i]
+							);
+							if (differences.length > 0) {
+								// differences found:
+								// add entry: "local name" <--> "external name"
+								this.addTreeItem(
+									addressBook.URI,
+									addressBook.dirName,
+									localCard,
+									path,
+									i,
+									differences,
+									filters
+								);
+							}
+						}
+						else {
+							// no match found, seems to be a new external contact
+							if (remoteUID == "") {
+								// generate UID for contact
+								remoteUID = uuidgenerator.generateUUID().toString().slice(1,37);
+								this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
+							}
+							// add entry: "" <-- "external name"
+							this.addTreeItem(
+								addressBook.URI,
+								addressBook.dirName,
+								null,
+								path,
+								i,
+								[],
+								""
+							);
+						}
+						// register UID as checked so it's skipped
+						// when all addressbook items are processed
+						list_checked.push(remoteUID);
+					}
 				}
 			}
 			
-			//
-			// read all contacts from addressbook and process
-			// if not yet checked (i.e. not in list_checked)
-			//
-			var cards = addressBook.childCards;
-			while (cards.hasMoreElements()) {
-				var card = cards.getNext();
-				if ((card instanceof Components.interfaces.nsIAbCard) && (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
-					// add entry: "local name" --> ""
-					this.addTreeItem(
-						addressBook.URI,
-						addressBook.dirName,
-						card,
-						null,
-						null,
-						[]
-					);
+			if (syncMode != "import") {
+				//
+				// read all contacts from addressbook and process
+				// if not yet checked (i.e. not in list_checked)
+				//
+				var cards = addressBook.childCards;
+				while (cards.hasMoreElements()) {
+					var card = cards.getNext();
+					if ((card instanceof Components.interfaces.nsIAbCard) && (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
+						// add entry: "local name" --> ""
+						this.addTreeItem(
+							addressBook.URI,
+							addressBook.dirName,
+							card,
+							null,
+							null,
+							[],
+							""
+						);
+					}
 				}
 			}
 		}
@@ -909,7 +1018,7 @@ var ThunderSyncDialog = {
 	 * @param propDeleted boolean, true means "delete local" or "delete remote"
 	 * @param localCard local contact (nsIAbCard)
 	 * @param abURI related addressBook URI
-	 * @param path path of remote contact ressource
+	 * @param path path of remote contact resource
 	 * @param index index of remote contact in this path
 	 */
 	mergeProperties: function (propType,propMode,propDeleted,localCard,abURI,path,index) {
@@ -1045,7 +1154,7 @@ var ThunderSyncDialog = {
 	 * @param propDeleted boolean, true means "delete local" or "delete remote"
 	 * @param localCard local contact (nsIAbCard)
 	 * @param abURI related addressBook URI
-	 * @param path path of remote contact ressource
+	 * @param path path of remote contact resource
 	 * @param index index of remote contact in this path
 	 */
 	mergePhotoProperty: function (propMode,propDeleted,localCard,abURI,path,index) {
@@ -1396,7 +1505,7 @@ var ThunderSyncDialog = {
 				}
 				fStream.close();
 			} else {
-				// ressource at abURI/path does not contain any contacts: delete file
+				// resource at abURI/path does not contain any contacts: delete file
 				// remove...
 				file.remove(false);
 			}
@@ -1404,22 +1513,22 @@ var ThunderSyncDialog = {
 	},
 	
 	/**
-	 * Read all contacts from given file ressource in given file format and
+	 * Read all contacts from given file resource in given file format and
 	 * store them in local memory; addressed via addressbook URI, path and index.
 	 * 
 	 * @param abURI URI of the corresponding addressbook
-	 * @param path path to teh file ressource
+	 * @param path path to teh file resource
 	 */
 	read: function (abURI,path) {
-		var ressource = Components.classes["@mozilla.org/file/local;1"]
+		var resource = Components.classes["@mozilla.org/file/local;1"]
 				.createInstance(Components.interfaces.nsILocalFile);
-		ressource.initWithPath(path);
-		ressource.QueryInterface(Components.interfaces.nsIFile);
+		resource.initWithPath(path);
+		resource.QueryInterface(Components.interfaces.nsIFile);
 		
-		if (ressource.exists()) {
-			if (ressource.isFile()) {
+		if (resource.exists()) {
+			if (resource.isFile()) {
 				var cards = this.readContactsFromFile(
-						ressource,
+						resource,
 						this.FormatDB[abURI],
 						this.ImpEncDB[abURI]);
 				if (cards.length > 0) {
@@ -1432,8 +1541,8 @@ var ThunderSyncDialog = {
 					this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 				}
 			}
-			else { if (ressource.isDirectory()) {
-				var files = ressource.directoryEntries;
+			else { if (resource.isDirectory()) {
+				var files = resource.directoryEntries;
 				while (files.hasMoreElements()) {
 					// get next item in list; skip if it's not a file object
 					var file = files.getNext();
@@ -1469,15 +1578,15 @@ var ThunderSyncDialog = {
 	},
 
 	/**
-	 * Extract all contacts in given format from a given file ressource.
+	 * Extract all contacts in given format from a given file resource.
 	 *
 	 * An Array will be returned, consisting of all extracted nsIAbCards:
 	 *    (nsIAbCard, nsIAbCard, ...)
 	 * 
-	 * If file points to an unknown ressource or a directory,
+	 * If file points to an unknown resource or a directory,
 	 * an empty array is returned.
 	 * 
-	 * @param fileRessource  nsIFile object, remote ressource file
+	 * @param fileResource  nsIFile object, remote resource file
 	 * @param format file format string, e.g. "vCardDir" or "vCardFile"
 	 * @param encoding import encoding
 	 * @return Array
@@ -1514,8 +1623,8 @@ var ThunderSyncDialog = {
 	 * Retrieve a contact's property from internal memory
 	 * 
 	 * @param abURI URI of the addressbook (part 1 of contact identifier)
-	 * @param path path to file ressource (part 2 of contact identifier)
-	 * @param index index inside file ressource (part 3 of contact identifier)
+	 * @param path path to file resource (part 2 of contact identifier)
+	 * @param index index inside file resource (part 3 of contact identifier)
 	 * @param property name of property
 	 * @param defaultValue default value, returned if property doesn't exist
 	 * @return string value of property
@@ -1528,8 +1637,8 @@ var ThunderSyncDialog = {
 	 * Define a new value for a contact's property in internal memory.
 	 * 
 	 * @param abURI URI of the addressbook (part 1 of contact identifier)
-	 * @param path path to file ressource (part 2 of contact identifier)
-	 * @param index index inside file ressource (part 3 of contact identifier)
+	 * @param path path to file resource (part 2 of contact identifier)
+	 * @param index index inside file resource (part 3 of contact identifier)
 	 * @param property name of property
 	 * @param value value of property
 	 */
@@ -1547,8 +1656,8 @@ var ThunderSyncDialog = {
 	 * Mark contact as "to delete" in internal memory.
 	 * 
 	 * @param abURI URI of the addressbook (part 1 of contact identifier)
-	 * @param path path to file ressource (part 2 of contact identifier)
-	 * @param index index inside file ressource (part 3 of contact identifier)
+	 * @param path path to file resource (part 2 of contact identifier)
+	 * @param index index inside file resource (part 3 of contact identifier)
 	 */
 	deleteCard: function (abURI,path,index) {
 		this.CardDB[abURI][path][index] = null;
@@ -1562,13 +1671,13 @@ var ThunderSyncDialog = {
 	
 	/**
 	 * Add contact to internal memory and mark it as "modified".
-	 * Application: add local card to remote ressource.
+	 * Application: add local card to remote resource.
 	 * 
 	 * Path may either point to a directory or a file.
 	 * In case of a directory a unique file name is created.
 	 * 
 	 * @param abURI URI of the addressbook (part 1 of contact identifier)
-	 * @param path path to file ressource
+	 * @param path path to file resource
 	 * @param format file format string, e.g. "vCardDir" or "vCardFile"
 	 * @param localCard contact to add
 	 */
@@ -1577,17 +1686,17 @@ var ThunderSyncDialog = {
 			return;
 		}
 		
-		var ressource = Components.classes["@mozilla.org/file/local;1"]
+		var resource = Components.classes["@mozilla.org/file/local;1"]
 				.createInstance(Components.interfaces.nsILocalFile);
-		ressource.initWithPath(path);
-		ressource.QueryInterface(Components.interfaces.nsIFile);
+		resource.initWithPath(path);
+		resource.QueryInterface(Components.interfaces.nsIFile);
 		
-		if (ressource.isFile()) {
+		if (resource.isFile()) {
 			// entire addressbook is stored in card of cards:
 			// simple: new path is filepath of addressbook vCard
 			var newPath = path;
 		}
-		else { if (ressource.isDirectory()) {
+		else { if (resource.isDirectory()) {
 			// addressbook stores contacts in single files:
 			// create new unique file name
 			var newPath = this.createFileName(
@@ -1612,47 +1721,3 @@ var ThunderSyncDialog = {
 		}
 		if (doPush) { this.ModDB.push(newValue);}
 	}
-	
-				/*
-Brainstorming...
-
-We iterate over addressbooks, identified by URI and dirName (=displayed name).
-For each addressbook, either a path or a file is given, containing contacts.
-Problem: files that contain more than one contact; instead of contact-wise
-         processing, we need a file-based writing process
-
-1. read all contacts of a remote ressource and store in memory
-2. compare, add to tree
-3. sync: walk through tree, process changes in cards in memory
-4. finally, write back every file containing modified contacts
-
-data structure: Array/Object
-CardDB[addressBookURI][filepath][index] = nsIAbCard
-
-http://de.selfhtml.org/javascript/objekte/array.htm#assoziative_arrays
-
-needed methods: (obsolete, implemented, but slightly different)
-readContacts(path)
-   clear CardDB
-   if path = dir:
-      iterate over files, add contacts to CardDB
-   if path = file:
-      read all cards from file and add to CardDB
-
-modifyContact(URI,path,UID,Property,Value):
-   this.CardDB[URI][path][UID][1].setProperty(Property,Value);
-   this.CardDB[URI][path][UID][0] = true;
-
-writeContacts()
-   for each URI:
-      for each path:
-         doit=false;
-         for each UID:
-            doit |= this.CardDB[URI][path][UID][0];
-         if doit:
-            write this.CardDB[URI][path][*][1] to path
-   clear CardDB
-
-			*/
-
-}

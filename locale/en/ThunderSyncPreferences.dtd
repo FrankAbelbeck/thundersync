@@ -87,7 +87,6 @@ $Id$
 
 <!ENTITY ThunderSyncPreferences.label.advancedOptions "Options for Advanced Users">
 <!ENTITY ThunderSyncPreferences.label.UID "Additionally encode UID as Mozilla property">
-<!ENTITY ThunderSyncPreferences.label.warning "Warning! The next two preferences should only be changed if third-party software cannot process quoted-printable encoding and/or line folding!">
 <!ENTITY ThunderSyncPreferences.label.quotedPrintable "Use quoted-printable encoding (default value: activated)">
 <!ENTITY ThunderSyncPreferences.label.folding "Fold long lines (default value: activated)">
 <!ENTITY ThunderSyncPreferences.label.warning "Warning! The next two preferences should only be changed if third-party software cannot process quoted-printable encoding and/or line folding!">

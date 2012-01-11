@@ -188,57 +188,11 @@ var ThunderSyncPref = {
 		// populate filter tree
 		//
 		var stringsBundleProp = document.getElementById("string-bundle-prop");
-		var props = ThunderSyncVCardLib.allProperties();
 		var props = ThunderSyncVCardLib.baseProperties.concat(
 				ThunderSyncVCardLib.otherProperties
 		);
 		props.push("Photo");
 		var propName = "";
-		
-		//
-		// experiment: RDF...
-		// but documentation is outdated and not very helpful
-		// -> waste of time
-		//
-/*		
-		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-					.getService(Components.interfaces.nsIConsoleService);
-		
-		var RDF = Components.classes["@mozilla.org/rdf/rdf-service;1"]
-			.getService(Components.interfaces.nsIRDFService);
-		this.filterDataSource = Components.classes["@mozilla.org/rdf/datasource;1?name=in-memory-datasource"]
-			.createInstance(Components.interfaces.nsIRDFDataSource);
-		
-		for (i=0; i<props.length; i++) {
-			try {
-				propName = stringsBundleProp.getString(props[i]);
-			} catch (exception) {
-				propName = "<" + props[i] + ">";
-			}
-			this.filterDataSource.Assert(
-				RDF.GetResource("urn:root"),
-				RDF.GetResource("http://abelbeck.wordpress.com/rdf#filterItem"),
-				RDF.GetResource("urn:" + (i+1)),
-				true
-			);
-			this.filterDataSource.Assert(
-				RDF.GetResource("urn:" + (i+1)),
-				RDF.GetResource("http://abelbeck.wordpress.com/rdf#filterProperty"),
-				RDF.GetLiteral(propName),
-				true
-			);
-			this.filterDataSource.Assert(
-				RDF.GetResource("urn:" + (i+1)),
-				RDF.GetResource("http://abelbeck.wordpress.com/rdf#filterAction"),
-				RDF.GetLiteral("ask"),
-				true
-			);
-		}
-		var tree = document.getElementById("ThunderSyncPreferences.tree.filter");
-		tree.database.AddDataSource(this.filterDataSource);
-		tree.setAttribute("ref","urn:root");
-		tree.setAttribute("containment","http://abelbeck.wordpress.com/rdf#filterItem");
-*/
 		var list = document.getElementById("ThunderSyncPreferences.treechildren.filter");
 		for (i=0; i<props.length; i++) {
 			try {
@@ -251,7 +205,6 @@ var ThunderSyncPref = {
 				"treeitem"
 			);
 			item.setAttribute("class","ThunderSyncPreferences.treeitem.filter");
-// 			item.setAttribute("context","ThunderSyncPreferences.popup.filter");
 			
 			var row = document.createElementNS(
 				"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",

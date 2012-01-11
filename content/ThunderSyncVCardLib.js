@@ -622,7 +622,7 @@ var ThunderSyncVCardLib = {
 	},
 	
 	/**
-	 * 
+	 * Helper function
 	 */
 	interpretVCardString: function (datastr,encoding) {
 		// split data string into separate vCards

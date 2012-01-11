@@ -49,15 +49,14 @@ ThunderSyncAutoSync.prototype = {
 				var action = false;
 				try {
 					var obj = new Object();
-					var syncPrefs = prefs.getChildList("startup.",obj);
+					var syncPrefs = prefs.getChildList("startUp.",obj);
 					for (i=0;i<syncPrefs.length;i++) {
 						if (prefs.getCharPref(syncPrefs[i]) != "no") {
 							action = true;
 						}
 					}
+					if (action) { this.doSync("startUp"); }
 				} catch (exception) {}
-				if (action) { this.doSync(); }
-				
 				break;
 				
 			case "quit-application-requested":
@@ -76,13 +75,13 @@ ThunderSyncAutoSync.prototype = {
 							action = true;
 						}
 					}
+					if (action) { this.doSync("shutdown"); }
 				} catch (exception) {}
-				if (action) { this.doSync(); }
 				break;
 		}
 	},
 	
-	doSync: function (action) {
+	doSync: function (mode) {
 		try {
 			var window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 					.getService(Components.interfaces.nsIWindowWatcher);
@@ -91,7 +90,7 @@ ThunderSyncAutoSync.prototype = {
 					'chrome://thundersync/content/ThunderSyncDialog.xul',
 					'',
 					'chrome,centerscreen,modal,alwaysRaised,dialog',
-					[true]
+					[mode,true]
 			);
 		} catch (exception) {
 			var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
