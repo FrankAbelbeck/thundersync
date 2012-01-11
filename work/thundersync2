@@ -1,0 +1,324 @@
+2012-01-10: no new routine, we do it inline
+-------------------------------------------
+
+2012-01-10: new routine to create vCard strings?
+------------------------------------------------
+
+vCardEntry(["PHOTO","TYPE=JPG"],datastr,null,"Base64",true);
+
+BEGIN:VCARD
+VERSION:2.1
+
+END:VCARD
+
+
+REV:YYYY-MM-DDTHH:MM:SSZ
+N;CHARSET=charset:LastName;FirstName;;;
+FN;CHARSET=charset:DisplayName
+UID:UID
+EMAIL;TYPE=INTERNET:PrimaryEmail
+EMAIL;TYPE=INTERNET:SecondaryEmail
+ADR;TYPE=HOME;CHARSET=charset:;HomeAddress2;HomeAddress;HomeCity;HomeState;HomeZipCode;HomeCountry
+ADR;TYPE=WORK;CHARSET=charset:;WorkAddress2;WorkAddress;WorkCity;WorkState;WorkZipCode;WorkCountry
+TEL;TYPE=HOME;TYPE=VOICE:HomePhone
+TEL;TYPE=WORK;TYPE=VOICE:WorkPhone
+TEL;TYPE=FAX:FaxNumber
+TEL;TYPE=CELL:CellularNumber
+TITLE;CHARSET=charset:JobTitle
+ORG;CHARSET=charset:Company;Department
+URL;TYPE=WORK:WebPage1
+URL;TYPE=WORK:WebPage2
+BDAY:YYYYMMDD
+X-MOZILLA-PROPERTY:BirthYear;YYYY
+X-MOZILLA-PROPERTY:BirthMonth;MM
+X-MOZILLA-PROPERTY:BirthDay;DD
+X-MOZILLA-PROPERTY;CHARSET=charset;ENCODING=encoding:Name;Value
+X-MOZILLA-PROPERTY:UID
+NOTE;CHARSET=charset;ENCODING=encoding:Notes
+PHOTO;VALUE=URL:photoURI
+PHOTO;ENCODING=BASE64;TYPE=type:photostr
+
+
+
+Transition to Thunderbird 6
+---------------------------
+
+
+https://developer.mozilla.org/en/Thunderbird_5_for_developers
+https://developer.mozilla.org/en/Thunderbird_6_for_developers
+
+https://developer.mozilla.org/en/JavaScript_code_modules/Services.jsm
+
+https://developer.mozilla.org/en/XPCOM/XPCOM_changes_in_Gecko_2.0
+
+https://developer.mozilla.org/En/Address_Book_Examples
+
+https://developer.mozilla.org/En/Address_Book_Interfaces
+
+
+
+Compare Process
+---------------
+
+Can't think of a better way. Only enhancement for now: if local contact was checked, exclude it in future iterations.
+
+Or not? vCard addressbooks are tricky to implement.
+
+Better read all remote cards, process them in-memory and then write back?
+
+Nope, keep current function "compare". But function "sync" needs work.
+If a target file is in fact a vCard addressbook, sync has to load all cards contained;
+then the modified card has to be inserted and everything has to be written back to disk.
+
+
+
+
+Wordpress Temp
+--------------
+
+After doing some recherche on IMAP handling in Thunderbird, I decided to ignore milestone V 1.94 (IMAP-stored attachement as remote target) -- for now. Instead I focused on V 1.95, V 1.96 and V 1.98 and revised the start-up script. Automatic synchronisation is now also possible at shutdown. And the synchronisation behaviour itself is tunable down to the processing of individual properties.
+
+That led to the development of a new preferences dialog, which is presented in a couple of screenshots below. Each addressbook can now be configured individually.
+
+>>> done
+
+
+Todo (David von Oheimb)
+-----------------------
+ - option in preferences/format: store UID in NOTE
+ - option in preferences/format: disable quoted-printable
+ - option in preferences/format: disable line-folding
+ - double encoding bug (UTF8 vs. binary encoding)
+
+==> Ok, implemented in XUL, needs logic in JS => done
+
+
+
+Todo (sync op)
+--------------
+
+ - implement IMAP target (read/write process)
+ - implement filter rules (compare/sync process)
+ - implement UID-as-NOTE rule (write process)
+ - implement quoted-printable encoding rule (write process)
+ - implement line folding rule (write process)
+
+
+
+
+
+	/**
+	 * fix "old" preferences, i.e. update from 1.x to 2.x
+	 */
+	fixPreferences: function () {
+		/*
+		old preferences to keep:
+			extensions.ThunderSync.Addressbooks.abook
+			extensions.ThunderSync.Addressbooks.abook-1
+			...
+			extensions.ThunderSync.Addressbooks.history
+			extensions.ThunderSync.Addressbooks.impab
+		
+		preferences that must be updated:
+			extensions.ThunderSync.exportEncoding -> .exportEncoding.[addressbook name]
+			extensions.ThunderSync.exportFormat   -> .exportFormat.[addressbook name]
+			extensions.ThunderSync.importEncoding -> .importEncoding.[addressbook name]
+			
+			extensions.ThunderSync.syncOnShutdown -> .syncOnShutdown.[addressbook name]
+			extensions.ThunderSync.syncOnStartup  -> .syncOnStartup.[addressbook name]
+				sync preferences: check type (old: bool, new: string)!
+		
+		new preferences:
+			extensions.ThunderSync.syncMode.[addressbook name] = mode
+				standard sync mode of an addressbook (no,ask,import,export)
+			extensions.ThunderSync.filter.[addressbook name].propertyname = action
+				individual sync rules for contact properties (ignore,ask,export,import)
+				
+		*/
+		
+		//
+		// todo: expand current update routine
+		//
+		
+		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+				.getService(Components.interfaces.nsIPrefService)
+				.getBranch("extensions.ThunderSync.");
+		
+		//
+		// get, store and clear old sync-on-startup preference
+		// if not of type PREF_STRING or PREF_BOOL: preference not set
+		//
+		var syncOnStartup = null;
+		var prefType = prefs.getPrefType("syncOnStartup");
+		switch (prefType) {
+			case prefs.PREF_BOOL:
+				if (prefs.getBoolPref("syncOnStartup")) {
+					var syncOnStartup = "ask";
+				} else {
+					var syncOnStartup = "no";
+				}
+				break;
+			case prefs.PREF_STRING:
+				syncOnStartup = prefs.getCharPref("syncOnStartup")
+				if (syncOnStartup != "ask" && syncOnStartup != "export" && syncOnStartup != "import" ) {
+					syncOnStartup = "no";
+				}
+				break;
+		}
+// 		prefs.clearUserPref("syncOnStartup");
+		
+		//
+		// get, store and clear old sync-on-shutdown preference
+		// if not of type PREF_STRING or PREF_BOOL: preference not set
+		//
+		var syncOnShutdown = null;
+		var prefType = prefs.getPrefType("syncOnShutdown");
+		switch (prefType) {
+			case prefs.PREF_BOOL:
+				prefs.clearUserPref("syncOnShutdown");
+				if (prefs.getBoolPref("syncOnShutdown")) {
+					syncOnShutdown = "ask";
+				} else {
+					syncOnShutdown = "no";
+				}
+				break;
+			case prefs.PREF_STRING:
+				syncOnShutdown = prefs.getCharPref("syncOnShutdown")
+				if (syncOnShutdown != "ask" && syncOnShutdown != "export" && syncOnShutdown != "import" ) {
+					syncOnShutdown = "no";
+				}
+				break;
+		}
+// 		prefs.clearUserPref("syncOnShutdown");
+	}
+
+
+
+
+
+
+
+// 		var abPref       = prefs.getBranch("extensions.ThunderSync.Addressbooks.");
+// 		var formatPref   = prefs.getBranch("extensions.ThunderSync.exportFormat.");
+// 		var vCardExpPref = prefs.getBranch("extensions.ThunderSync.vCard.exportEncoding.");
+// 		var vCardImpPref = prefs.getBranch("extensions.ThunderSync.vCard.importEncoding.");
+// 		var startUpPref  = prefs.getBranch("extensions.ThunderSync.startUp.");
+// 		var shutDownPref = prefs.getBranch("extensions.ThunderSync.shutDown.");
+// 		var filterPref   = prefs.getBranch("extensions.ThunderSync.filter.");
+		
+		//
+		// get, store and clear old sync-on-startup preference
+		// if not of type PREF_STRING or PREF_BOOL: preference not set
+		//
+		var syncOnStartup = null;
+		var prefType = prefs.getPrefType("syncOnStartup");
+		switch (prefType) {
+			case prefs.PREF_BOOL:
+				if (prefs.getBoolPref("syncOnStartup")) {
+					var syncOnStartup = "ask";
+				} else {
+					var syncOnStartup = "no";
+				}
+				break;
+			case prefs.PREF_STRING:
+				syncOnStartup = prefs.getCharPref("syncOnStartup")
+				if (syncOnStartup != "ask" && syncOnStartup != "export" && syncOnStartup != "import" ) {
+					syncOnStartup = "no";
+				}
+				break;
+		}
+// 		prefs.clearUserPref("syncOnStartup");
+		
+		//
+		// get, store and clear old sync-on-shutdown preference
+		// if not of type PREF_STRING or PREF_BOOL: preference not set
+		//
+		var syncOnShutdown = null;
+		var prefType = prefs.getPrefType("syncOnShutdown");
+		switch (prefType) {
+			case prefs.PREF_BOOL:
+				prefs.clearUserPref("syncOnShutdown");
+				if (prefs.getBoolPref("syncOnShutdown")) {
+					syncOnShutdown = "ask";
+				} else {
+					syncOnShutdown = "no";
+				}
+				break;
+			case prefs.PREF_STRING:
+				syncOnShutdown = prefs.getCharPref("syncOnShutdown")
+				if (syncOnShutdown != "ask" && syncOnShutdown != "export" && syncOnShutdown != "import" ) {
+					syncOnShutdown = "no";
+				}
+				break;
+		}
+// 		prefs.clearUserPref("syncOnShutdown");
+		
+		//
+		// get, store and clear old export format preference
+		// if not of type PREF_STRING: preference not set
+		//
+		var exportFormat = null;
+		if (prefs.getPrefType("exportFormat") == prefs.PREF_STRING) {
+			exportFormat = prefs.getCharPref("exportFormat");
+			if (exportFormat != "vcard") {
+				exportFormat = "vcard";
+			}
+		}
+// 		prefs.clearUserPref("exportFormat");
+		
+		//
+		// get, store and clear old export encoding preference
+		// if not of type PREF_STRING: preference not set
+		//
+		var exportEncoding = "UTF-8";
+		if (prefs.getPrefType("exportEncoding") == prefs.PREF_STRING) {
+			exportEncoding = prefs.getCharPref("exportEncoding");
+			// Standard, ISO-8859-1, ISO-8859-2, ISO-8859-3,
+			// ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7,
+			// ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-11,
+			// ISO-8859-13, ISO-8859-14, ISO-8859-15, ISO-8859-16,
+			// Windows-874, Windows-932, Windows-936, Windows-949
+			// Windows-950, Windows-1250, Windows-1251, Windows-1252
+			// Windows-1253, Windows-1254, Windows-1255, Windows-1256
+			// Windows-1257, Windows-1258, UTF-8
+		}
+// 		prefs.clearUserPref("exportEncoding");
+		
+		//
+		// get, store and clear old import encoding preference
+		// if not of type PREF_STRING: preference not set
+		//
+		var importEncoding = "Standard";
+		if (prefs.getPrefType("importEncoding") == prefs.PREF_STRING) {
+			importEncoding = prefs.getCharPref("importEncoding");
+			// Standard, ISO-8859-1, ISO-8859-2, ISO-8859-3,
+			// ISO-8859-4, ISO-8859-5, ISO-8859-6, ISO-8859-7,
+			// ISO-8859-8, ISO-8859-9, ISO-8859-10, ISO-8859-11,
+			// ISO-8859-13, ISO-8859-14, ISO-8859-15, ISO-8859-16,
+			// Windows-874, Windows-932, Windows-936, Windows-949
+			// Windows-950, Windows-1250, Windows-1251, Windows-1252
+			// Windows-1253, Windows-1254, Windows-1255, Windows-1256
+			// Windows-1257, Windows-1258, UTF-8
+		}
+// 		prefs.clearUserPref("importEncoding");
+		
+		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
+			.getService(Components.interfaces.nsIConsoleService);
+		
+		// if any preference was read, we need to update global preferences
+		// to addressbook-specific preferences
+		if (syncOnStartup != null || syncOnShutdown != null || exportFormat != null || exportEncoding != null || importEncoding != null) {
+			var obj = new Object();
+			var abooks = prefs.getChildList("Addressbooks.",obj);
+			for (i=0;i<abooks.length;i++) {
+				abName = abooks[i].substr(13);
+// 				consoleService.logStringMessage("ThunderSync: "+abooks[i]);
+				prefs.setCharPref
+			}
+		
+
+		}
+
+
+
+

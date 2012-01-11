@@ -690,8 +690,8 @@ var ThunderSyncVCardLib = {
 			try {
 				var posColon = lines[i].indexOf(":");
 				if (posColon == -1 ) { throw "undefined"; }
-				var property = lines[i].substr(0,posColon).split(";");
-				var value = lines[i].substr(posColon+1).split(";");
+				var property = lines[i].substr(0,posColon).split(/[^\\];/);
+				var value = lines[i].substr(posColon+1).split(/[^\\];/);
 				for (var k = 1; k < property.length; k++) {
 					var prop = property[k].split("=");
 					switch (prop.length) {
