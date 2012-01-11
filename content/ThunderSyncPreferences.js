@@ -560,7 +560,7 @@ var ThunderSyncPref = {
 	 * Let the user choose a file and set it as path of the current addressbook
 	 */
 	openFileDialog: function () {
-		this.openPathDialog(Components.interfaces.nsIFilePicker.modeSave);
+		this.openPathDialog(Components.interfaces.nsIFilePicker.modeOpen);
 	},
 	
 	/**

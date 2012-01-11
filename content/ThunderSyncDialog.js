@@ -100,7 +100,6 @@ var ThunderSyncDialog = {
 		this.HideUIDDB   = new Object();
 		this.UseQPEDB    = new Object();
 		this.DoFoldingDB = new Object();
-		this.FilterDB    = new Object();
 	},
 	
 	/**
@@ -405,91 +404,74 @@ var ThunderSyncDialog = {
 		var prop1 = "";
 		var prop2 = "";
 		for (var i = 0; i < properties.length; i++) {
-			switch filters[properties[i]]) {
+			prop1 = card1.getProperty(properties[i],"");
+			prop2 = card2.getProperty(properties[i],"");
+			if (prop1 == 0) { prop1 = ""; }
+			if (prop2 == 0) { prop2 = ""; }
+			switch (filters[properties[i]]) {
 				case "ignore":
 					continue;
 					break;
 				case "export":
-					prop1 = card1.getProperty(properties[i],"");
-					if (prop1 == 0) { prop1 = ""; }
-					result.push([prop1,"",properties[i]]);
+					prop2 = "";
 					break;
 				case "import":
-					prop2 = card2.getProperty(properties[i],"");
-					if (prop2 == 0) { prop2 = ""; }
-					result.push(["",prop2,properties[i]]);
+					prop1 = "";
 					break;
-				default:
-					prop1 = card1.getProperty(properties[i],"");
-					prop2 = card2.getProperty(properties[i],"");
-					if (prop1 == 0) { prop1 = ""; }
-					if (prop2 == 0) { prop2 = ""; }
-					if (prop1 != prop2) { result.push([prop1,prop2,properties[i]]); }
 			}
+			if (prop1 != prop2) { result.push([prop1,prop2,properties[i]]); }
 		}
 		if (filters["Photo"] != "ignore") {
-			if (filters["Photo"] != "import") {
-				// prepare contact photo for comparison: if it's a file, read
-				// contents and store them as string
-				var photoname1 = card1.getProperty("PhotoName","");
-				var phototype1 = card1.getProperty("PhotoType","");
-				var photouri1 = card1.getProperty("PhotoURI","");
-				switch (phototype1) {
-					case "generic":
-						photouri1 = "";
-						break;
-					case "file":
-						photouri1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
-						break;
-				}
-			}
-			
-			if (filters["Photo"] != "export") {
-				// prepare other contact photo for comparison: if it's a file,
-				// read contents and store them as string
-				var photoname2 = card2.getProperty("PhotoName","");
-				var phototype2 = card2.getProperty("PhotoType","");
-				var photouri2 = card2.getProperty("PhotoURI","");
-				switch (phototype2) {
-					case "generic":
-						photouri2 = "";
-						break;
-					case "file":
-						photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
-						break;
-				}
-			}
-			
-			// compare photos; push (append) to result array if differing
-			var stringsBundle = document.getElementById("string-bundle");
-			switch (filters["Photo"]) {
-				case "ignore":
-					// do nothing (should not happen as it is caught above)
+			// prepare contact photo for comparison: if it's a file, read
+			// contents and store them as string
+			var photoname1 = card1.getProperty("PhotoName","");
+			var phototype1 = card1.getProperty("PhotoType","");
+			var photouri1 = card1.getProperty("PhotoURI","");
+			switch (phototype1) {
+				case "generic":
+					photouri1 = "";
 					break;
+				case "file":
+					photouri1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
+					break;
+			}
+			
+			// prepare other contact photo for comparison: if it's a file,
+			// read contents and store them as string
+			var photoname2 = card2.getProperty("PhotoName","");
+			var phototype2 = card2.getProperty("PhotoType","");
+			var photouri2 = card2.getProperty("PhotoURI","");
+			switch (phototype2) {
+				case "generic":
+					photouri2 = "";
+					break;
+				case "file":
+					photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
+					break;
+			}
+			
+			switch (filters["Photo"]) {
 				case "export":
-					// plain export: card1 ---> empty string
-					result.push([stringsBundle.getString("Photo"),"","Photo"]);
+					photouri2 = "";
 					break;
 				case "import":
-					// plain import: empty string <--- card2
-					result.push(["",stringsBundle.getString("Photo"),"Photo"]);
+					photouri1 = "";
 					break;
-				default:
-					// comparison of uris...
-					// perhaps results in card1 <---> card2
-					if ((photouri1  != photouri2)) {
-						if (photouri1 != "") {
-							photouri1 = stringsBundle.getString("Photo");
-						} else {
-							photouri1 = "";
-						}
-						if (photouri2 != "") {
-							photouri2 = stringsBundle.getString("Photo");
-						} else {
-							photouri2 = "";
-						}
-						result.push([photouri1,photouri2,"Photo"]);
-					}
+			}
+			// compare photos; push (append) to result array if differing
+			var stringsBundle = document.getElementById("string-bundle");
+			if ((photouri1  != photouri2)) {
+				if (photouri1 != "") {
+					photouri1 = stringsBundle.getString("Photo");
+				} else {
+					photouri1 = "";
+				}
+				if (photouri2 != "") {
+					photouri2 = stringsBundle.getString("Photo");
+				} else {
+					photouri2 = "";
+				}
+				result.push([photouri1,photouri2,"Photo"]);
 			}
 		}
 		return result;
@@ -632,11 +614,14 @@ var ThunderSyncDialog = {
 			}
 			
 			// read addressbook-specific filters preference
+			filters = new Object();
 			try {
-				filters = filterPrefs.getCharPref(abName);
-			} catch (exception) {
-				filters = "";
-			}
+				filterstr = filterPrefs.getCharPref(abName).split(",");
+				for (var i=0; i<filterstr.length; i++) {
+					[name,value] = filterstr[i].split("=");
+					filters[name] = value;
+				}
+			} catch (exception) {}
 			
 			// read addressbook-specific comparison mode: no, ask, export, import
 			try {
@@ -743,7 +728,9 @@ var ThunderSyncDialog = {
 								while (cards.hasMoreElements()) {
 									// get next item in list; skip if it's not a contact
 									var card = cards.getNext();
-									if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) == -1)) { continue; }
+									if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
+										continue;
+									}
 									matches = 0;
 									total = 0;
 									for (k=0; k<ThunderSyncVCardLib.baseProperties.length; k++) {
@@ -753,8 +740,7 @@ var ThunderSyncDialog = {
 													addressBook.URI,path,i,
 													ThunderSyncVCardLib.baseProperties[k],""
 											);
-										} catch (exception) {
-										}
+										} catch (exception) {}
 										
 										if (value != "") {
 											total++;
@@ -795,7 +781,8 @@ var ThunderSyncDialog = {
 							// compute differences
 							var differences = this.cardDifferences(
 								localCard,
-								this.CardDB[addressBook.URI][path][i]
+								this.CardDB[addressBook.URI][path][i],
+								filters
 							);
 							if (differences.length > 0) {
 								// differences found:
@@ -806,8 +793,7 @@ var ThunderSyncDialog = {
 									localCard,
 									path,
 									i,
-									differences,
-									filters
+									differences
 								);
 							}
 						}
@@ -825,8 +811,7 @@ var ThunderSyncDialog = {
 								null,
 								path,
 								i,
-								[],
-								""
+								[]
 							);
 						}
 						// register UID as checked so it's skipped
@@ -852,8 +837,7 @@ var ThunderSyncDialog = {
 							card,
 							null,
 							null,
-							[],
-							""
+							[]
 						);
 					}
 				}
@@ -1313,7 +1297,7 @@ var ThunderSyncDialog = {
 						else {
 							// add new contact to CardDB
 							this.addCard(
-								abURI,
+								addressBook.URI,
 								abPrefs.getCharPref(addressBook.fileName.replace(".mab","")),
 								format,
 								localCard
@@ -1381,13 +1365,15 @@ var ThunderSyncDialog = {
 	 * @param format file format string, e.g. "vCardDir" or "vCardFile"
 	 * @param dir path to target directory
 	 * @param uid UID, used as main file name component
-	 * @return nsIFile object pointing to constructed filename
+	 * @return string constructed absolute path string (e.g. file://...)
 	 */
 	createFileName: function (format,dir,uid) {
 		try {
-			var directory = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsILocalFile);
-			directory.initWithPath(dir);
+			var directory = Components.classes["@mozilla.org/network/io-service;1"]
+				.getService(Components.interfaces.nsIIOService)
+				.newURI(dir,null,null)
+				.QueryInterface(Components.interfaces.nsIFileURL)
+				.file;
 		}
 		catch (exception) {
 			return null;
@@ -1420,11 +1406,13 @@ var ThunderSyncDialog = {
 			} while (file.exists());
 		}
 		
-		return file;
+		return Components.classes["@mozilla.org/network/io-service;1"]
+			.getService(Components.interfaces.nsIIOService)
+			.newFileURI(file).spec;
 	},
 	
 	/**
-	 * Write all modified contacts back to their files and delete if necessary.
+	 * Write all modified contacts back to their external resources (and delete if necessary).
 	 */
 	write: function () {
 		var file = Components.classes["@mozilla.org/file/local;1"]
@@ -1441,11 +1429,10 @@ var ThunderSyncDialog = {
 			abURI = this.ModDB[i][0];
 			path  = this.ModDB[i][1];
 			dataString = "";
-			
 			for (k=0; k<this.CardDB[abURI][path].length; k++) {
 				if (this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) {
 					// at least one contact exists: process contact
-					switch (format) {
+					switch (this.FormatDB[abURI]) {
 						case "vCardDir":
 						case "vCardFile":
 							if (dataString.length > 0) { dataString += ThunderSyncVCardLib.CRLF; }
@@ -1455,19 +1442,23 @@ var ThunderSyncDialog = {
 								this.HideUIDDB[abURI],
 								this.UseQPEDB[abURI],
 								this.DoFoldingDB[abURI]
-							)
+							);
 							break;
 					}
 				}
 			}
-			file.initWithPath(path);
 			if (dataString.length > 0) {
-				// yep, file should be written...
-				// initialise file stream object
-				fStream.init(file,0x02|0x08|0x20,0600,0);
+				// yep, data should be written...
 				switch (this.FormatDB[abURI]) {
 					case "vCardDir":
 					case "vCardFile":
+						// initialise file stream object
+						var file = Components.classes["@mozilla.org/network/io-service;1"]
+								.getService(Components.interfaces.nsIIOService)
+								.newURI(path,null,null)
+								.QueryInterface(Components.interfaces.nsIFileURL)
+								.file;
+						fStream.init(file,0x02|0x08|0x20,0600,0);
 						// a vCard ought to be written...
 						// fix Outlook's non-standard behaviour:
 						// apply a different encoding chosen by the user
@@ -1501,13 +1492,18 @@ var ThunderSyncDialog = {
 							}
 						}
 						converter.close();
+						fStream.close();
 						break;
 				}
-				fStream.close();
 			} else {
 				// resource at abURI/path does not contain any contacts: delete file
 				// remove...
-				file.remove(false);
+				switch (this.FormatDB[abURI]) {
+					case "vCardDir":
+					case "vCardFile":
+						file.remove(false);
+						break;
+				}
 			}
 		}
 	},
@@ -1520,50 +1516,77 @@ var ThunderSyncDialog = {
 	 * @param path path to teh file resource
 	 */
 	read: function (abURI,path) {
-		var resource = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsILocalFile);
-		resource.initWithPath(path);
-		resource.QueryInterface(Components.interfaces.nsIFile);
+		switch (this.FormatDB[abURI]) {
+			case "vCardDir":
+				this.readDir(abURI,path);
+				break;
+			case "vCardFile":
+				this.readFile(abURI,path);
+				break;
+// 			case "vCardIMAP":
+// 				this.readIMAP(abURI,path);
+// 				break;
+			default:
+				return;
+		}
+	},
+	
+	readDir: function (abURI,path) {
+		var resource = Components.classes["@mozilla.org/network/io-service;1"]
+				.getService(Components.interfaces.nsIIOService)
+				.newURI(path,null,null)
+				.QueryInterface(Components.interfaces.nsIFileURL)
+				.file;
 		
-		if (resource.exists()) {
-			if (resource.isFile()) {
-				var cards = this.readContactsFromFile(
-						resource,
-						this.FormatDB[abURI],
-						this.ImpEncDB[abURI]);
-				if (cards.length > 0) {
-					if (!this.CardDB[abURI]) {
-						this.CardDB[abURI] = new Object();
+		if (resource.exists() && resource.isDirectory()) {
+			var files = resource.directoryEntries;
+			while (files.hasMoreElements()) {
+				// get next item in list; skip if it's not a file object
+				var file = files.getNext();
+				file.QueryInterface(Components.interfaces.nsIFile);
+				if (file.isFile()) {
+					var cards = this.readContactsFromFile(
+							file,
+							this.FormatDB[abURI],
+							this.ImpEncDB[abURI]);
+					var path = Components.classes["@mozilla.org/network/io-service;1"]
+							.getService(Components.interfaces.nsIIOService)
+							.newFileURI(file).spec;
+					if (cards.length > 0) {
+						if (!this.CardDB[abURI]) {
+							this.CardDB[abURI] = new Object();
+						}
+						if (!this.CardDB[abURI][path]) {
+							this.CardDB[abURI][path] = new Array();
+						}
+						this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 					}
-					if (!this.CardDB[abURI][path]) {
-						this.CardDB[abURI][path] = new Array();
-					}
-					this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 				}
 			}
-			else { if (resource.isDirectory()) {
-				var files = resource.directoryEntries;
-				while (files.hasMoreElements()) {
-					// get next item in list; skip if it's not a file object
-					var file = files.getNext();
-					file.QueryInterface(Components.interfaces.nsIFile);
-					if (file.isFile()) {
-						var cards = this.readContactsFromFile(
-								file,
-								this.FormatDB[abURI],
-								this.ImpEncDB[abURI]);
-						if (cards.length > 0) {
-							if (!this.CardDB[abURI]) {
-								this.CardDB[abURI] = new Object();
-							}
-							if (!this.CardDB[abURI][file.path]) {
-								this.CardDB[abURI][file.path] = new Array();
-							}
-							this.CardDB[abURI][file.path] = this.CardDB[abURI][file.path].concat(cards);
-						}
-					}
+		}
+	},
+	
+	readFile: function (abURI,path) {
+		var resource = Components.classes["@mozilla.org/network/io-service;1"]
+				.getService(Components.interfaces.nsIIOService)
+				.newURI(path,null,null)
+				.QueryInterface(Components.interfaces.nsIFileURL)
+				.file;
+		
+		if (resource.exists() && resource.isFile()) {
+			var cards = this.readContactsFromFile(
+					resource,
+					this.FormatDB[abURI],
+					this.ImpEncDB[abURI]);
+			if (cards.length > 0) {
+				if (!this.CardDB[abURI]) {
+					this.CardDB[abURI] = new Object();
 				}
-			}}
+				if (!this.CardDB[abURI][path]) {
+					this.CardDB[abURI][path] = new Array();
+				}
+				this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
+			}
 		}
 	},
 	
@@ -1609,7 +1632,6 @@ var ThunderSyncDialog = {
 				bStream.setInputStream(fStream);
 				var datastr = bStream.readBytes(bStream.available());
 				bStream.close();
-				
 				// interpret content of file and store result as Array
 				retval = ThunderSyncVCardLib.interpretVCardString(datastr,encoding);
 				
@@ -1686,25 +1708,26 @@ var ThunderSyncDialog = {
 			return;
 		}
 		
-		var resource = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsILocalFile);
-		resource.initWithPath(path);
-		resource.QueryInterface(Components.interfaces.nsIFile);
-		
-		if (resource.isFile()) {
-			// entire addressbook is stored in card of cards:
-			// simple: new path is filepath of addressbook vCard
-			var newPath = path;
+		switch (format) {
+			case "vCardDir":
+				// addressbook stores contacts in single files:
+				// create new unique file name
+				var newPath = this.createFileName(
+						format,
+						path,
+						localCard.getProperty("UID","")
+				);
+				break;
+			case "vCardFile":
+				// entire addressbook is stored in card of cards:
+				// simple: new path is filepath of addressbook vCard
+				var newPath = path;
+				break;
+// 			case "vCardIMAP":
+// 				break;
+			default:
+				return;
 		}
-		else { if (resource.isDirectory()) {
-			// addressbook stores contacts in single files:
-			// create new unique file name
-			var newPath = this.createFileName(
-					format,
-					dir,
-					localCard.getProperty("UID","")
-			);
-		}}
 		
 		if (!this.CardDB[abURI]) {
 			this.CardDB[abURI] = new Object();
@@ -1721,3 +1744,5 @@ var ThunderSyncDialog = {
 		}
 		if (doPush) { this.ModDB.push(newValue);}
 	}
+
+}
