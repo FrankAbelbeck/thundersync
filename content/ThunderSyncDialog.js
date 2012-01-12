@@ -1429,6 +1429,7 @@ var ThunderSyncDialog = {
 			abURI = this.ModDB[i][0];
 			path  = this.ModDB[i][1];
 			dataString = "";
+// 			this.logMsg("write: " + abURI + " ---> " + path);
 			for (k=0; k<this.CardDB[abURI][path].length; k++) {
 				if (this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) {
 					// at least one contact exists: process contact
@@ -1596,8 +1597,9 @@ var ThunderSyncDialog = {
 	 * @param msg message string
 	 */
 	logMsg: function (msg) {
-		var consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
-		consoleService.logStringMessage("ThunderSync: "+msg);
+		Components.classes["@mozilla.org/consoleservice;1"]
+			.getService(Components.interfaces.nsIConsoleService)
+			.logStringMessage("[ThunderSync] "+msg);
 	},
 
 	/**
@@ -1729,6 +1731,8 @@ var ThunderSyncDialog = {
 				return;
 		}
 		
+// 		this.logMsg("addCard: " + abURI + " ---> " + newPath);
+
 		if (!this.CardDB[abURI]) {
 			this.CardDB[abURI] = new Object();
 		}
@@ -1737,7 +1741,7 @@ var ThunderSyncDialog = {
 		}
 		this.CardDB[abURI][newPath].push(localCard);
 		
-		var newValue = new Array(abURI,path);
+		var newValue = new Array(abURI,newPath);
 		var doPush = true;
 		for (j=0; j<this.ModDB.length; j++) {
 			if (this.ModDB[j] == newValue) { doPush = false; }

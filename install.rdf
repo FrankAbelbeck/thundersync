@@ -29,7 +29,7 @@ $Id$
 		
 		<em:id>thundersync@frank.abelbeck</em:id>
 		<em:name>ThunderSync</em:name>
-		<em:version>1.96</em:version>
+		<em:version>1.99</em:version>
 		<em:creator>Frank Abelbeck</em:creator>
 		<em:description>Synchronise Thunderbird's addressbook with an external ressource.</em:description>
 		<em:homepage>http://abelbeck.wordpress.com/</em:homepage>

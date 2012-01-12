@@ -23,6 +23,7 @@
 content thundersync content/
 
 overlay chrome://messenger/content/addressbook/addressbook.xul chrome://thundersync/content/ThunderSyncMenuItem.xul
+overlay chrome://messenger/content/mailWindowOverlay.xul       chrome://thundersync/content/ThunderSyncToolbar.xul
 
 locale thundersync en locale/en/
 locale thundersync de locale/de/
