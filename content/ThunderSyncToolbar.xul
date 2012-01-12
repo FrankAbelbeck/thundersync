@@ -2,7 +2,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://thundersync/locale/ThunderSyncMenuItem.dtd">
 
 <!--
-Overlay for Thunderbird's addressbook menubar, adds menu item.
+Overlay for Thunderbird's main toolbar, adds toolbar button.
 Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
 
 This file is part of the Mozilla Thunderbird extension "ThunderSync."
@@ -25,16 +25,17 @@ or see <http://www.gnu.org/licenses/>.
 $Id$
 -->
 
-<overlay id="ThunderSync.overlay.menuitem"
+<overlay id="ThunderSync.overlay.toolbar"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
-	<menu id="tasksMenu">
-		<menupopup id="taskPopup">
-			<menuseparator />  
-			<menuitem label="&ThunderSyncMenuItem;"
-				oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
-			/>
-		</menupopup>
-        </menu>
+	<toolbarpalette id="MailToolbarPalette">
+		<!--		<toolbarseparator />-->
+		<toolbarbutton id="ThunderSyncToolbarButton"
+			class="toolbarbutton-1"
+			label="ThunderSync"
+			tooltiptext="&ThunderSyncMenuItem;"
+			oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
+		/>
+	</toolbarpalette>
 	
 </overlay>

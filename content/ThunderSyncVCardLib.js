@@ -484,7 +484,7 @@ var ThunderSyncVCardLib = {
 						vcfstr += tmpstr + this.foldBase64(
 								window.btoa(value),
 								tmpstr.length
-							) + this.CRLF;
+							) + this.CRLF + this.CRLF;
 					} else {
 						// ...but don't fold the line
 						vcfstr += tmpstr + window.btoa(value) + this.CRLF;
@@ -504,7 +504,7 @@ var ThunderSyncVCardLib = {
 		}
 		
 		for (var i = 0; i < this.otherProperties.length; i++) {
-			value = card.getProperty(this.otherProperties[i],"").replace(/;/g,"\\;");
+			value = String(card.getProperty(this.otherProperties[i],"")).replace(/;/g,"\\;");
 			if (value != "") {
 				if (value.indexOf("\n") != -1) {
 					// at least one line break is present: encoding needed
@@ -535,7 +535,7 @@ var ThunderSyncVCardLib = {
 							vcfstr += tmpstr + this.foldBase64(
 									window.btoa(value),
 									tmpstr.length
-								) + this.CRLF;
+								) + this.CRLF + this.CRLF;
 						} else {
 							// ...but don't fold the line
 							vcfstr += tmpstr + window.btoa(value) + this.CRLF;
@@ -668,14 +668,21 @@ var ThunderSyncVCardLib = {
 		try {
 			// make sure file begins with BEGIN:VCARD and ends with END:VCARD
 			var tmp = /BEGIN:VCARD\r\n([\s\S]*)END:VCARD/.exec(datastr)[1];
-			// replace lines ending with a "=" and followed by another
-			// line break with just a line break; fixes remaining
-			// filling characters of a Base64 encoding
+			
+			// replace lines ending with a "=" and followed by a
+			// line break with just a line break;
+			// remove line break masking characters of QPE encoding
 			tmp = tmp.replace(/=\r\n([^\r\n])/g,"$1");
-			// replace all linebreaks followed by a tab or space by
-			// a single space; this implements the "folding"
+			
+			// replace all linebreaks followed by a tab or space (=LWSP)
+			// by a single LWSP; this implements the "folding"
 			// technique specified in the vCard standard
-			tmp = tmp.replace(/\r\n[\t| ]/g," ");
+			tmp = tmp.replace(/\r\n([\s])/g,"$1");
+			
+// 			Components.classes["@mozilla.org/consoleservice;1"]
+// 				.getService(Components.interfaces.nsIConsoleService)
+// 				.logStringMessage("[ThunderSync] vCard str: "+tmp);
+			
 			// finally, split the datastring at \r\n line breaks
 			var lines = tmp.split(this.CRLF);
 		} catch (exception) {
@@ -869,6 +876,14 @@ var ThunderSyncVCardLib = {
 					break;
 				case "X-MOZILLA-PROPERTY":
 					if (value[0] != "" && value[1] != "") {
+						switch (value[0]) {
+							case "AllowRemoteContent":
+							case "PopularityIndex":
+							case "PreferMailFormat":
+								value[1] = Number(value[1]);
+								if (isNaN(value[1])) { value[1] = 0; }
+								break;
+						}
 						card.setProperty(value[0],value[1]);
 					}
 					break;
