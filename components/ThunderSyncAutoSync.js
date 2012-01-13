@@ -229,6 +229,53 @@ ThunderSyncAutoSync.prototype = {
 				prefs.setCharPref("vCard.importEncoding."+abName,vCardImportEncoding);
 			}
 			
+			// check paths: are they valid, are they URIs?
+			format = prefs.getCharPref("exportFormat."+abName);
+			path = prefs.getCharPref("Addressbooks."+abName);
+			switch (format) {
+				case "vCardDir":
+				case "vCardFile":
+					try {
+						// try to load file as if it were a native path string
+						// (e.g. /home/user/vcard)
+						var pathFile = Components.classes["@mozilla.org/file/local;1"]
+								.createInstance(Components.interfaces.nsILocalFile);
+						pathFile.initWithPath(path);
+						// convert path to a URI
+						path = Components.classes["@mozilla.org/network/io-service;1"]
+							.getService(Components.interfaces.nsIIOService)
+							.newFileURI(pathFile).spec;
+					} catch (exception) {
+						// something went wrong; most propable cause:
+						// path is already a URI
+						try {
+							var pathFile = Components.classes["@mozilla.org/network/io-service;1"]
+									.getService(Components.interfaces.nsIIOService)
+									.newURI(path,null,null)
+									.QueryInterface(Components.interfaces.nsIFileURL)
+									.file;
+						} catch (exception) {
+							// it wasn't a URI either: reset
+							var pathFile = null;
+							path = "";
+						}
+					}
+					if (format == "vCardDir" &&
+					     (  !pathFile || !pathFile.exists() || !pathFile.isDirectory()) {
+						// vCardDir needs an existing directory
+						// if path points to a nonexisting file or
+						// if path points to a file that is not a directory or
+						// if a file object could not be constructed:
+						// reset path
+						path = "";
+					}
+					break;
+				default:
+					path = "";
+			}
+			// write back path
+			prefs.setCharPref("Addressbooks."+abName,path);
+			
 			// check new entry: syncMode
 			if (prefs.getPrefType("syncMode."+abName) == prefs.PREF_STRING) {
 				var syncMode = prefs.getCharPref("syncMode."+abName);

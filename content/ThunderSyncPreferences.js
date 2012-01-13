@@ -476,12 +476,14 @@ var ThunderSyncPref = {
 		//
 		switch (format) {
 			case "vCardDir":
+				this.clearPath();
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = true;
 // 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = true;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = false;
 // 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPFolder").hidden = false;
 				break;
 			case "vCardFile":
+				this.clearPath();
 				document.getElementById("ThunderSyncPreferences.button.chooseFile").hidden = false;
 // 				document.getElementById("ThunderSyncPreferences.button.chooseIMAPMsg").hidden = false;
 				document.getElementById("ThunderSyncPreferences.button.chooseDir").hidden = true;
