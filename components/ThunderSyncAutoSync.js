@@ -260,8 +260,9 @@ ThunderSyncAutoSync.prototype = {
 							path = "";
 						}
 					}
-					if (format == "vCardDir" &&
-					     (  !pathFile || !pathFile.exists() || !pathFile.isDirectory()) {
+					if ((format == "vCardDir") && pathFile &&
+					     (  !pathFile.exists() || !pathFile.isDirectory() )
+					) {
 						// vCardDir needs an existing directory
 						// if path points to a nonexisting file or
 						// if path points to a file that is not a directory or
