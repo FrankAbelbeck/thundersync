@@ -44,5 +44,5 @@ nein     | Base64-Dekodierung bei Faltung
 nein     | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht
 nein     | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht
 ---------+----------------------------------------------------------------------
-nein     | ... 
+nein     | Kompatibilität TB 9.x
 ---------+----------------------------------------------------------------------

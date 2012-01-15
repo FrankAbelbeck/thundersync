@@ -555,7 +555,7 @@ var ThunderSyncPref = {
 		path.setAttribute("label","");
 */
 		this.ConfigPath[this.aBook] = "";
-		document.getElementById("ThunderSyncPreferences.edit.path").setAttribute("value","");
+		document.getElementById("ThunderSyncPreferences.edit.path").value = ""
 	},
 	
 	/**
