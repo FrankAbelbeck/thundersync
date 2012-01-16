@@ -116,3 +116,5 @@ $Id$
 <!ENTITY ThunderSyncPreferences.IMAP.size "Größe">
 <!ENTITY ThunderSyncPreferences.IMAP.subject "Betreff">
 
+<!ENTITY ThunderSyncPreferences.button.fixfoto  "Überflüssige Fotodateien aus Profil-Verzeichnis löschen">
+

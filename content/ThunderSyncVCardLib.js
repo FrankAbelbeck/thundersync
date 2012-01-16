@@ -70,7 +70,7 @@ var ThunderSyncVCardLib = {
 		"HomeZipCode", "HomeCountry",
 		"WorkAddress", "WorkAddress2", "WorkCity", "WorkState",
 		"WorkZipCode", "WorkCountry",
-		"HomePhone", "WorkPhone", "FaxNumber", "CellularNumber",
+		"HomePhone", "WorkPhone", "FaxNumber", "CellularNumber", "PagerNumber",
 		"JobTitle", "Department", "Company", "WebPage1", "WebPage2",
 		"BirthYear", "BirthMonth", "BirthDay", "Notes"
 	),
@@ -400,6 +400,8 @@ var ThunderSyncVCardLib = {
 		if (value != "") { vcfstr += "TEL;FAX:" + value + this.CRLF; }
 		value = card.getProperty("CellularNumber","");
 		if (value != "") { vcfstr += "TEL;CELL:" + value + this.CRLF; }
+		value = card.getProperty("PagerNumber","");
+		if (value != "") { vcfstr += "TEL;PAGER:" + value + this.CRLF; }
 		
 		//
 		// job title
@@ -716,7 +718,9 @@ var ThunderSyncVCardLib = {
 						case 1:
 							properties[prop[0]] = true;
 							break;
-						case 2: properties[prop[0]] = prop[1];
+						case 2:
+							properties[prop[0]] = prop[1];
+							properties[prop[1]] = true;
 					}
 				}
   			} catch (exception) {
@@ -792,8 +796,8 @@ var ThunderSyncVCardLib = {
 					}
 					break;
 				case "ADR":
-					if (properties["WORK"] == true) { properties["TYPE"] = "WORK"; }
-					if (properties["HOME"] == true) { properties["TYPE"] = "HOME"; }
+// 					if (properties["WORK"]) { properties["TYPE"] = "WORK"; }
+// 					if (properties["HOME"]) { properties["TYPE"] = "HOME"; }
 					switch (properties["TYPE"]) {
 						case "HOME":
 							properties["TYPE"] = "Home";
@@ -825,17 +829,20 @@ var ThunderSyncVCardLib = {
 					break;
 				case "TEL":
 					var teltype = "HomePhone";
-					if (properties["CELL"] == true) {
+					if (properties["CELL"]) {
 						teltype = "CellularNumber";
 					}
-					if (properties["FAX"] == true) {
+					if (properties["FAX"]) {
 						teltype = "FaxNumber";
 					}
-					if (properties["WORK"] == true && properties["VOICE"]) {
+					if (properties["WORK"] && properties["VOICE"]) {
 						teltype = "WorkPhone";
 					}
-					if (properties["HOME"] == true && properties["VOICE"]) {
+					if (properties["HOME"] && properties["VOICE"]) {
 						teltype = "HomePhone";
+					}
+					if (properties["PAGER"]) {
+						teltype = "PagerNumber";
 					}
 					card.setProperty(teltype,value[0]);
 					break;
@@ -861,7 +868,7 @@ var ThunderSyncVCardLib = {
 					break;
 				case "URL":
 					if (value[0] != "") {
-						if (properties["TYPE"] == "WORK" || properties["WORK"] == true) {
+						if ((properties["TYPE"] == "WORK") || (properties["WORK"] == true)) {
 							card.setProperty("WebPage1",value[0]);
 						} else {
 							card.setProperty("WebPage2",value[0]);
@@ -875,7 +882,7 @@ var ThunderSyncVCardLib = {
 					}
 					break;
 				case "X-MOZILLA-PROPERTY":
-					if (value[0] != "" && value[1] != "") {
+					if ((value[0] != "") && (value[1] != "")) {
 						switch (value[0]) {
 							case "AllowRemoteContent":
 							case "PopularityIndex":

@@ -7,18 +7,18 @@ nein     | Konvertierung von alten Pfaden beim Start
 nein     | Setzen/Speichern aller Preferences gemäß Einstellungsdialog
 nein     | Korrektes Laden aller Preferences
 nein     | Umschalten der Preferences bei Adressbuchwechsel
-nein     | Auswirkung Änderung Exportformat (Pfad, Exportformat-Reiter)
+ja       | Auswirkung Änderung Exportformat (Pfad, Exportformat-Reiter)
 nein     | Setzen, laden und speichern der Filterregeln
-nein     | Leeres Adressbuch wird befüllt
-nein     | Lokale Kontakte werden (samt Foto) gelöscht
+ja       | Leeres Adressbuch wird befüllt
+ja       | Lokale Kontakte werden (samt Foto) gelöscht
 ---------+----------------------------------------------------------------------
-nein     | Export als einzelne vCard
-nein     | Export als Sammlung von vCards
-nein     | Import als einzelne vCard
-nein     | Import als Sammlung von vCards
+ja       | Export als einzelne vCard
+ja       | Export als Sammlung von vCards
+ja       | Import als einzelne vCard
+ja       | Import als Sammlung von vCards
 nein     | Abgleich von Unterschieden
 nein     | Abgleich von Unterschieden basierend auf versch. Regeln
-nein     | Löschen lokaler Kontakte
+ja       | Löschen lokaler Kontakte
 nein     | Löschen von einzelnen vCards einer Sammlung
 nein     | Löschen einzelner Kontakte aus einer vCard
 nein     | Aktion beim Starten
@@ -28,7 +28,7 @@ nein     | Aktion beim Beenden
 nein     | Export von Bildern
 nein     | Import von Bildern
 nein     | Import von Bildern bei fehlendem Photo-Verzeichnis im Profil
-nein     | Löschen lokal gespeicherter Bilder
+ja       | Löschen lokal gespeicherter Bilder
 ---------+----------------------------------------------------------------------
 nein     | Export-Zeichensatz eingehalten
 nein     | Import-Zeichensatz eingehalten

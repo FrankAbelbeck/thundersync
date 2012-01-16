@@ -777,6 +777,94 @@ var ThunderSyncPref = {
 				this.ConfigFilter[this.aBook][property] = action;
 			}
 		}
+	},
+	
+	/**
+	 * Clean up photo directory.
+	 * 
+	 * Iterates over all contacts in all addressbooks and looks for
+	 * locally stored photo files. Deletes all files not connected to any
+	 * contact.
+	 */
+	cleanUpPhotoDir: function () {
+		// first: collect all photo files
+		var fileList = new Array();
+		var photoDir = Components
+				.classes["@mozilla.org/file/directory_service;1"]
+				.getService(Components.interfaces.nsIProperties)
+				.get("ProfD", Components.interfaces.nsIFile);
+		var photoDirPath = photoDir.path;
+		photoDir.append("Photos");
+		try {
+			if (!photoDir.isDirectory()) {
+				throw "PhotoDir missing";
+			}
+		}
+		catch (exception) { return; }
+		if (photoDir.exists() && photoDir.isDirectory()) {
+			var files = photoDir.directoryEntries;
+			while (files.hasMoreElements()) {
+				// get next item in list; skip if it's not a file object
+				var file = files.getNext();
+				file.QueryInterface(Components.interfaces.nsIFile);
+				if (file.isFile()) { fileList.push(file.leafName); }
+			}
+		}
+		
+		// second: iterate over all contacs and delete their photo files
+		// from the file list created above.
+		var abManager = Components.classes["@mozilla.org/abmanager;1"]
+				.getService(Components.interfaces.nsIAbManager);
+		var allAddressBooks = abManager.directories;
+		var ablist = document.getElementById("ThunderSyncPreferences.list.addressbook");
+		while (allAddressBooks.hasMoreElements()) {
+			var addressBook = allAddressBooks.getNext();
+			if (addressBook instanceof Components.interfaces.nsIAbDirectory)
+			{
+				var cards = addressBook.childCards;
+				while (cards.hasMoreElements()) {
+					var card = cards.getNext();
+					if (card instanceof Components.interfaces.nsIAbCard) {
+						if (card.getProperty("PhotoType","") == "file") {
+							var index = fileList.indexOf(card.getProperty("PhotoName",""));
+							if (index >= 0) {
+								var fileList = fileList
+									.slice(0,index)
+									.concat(fileList.slice(index+1));
+							}
+							
+						}
+					}
+				}
+			}
+		}
+		
+		// finally: delete all files still in list
+		// prior to this: ask user if he really wants to do it.
+		var stringsBundle = document.getElementById("string-bundle");
+		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+			.getService(Components.interfaces.nsIPromptService);
+		if (fileList.length > 0) {
+			var answer = promptService.confirm(null,
+				stringsBundle.getString("titleCleanFoto"),
+				stringsBundle.getFormattedString("textCleanFoto",[photoDirPath])
+			);
+			if (answer) {
+				for (var i=0; i<fileList.length; i++) {
+					var photoFile = photoDir.clone();
+					photoFile.append(fileList[i]);
+					Components.classes["@mozilla.org/consoleservice;1"]
+						.getService(Components.interfaces.nsIConsoleService)
+						.logStringMessage("Removing file " + photoFile.path);
+					photoFile.remove(false);
+				}
+			}
+		} else {
+			promptService.alert(null,
+				stringsBundle.getString("titleCleanFoto"),
+				stringsBundle.getFormattedString("textNoCleanFoto",[photoDirPath])
+			);
+		}
 	}
 }
 

@@ -514,5 +514,7 @@ $Id$
 			</tabpanels>
 		</tabbox>
 	</hbox>
-
+	<button label="&ThunderSyncPreferences.button.fixfoto;"
+		id="ThunderSyncPreferences.button.fixfoto"
+		oncommand="ThunderSyncPref.cleanUpPhotoDir();" />
 </dialog>
