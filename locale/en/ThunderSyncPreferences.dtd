@@ -116,3 +116,5 @@ $Id$
 <!ENTITY ThunderSyncPreferences.IMAP.size "Size">
 <!ENTITY ThunderSyncPreferences.IMAP.subject "Subject">
 
+<!ENTITY ThunderSyncPreferences.button.fixfoto  "Remove unused photo files from profile directory">
+

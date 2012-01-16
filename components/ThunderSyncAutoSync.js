@@ -45,6 +45,23 @@ ThunderSyncAutoSync.prototype = {
 				// fix preferences from versions prior to 2.x
 				this.fixPreferences();
 				
+				// ensure photo directory is present in profile
+				// construct path to Thunderbird's Photos directory
+				var photoDir = Components
+					.classes["@mozilla.org/file/directory_service;1"]
+					.getService(Components.interfaces.nsIProperties)
+					.get("ProfD", Components.interfaces.nsIFile);
+				photoDir.append("Photos");
+				try {
+					if (!photoDir.exists()) {
+						photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
+					}
+					if (!photoDir.isDirectory()) {
+						throw "PhotoDir missing";
+					}
+				}
+				catch (exception) {}
+				
 				// check if start-up sync should be done
 				var action = false;
 				try {

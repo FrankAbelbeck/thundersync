@@ -1059,7 +1059,9 @@ var ThunderSyncDialog = {
 				card.setProperty("PhotoURI","");
 			}
 		}
-		catch (exception) {}
+		catch (exception) {
+			this.logMsg("Fixing foto file failed.");
+		}
 	},
 	
 	/**
@@ -1089,13 +1091,14 @@ var ThunderSyncDialog = {
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
 		photoDir.append("Photos");
-		if (!photoDir.exists()) {
-			photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
-		}
 		try {
-			if (!photoDir.isDirectory()) { throw "undefined"; }
+			if (!photoDir.isDirectory()) {
+				throw "PhotoDir missing";
+			}
 		}
-		catch (exception) { return; }
+		catch (exception) {
+			this.logMsg("Photo directory is missing!");
+		}
 		
 		// get data string from PhotoURI and determine file type and suffix
 		var datastr = card.getProperty("PhotoURI","");
@@ -1146,9 +1149,7 @@ var ThunderSyncDialog = {
 			case this.modeFromLocal:
 				if (propDeleted) {
 					// delete local property
-					localCard.setProperty("PhotoName","");
-					localCard.setProperty("PhotoType","");
-					localCard.setProperty("PhotoURI","");
+					this.removePhotoFile(localCard);
 				}
 				else {
 					// create external property
