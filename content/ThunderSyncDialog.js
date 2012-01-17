@@ -25,33 +25,36 @@
 var ThunderSyncDialog = {
 	
 	/*
+		mode constants as bitfields
+	*/
+	modeIgnore:     0x00, // 0000b
+	modeFromLocal:  0x01, // 0001b
+	modeFromRemote: 0x02, // 0010b
+	modeUnequal:    0x04, // 0100b
+	modeDelete:     0x08, // 1000b
+	/*
 		Unicode symbols for "mode" column 
 	*/
-	modeFromLocal:    ">>",
-	modeFromRemote:   "<<",
-	modeUnequal:      "!=",
-	modeExchange:     "<>",
+	symbolModeFromLocal:    ">>",
+	symbolModeFromRemote:   "<<",
+	symbolModeUnequal:      "!=",
+	symbolModeExchange:     "<>",
 	
 	/**
-	 * Compares to string values and returns a mode character:
-	 *   value1 == "" && value2 != "": this.modeFromRemote
-	 *   value1 != "" && value2 == "": this.modeFromLocal
-	 *   otherwise: this.modeUnequal
+	 * Translates a mode constant into a Unicode symbol
 	 *
-	 * @param localValue string value of local resource
-	 * @param remoteValue string value of remote resource
+	 * @param mode integer value
 	 * @return mode character
 	 */
-	getMode: function (localValue,remoteValue) {
-		if ( (localValue != "") && (remoteValue == "") ) {
-			return this.modeFromLocal;
-		}
-		else {
-			if ( (localValue == "") && (remoteValue != "") ) {
-				return this.modeFromRemote;
+	getModeSymbol: function (mode) {
+		if (mode & this.modeFromLocal) {
+			return this.symbolModeFromLocal;
+		} else {
+			if (mode & this.modeFromRemote) {
+				return this.symbolModeFromRemote;
 			}
 		}
-		return this.modeUnequal;
+		return this.symbolModeUnequal;
 	},
 	
 	/**
@@ -72,12 +75,12 @@ var ThunderSyncDialog = {
 		var itemmode = item.getElementsByClassName("ThunderSyncDialog.treecell.mode")[0];
 		var modeitems = item.getElementsByClassName("ThunderSyncDialog.treecell.property.mode");
 		
-		var mode = this.modeExchange;
+		var mode = this.symbolModeExchange;
 		var tmpmode = "";
 		for (var i = 0; i < modeitems.length; i++) {
 			tmpmode = modeitems[i].getAttribute("label");
-			if (tmpmode == this.modeUnequal) {
-				mode = this.modeUnequal;
+			if (tmpmode == this.symbolModeUnequal) {
+				mode = this.symbolModeUnequal;
 				break;
 			}
 		}
@@ -284,13 +287,27 @@ var ThunderSyncDialog = {
 		cell.setAttribute("class","ThunderSyncDialog.treecell.local");
 		cell.setAttribute("UID",localUID);
 		row.appendChild(cell);
+		
 		var cell = document.createElementNS(
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 			"treecell"
 		);
-		cell.setAttribute("label",this.getMode(localDisplayName,remoteDisplayName));
+		if (localDisplayName != "") {
+			if (remoteDisplayName != "") {
+				cell.setAttribute("label",this.symbolModeUnequal);
+			} else {
+				cell.setAttribute("label",this.symbolModeFromLocal);
+			}
+		} else {
+			if (remoteDisplayName != "") {
+				cell.setAttribute("label",this.symbolModeFromRemote);
+			} else {
+				cell.setAttribute("label",this.symbolModeUnequal);
+			}
+		}
 		cell.setAttribute("class","ThunderSyncDialog.treecell.mode");
 		row.appendChild(cell);
+		
 		var cell = document.createElementNS(
 			"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 			"treecell"
@@ -304,6 +321,7 @@ var ThunderSyncDialog = {
 			cell.setAttribute("fileIndex",index);
 		}
 		row.appendChild(cell);
+		
 		item.appendChild(row);
 		
 		//
@@ -339,13 +357,19 @@ var ThunderSyncDialog = {
 					"treecell"
 				);
 				cell.setAttribute("label",differences[i][0]);
+				if (differences[i][2] == (this.modeFromLocal | this.modeDelete)) {
+					cell.setAttribute("properties","deleteItem");
+				}
 				cell.setAttribute("class","ThunderSyncDialog.treecell.property.local");
 				row.appendChild(cell);
 				var cell = document.createElementNS(
 					"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 					"treecell"
 				);
-				cell.setAttribute("label",this.getMode(differences[i][0],differences[i][1]));
+				cell.setAttribute("label",this.getModeSymbol(differences[i][2]));
+				if (differences[i][2] & this.modeDelete) {
+					cell.setAttribute("properties","deleteItem");
+				}
 				cell.setAttribute("class","ThunderSyncDialog.treecell.property.mode");
 				row.appendChild(cell);
 				var cell = document.createElementNS(
@@ -353,6 +377,9 @@ var ThunderSyncDialog = {
 					"treecell"
 				);
 				cell.setAttribute("label",differences[i][1]);
+				if (differences[i][2] == (this.modeFromRemote | this.modeDelete)) {
+					cell.setAttribute("properties","deleteItem");
+				}
 				cell.setAttribute("class","ThunderSyncDialog.treecell.property.remote");
 				row.appendChild(cell);
 				var cell = document.createElementNS(
@@ -360,12 +387,12 @@ var ThunderSyncDialog = {
 					"treecell"
 				);
 				try {
-					var proptype = stringsBundle.getString(differences[i][2]);
+					var proptype = stringsBundle.getString(differences[i][3]);
 				} catch (exception) {
 					var proptype = "";
 				}
 				cell.setAttribute("label",proptype);
-				cell.setAttribute("value",differences[i][2]);
+				cell.setAttribute("value",differences[i][3]);
 				cell.setAttribute("class","ThunderSyncDialog.treecell.property.type");
 				row.appendChild(cell);
 				propitem.appendChild(row)
@@ -389,13 +416,12 @@ var ThunderSyncDialog = {
 	 * @param card1 card to compare (nsIAbCard)
 	 * @param card2 card to compare (nsIAbCard)
 	 * @param filters object of associative array with filtered properties (filters[name]=value)
-	 * @return array of differences [value_card1,value_card2,propertyname], compatible with addTreeItem()
+	 * @return array of differences [value_card1,value_card2,mode,propertyname], compatible with addTreeItem()
 	 */
 	cardDifferences: function (card1,card2,filters) {
 		// create array of property names: all properties except photo
-		var properties = ThunderSyncVCardLib.baseProperties.concat(
-			ThunderSyncVCardLib.otherProperties
-		);
+		var properties = ThunderSyncVCardLib.baseProperties.concat(ThunderSyncVCardLib.otherProperties);
+		properties.push("Photo");
 		var result = [];
 		
 		// compare these properties one by one and push (i.e. append)
@@ -404,74 +430,101 @@ var ThunderSyncDialog = {
 		var prop1 = "";
 		var prop2 = "";
 		for (var i = 0; i < properties.length; i++) {
-			prop1 = card1.getProperty(properties[i],"");
-			prop2 = card2.getProperty(properties[i],"");
-			if (prop1 == 0) { prop1 = ""; }
-			if (prop2 == 0) { prop2 = ""; }
+			if (filters[properties[i]] == "ignore") { continue; }
+			
+			if (properties[i] != "Photo") {
+				// process a normal property
+				prop1 = card1.getProperty(properties[i],"");
+				prop2 = card2.getProperty(properties[i],"");
+				if (prop1 == 0) { prop1 = ""; }
+				if (prop2 == 0) { prop2 = ""; }
+			} else {
+				// special routine for photos
+				// prepare contact photo for comparison: if it's a file, read
+				// contents and store them as string
+				var photoname1 = card1.getProperty("PhotoName","");
+				var phototype1 = card1.getProperty("PhotoType","");
+				var prop1 = card1.getProperty("PhotoURI","");
+				switch (phototype1) {
+					case "generic":
+						prop1 = "";
+						break;
+					case "file":
+						prop1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
+						break;
+				}
+				// prepare other contact photo for comparison: if it's a file,
+				// read contents and store them as string
+				var photoname2 = card2.getProperty("PhotoName","");
+				var phototype2 = card2.getProperty("PhotoType","");
+				var prop2 = card2.getProperty("PhotoURI","");
+				switch (phototype2) {
+					case "generic":
+						prop2 = "";
+						break;
+					case "file":
+						prop2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
+						break;
+				}
+			}
 			switch (filters[properties[i]]) {
-				case "ignore":
-					continue;
-					break;
 				case "export":
-					prop2 = "";
+					// user just wants to export this property
+					// default action: ">>"
+					var mode = this.modeFromLocal;
+					if (prop1 == prop2) {
+						// no differences: ignore
+						var mode = this.modeIgnore
+					} else {
+						if (prop1 == "") {
+							// delete remote property
+							var mode = this.modeFromRemote | this.modeDelete;
+						}
+					}
 					break;
 				case "import":
-					prop1 = "";
+					// user just wants to import this property
+					// default action: "<<"
+					var mode = this.modeFromRemote;
+					if (prop1 == prop2) {
+						// no differences: ignore
+						var mode = this.modeIgnore
+					} else {
+						if (prop2 == "") {
+							// delete local property
+							var mode = this.modeFromLocal | this.modeDelete;
+						}
+					}
 					break;
-			}
-			if (prop1 != prop2) { result.push([prop1,prop2,properties[i]]); }
-		}
-		if (filters["Photo"] != "ignore") {
-			// prepare contact photo for comparison: if it's a file, read
-			// contents and store them as string
-			var photoname1 = card1.getProperty("PhotoName","");
-			var phototype1 = card1.getProperty("PhotoType","");
-			var photouri1 = card1.getProperty("PhotoURI","");
-			switch (phototype1) {
-				case "generic":
-					photouri1 = "";
-					break;
-				case "file":
-					photouri1 = ThunderSyncVCardLib.readPhotoFromProfile(photoname1);
-					break;
+				default:
+					// interactive merge
+					// default action: "!="
+					var mode = this.modeUnequal;
+					if (prop1 == prop2) {
+						// no differences: ignore
+						var mode = this.modeIgnore;
+					} else {
+						// ok, properties differ...
+						if (prop1 == "") {
+							// prop1 == "", prop1 != prop2, thus prop2 != ""
+							var mode = this.modeFromRemote;
+						} else {
+							if (prop2 == "") {
+								// prop1 != "" and prop2 == ""
+								var mode = this.modeFromLocal;
+							}
+						}
+					}
 			}
 			
-			// prepare other contact photo for comparison: if it's a file,
-			// read contents and store them as string
-			var photoname2 = card2.getProperty("PhotoName","");
-			var phototype2 = card2.getProperty("PhotoType","");
-			var photouri2 = card2.getProperty("PhotoURI","");
-			switch (phototype2) {
-				case "generic":
-					photouri2 = "";
-					break;
-				case "file":
-					photouri2 = ThunderSyncVCardLib.readPhotoFromProfile(photoname2);
-					break;
-			}
-			
-			switch (filters["Photo"]) {
-				case "export":
-					photouri2 = "";
-					break;
-				case "import":
-					photouri1 = "";
-					break;
-			}
-			// compare photos; push (append) to result array if differing
-			var stringsBundle = document.getElementById("string-bundle");
-			if ((photouri1  != photouri2)) {
-				if (photouri1 != "") {
-					photouri1 = stringsBundle.getString("Photo");
-				} else {
-					photouri1 = "";
+			if (mode != this.modeIgnore) {
+				if (properties[i] == "Photo") {
+					var photoString = document.getElementById("string-bundle")
+								.getString("Photo");
+					if (prop1 != "") { prop1 = photoString; }
+					if (prop2 != "") { prop2 = photoString; }
 				}
-				if (photouri2 != "") {
-					photouri2 = stringsBundle.getString("Photo");
-				} else {
-					photouri2 = "";
-				}
-				result.push([photouri1,photouri2,"Photo"]);
+				result.push([prop1,prop2,mode,properties[i]]);
 			}
 		}
 		return result;
@@ -485,6 +538,11 @@ var ThunderSyncDialog = {
 	 * @param autoclose boolean variable, if true: close dialog if no differences are found.
 	 */
 	compare: function (mode,autoclose) {
+		try {
+			var mode = window.arguments[1];
+		} catch (exception) {
+		}
+		
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 					.getService(Components.interfaces.nsIPromptService);
 		var stringsBundle = document.getElementById("string-bundle");
@@ -531,16 +589,36 @@ var ThunderSyncDialog = {
 						.getService(Components.interfaces.nsIPrefService)
 						.getBranch("extensions.ThunderSync.syncMode.");
 			}
-		}
-		catch (exception) {
+			// check number of preferences in each branch
+			// if any equals 0, throw an exception
+			var obj = new Array();
+			var children = abPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = fmtPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = vcfExpEncPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = vcfImpEncPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = vcfHideUIDPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = vcfUseQPEPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = vcfDoFoldingPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = filterPrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+			var children = modePrefs.getChildList("",obj);  if (obj.value == 0) { throw "0"; }
+		} catch (exception) {
 			// error, not properly configured: inform user!
 			promptService.alert(
 				null,
 				stringsBundle.getString("informationDialogTitle"),
 				stringsBundle.getString("notProperlyConfiguredText")
 			);
+			try {
+				var autostartup = window.arguments[1];
+			} catch (exception) {
+				var autostartup = false;
+			}
+			if (autoclose == true || autostartup == false) {
+				document.getElementById("ThunderSync.dialog.sync").acceptDialog();
+			}
 			return;
 		}
+		
 		// prepare UID generator, initialise checklist and clear tree/database
 		var uuidgenerator = Components.classes["@mozilla.org/uuid-generator;1"].getService(Components.interfaces.nsIUUIDGenerator);
 		var list_checked = new Array();
@@ -592,7 +670,7 @@ var ThunderSyncDialog = {
 			}
 			if (this.ImpEncDB[addressBook.URI] == "Standard") { this.ImpEncDB[addressBook.URI] = "ISO-8859-1"; }
 			
-			// read addressbook-specific vCard preference: encode as Mozilla property?
+			// read addressbook-specific vCard preference: encode UID as Mozilla property?
 			try {
 				this.HideUIDDB[addressBook.URI] = vcfHideUIDPrefs.getBoolPref(abName);
 			} catch (exception) {
@@ -659,11 +737,16 @@ var ThunderSyncDialog = {
 				// just export all Thunderbird contacts to given resource
 				// i.e. iterate over all local contacts and
 				// populate tree with plain exports
+				// prior to this: delete external resource to avoid doublettes
+				//
+				// todo!
+				//
 				var cards = addressBook.childCards;
 				while (cards.hasMoreElements()) {
 					var card = cards.getNext();
 					if (card instanceof Components.interfaces.nsIAbCard) {
 						// add entry: "local name" --> ""
+						this.logMsg("add tree item: " + addressBook.URI + ", " + addressBook.dirName);
 						this.addTreeItem(
 							addressBook.URI,
 							addressBook.dirName,
@@ -726,9 +809,9 @@ var ThunderSyncDialog = {
 								var propability = 0;
 								var cards = addressBook.childCards;
 								while (cards.hasMoreElements()) {
-									// get next item in list; skip if it's not a contact
+									// get next item in list; skip if it's not a contact or if it was already checked
 									var card = cards.getNext();
-									if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
+									if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) >= 0)) {
 										continue;
 									}
 									matches = 0;
@@ -763,6 +846,13 @@ var ThunderSyncDialog = {
 									}
 								}
 							}
+						} else {
+							// only plain import is needed
+							// prior to this: delete local contacts,
+							// i.e. clear addressbook to avoid doublettes
+							//
+							// todo!
+							//
 						}
 						
 						//
@@ -899,16 +989,16 @@ var ThunderSyncDialog = {
 		var cell = selectedItem.getElementsByTagName("treecell");
 		
 		switch (cell[1].getAttribute("label")) {
-			case this.modeUnequal:
+			case this.symbolModeUnequal:
 				//
 				// move from "not equal" to "from local"
 				//
 				cell[0].removeAttribute("properties");
-				cell[1].setAttribute("label",this.modeFromLocal);
+				cell[1].setAttribute("label",this.symbolModeFromLocal);
 				cell[1].removeAttribute("properties");
 				cell[2].setAttribute("properties","deleteItem");
 				break;
-			case this.modeFromLocal:
+			case this.symbolModeFromLocal:
 				//
 				// current mode: copy local property to remote contact
 				// if mode cell has "deleteItem" property set, this
@@ -921,7 +1011,7 @@ var ThunderSyncDialog = {
 				//
 				if (cell[1].getAttribute("properties") == "deleteItem") {
 					cell[0].removeAttribute("properties");
-					cell[1].setAttribute("label",this.modeFromLocal);
+					cell[1].setAttribute("label",this.symbolModeFromLocal);
 					cell[1].removeAttribute("properties");
 					cell[2].setAttribute("properties","deleteItem");
 				}
@@ -932,12 +1022,12 @@ var ThunderSyncDialog = {
 						cell[1].setAttribute("properties","deleteItem");
 					}
 					else {
-						cell[1].setAttribute("label",this.modeFromRemote);
+						cell[1].setAttribute("label",this.symbolModeFromRemote);
 						cell[1].removeAttribute("properties");
 					}
 				}
 				break;
-			case this.modeFromRemote:
+			case this.symbolModeFromRemote:
 				//
 				// current mode: copy remote property to local contact
 				// if mode cell has "deleteItem" property set, this
@@ -950,7 +1040,7 @@ var ThunderSyncDialog = {
 				//
 				if (cell[1].getAttribute("properties") == "deleteItem") {
 					cell[0].setAttribute("properties","deleteItem");
-					cell[1].setAttribute("label",this.modeFromRemote);
+					cell[1].setAttribute("label",this.symbolModeFromRemote);
 					cell[1].removeAttribute("properties");
 					cell[2].removeAttribute("properties");
 				}
@@ -961,7 +1051,7 @@ var ThunderSyncDialog = {
 						cell[1].setAttribute("properties","deleteItem");
 					}
 					else {
-						cell[1].setAttribute("label",this.modeFromLocal);
+						cell[1].setAttribute("label",this.symbolModeFromLocal);
 						cell[1].removeAttribute("properties");
 					}
 				}
@@ -986,7 +1076,7 @@ var ThunderSyncDialog = {
 		
 		var unequal = false;
 		for (var i = 0; i < properties.length; i++) {
-			if (properties[i].getAttribute("label") == this.modeUnequal) {
+			if (properties[i].getAttribute("label") == this.symbolModeUnequal) {
 				unequal = true;
 				break;
 			}
@@ -1007,7 +1097,7 @@ var ThunderSyncDialog = {
 	 */
 	mergeProperties: function (propType,propMode,propDeleted,localCard,abURI,path,index) {
 		switch (propMode) {
-			case this.modeFromLocal:
+			case this.symbolModeFromLocal:
 				if (propDeleted) {
 					// delete local property
 					localCard.setProperty(propType,"");
@@ -1020,7 +1110,7 @@ var ThunderSyncDialog = {
 					);
 				}
 				break;
-			case this.modeFromRemote:
+			case this.symbolModeFromRemote:
 				if (propDeleted) {
 					// delete external property
 					this.setProperty(abURI,path,index,propType,"");
@@ -1146,7 +1236,7 @@ var ThunderSyncDialog = {
 	 */
 	mergePhotoProperty: function (propMode,propDeleted,localCard,abURI,path,index) {
 		switch (propMode) {
-			case this.modeFromLocal:
+			case this.symbolModeFromLocal:
 				if (propDeleted) {
 					// delete local property
 					this.removePhotoFile(localCard);
@@ -1158,7 +1248,7 @@ var ThunderSyncDialog = {
 					this.setProperty(abURI,path,index,"PhotoURI", localCard.getProperty("PhotoURI",""));
 				}
 				break;
-			case this.modeFromRemote:
+			case this.symbolModeFromRemote:
 				if (propDeleted) {
 					// delete external property
 					this.setProperty(abURI,path,index,"PhotoName","");
@@ -1218,6 +1308,7 @@ var ThunderSyncDialog = {
 			// that are stored in this addressbook
 			var contacts = addressBooks[i].getElementsByClassName("ThunderSyncDialog.treeitem.contact");
 			var cardsToDelete = Components.classes["@mozilla.org/array;1"].createInstance(Components.interfaces.nsIMutableArray);
+			var photosToDelete = new Array();
 			for (var k = 0; k < contacts.length; k++) {
 				//
 				// the tree contains all information necessary for data retrieval:
@@ -1232,7 +1323,7 @@ var ThunderSyncDialog = {
 				var modeDeleted = modecell.getAttribute("properties") == "deleteItem";
 				
 				switch (mode) {
-					case this.modeExchange:
+					case this.symbolModeExchange:
 						//
 						// local and remote entry differ,
 						// process properties
@@ -1284,7 +1375,7 @@ var ThunderSyncDialog = {
 						this.setProperty(addressBook.URI,path,index,"LastModifiedDate",rev);
 						break;
 					
-					case this.modeFromLocal:
+					case this.symbolModeFromLocal:
 						//
 						// local contact should be copied to external file
 						//
@@ -1294,6 +1385,11 @@ var ThunderSyncDialog = {
 						if (modeDeleted) {
 							// delete local contact
 							cardsToDelete.appendElement(localCard,false);
+							var photoType = localCard.getProperty("PhotoType","");
+							var photoName = localCard.getProperty("PhotoName","");
+							if (photoType == "file" && photoName != "") {
+								photosToDelete.push(photoName);
+							}
 						}
 						else {
 							// add new contact to CardDB
@@ -1306,7 +1402,7 @@ var ThunderSyncDialog = {
 						}
 						break;
 						
-					case this.modeFromRemote:
+					case this.symbolModeFromRemote:
 						//
 						// external file should be copied to local contact
 						//
@@ -1340,6 +1436,26 @@ var ThunderSyncDialog = {
 			// after all's done: delete these cards
 			//
 			if (cardsToDelete.length > 0) {
+				// important: delete any photos of these contacts, too!
+				var photoDir = Components
+						.classes["@mozilla.org/file/directory_service;1"]
+						.getService(Components.interfaces.nsIProperties)
+						.get("ProfD", Components.interfaces.nsIFile);
+				photoDir.append("Photos");
+				try {
+					if (photoDir.isDirectory()) {
+						for (var k=0; k<photosToDelete.length; k++) {
+							var photoFile = photoDir.clone();
+							photoFile.append(photosToDelete[k]);
+// 							this.logMsg("Removing file " + photoFile.path);
+							photoFile.remove(false);
+						}
+					}
+				} catch (exception) {
+					this.logMsg("Removing photo file failed; " + exception);
+				}
+				
+				// delete all marked contacts
 				addressBook.deleteCards(cardsToDelete);
 			}
 		}
@@ -1449,17 +1565,17 @@ var ThunderSyncDialog = {
 					}
 				}
 			}
+			var file = Components.classes["@mozilla.org/network/io-service;1"]
+					.getService(Components.interfaces.nsIIOService)
+					.newURI(path,null,null)
+					.QueryInterface(Components.interfaces.nsIFileURL)
+					.file;
 			if (dataString.length > 0) {
 				// yep, data should be written...
 				switch (this.FormatDB[abURI]) {
 					case "vCardDir":
 					case "vCardFile":
 						// initialise file stream object
-						var file = Components.classes["@mozilla.org/network/io-service;1"]
-								.getService(Components.interfaces.nsIIOService)
-								.newURI(path,null,null)
-								.QueryInterface(Components.interfaces.nsIFileURL)
-								.file;
 						fStream.init(file,0x02|0x08|0x20,0600,0);
 						// a vCard ought to be written...
 						// fix Outlook's non-standard behaviour:

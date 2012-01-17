@@ -237,12 +237,13 @@ var ThunderSyncPref = {
 			this.aBook = document.getElementById("ThunderSyncPreferences.list.addressbook")
 					.getItemAtIndex(0).getAttribute("value");
 			document.getElementById("ThunderSyncPreferences.list.addressbook").selectedIndex = 0;
-			document.getElementById("ThunderSyncPreferences.tree.filter").view.selection.select(0)
+			document.getElementById("ThunderSyncPreferences.tree.filter").view.selection.select(0);
 			this.updateExportFormat();
 		} catch (exception) {
 			// it seems there are no addressbooks: show alert and exit
 			var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 				.getService(Components.interfaces.nsIPromptService);
+			var stringsBundle = document.getElementById("string-bundle");
 			promptService.alert(
 				null,
 				stringsBundle.getString("titleError"),
@@ -463,17 +464,19 @@ var ThunderSyncPref = {
 	 * (for now this apply for vCard only)
 	 */
 	updateExportFormat: function () {
+		var oldformat = this.ConfigFormat[this.aBook];
 		var format = document.getElementById("ThunderSyncPreferences.menulist.format")
 			.selectedItem
 			.getAttribute("value");
 		
+		// check if format has really changed; if not, just return
+		if (format == oldformat) { return; }
+		
 		this.ConfigFormat[this.aBook] = format;
 		document.getElementById("ThunderSyncPreferences.grid.vCard")
-			.setAttribute("hidden", format != "vCardDir" && format != "vCardFile" );
+			.setAttribute("hidden", (format != "vCardDir") && (format != "vCardFile") );
 		
-		//
 		// manage path popup menu depending on format
-		//
 		switch (format) {
 			case "vCardDir":
 				this.clearPath();
@@ -586,7 +589,7 @@ var ThunderSyncPref = {
 		var fp = Components.classes["@mozilla.org/filepicker;1"]
 				.createInstance(nsIFilePicker);
 		
-		consoleService.logStringMessage("ThunderSync/File: " + this.ConfigPath[this.aBook]);
+// 		consoleService.logStringMessage("ThunderSync/File: " + this.ConfigPath[this.aBook]);
 		
 		if (this.ConfigPath[this.aBook].substr(0,7) == "file://") {
 			try {
@@ -853,9 +856,9 @@ var ThunderSyncPref = {
 				for (var i=0; i<fileList.length; i++) {
 					var photoFile = photoDir.clone();
 					photoFile.append(fileList[i]);
-					Components.classes["@mozilla.org/consoleservice;1"]
-						.getService(Components.interfaces.nsIConsoleService)
-						.logStringMessage("Removing file " + photoFile.path);
+// 					Components.classes["@mozilla.org/consoleservice;1"]
+// 						.getService(Components.interfaces.nsIConsoleService)
+// 						.logStringMessage("Removing file " + photoFile.path);
 					photoFile.remove(false);
 				}
 			}
