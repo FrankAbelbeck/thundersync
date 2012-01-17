@@ -31,7 +31,7 @@ $Id$
 	title="&ThunderSyncDialog.title;"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	orient="vertical"
-	onload="ThunderSyncDialog.compare('ask',true);"
+	onload="ThunderSyncDialog.compare(null,true);"
 	buttons=",">
 	
 	<script type="application/x-javascript"

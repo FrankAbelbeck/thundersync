@@ -247,8 +247,17 @@ ThunderSyncAutoSync.prototype = {
 			}
 			
 			// check paths: are they valid, are they URIs?
-			format = prefs.getCharPref("exportFormat."+abName);
-			path = prefs.getCharPref("Addressbooks."+abName);
+			try {
+				format = prefs.getCharPref("exportFormat."+abName);
+			} catch (exception) {
+				format = exportFormat;
+			}
+			try {
+				path = prefs.getCharPref("Addressbooks."+abName);
+			} catch (exception) {
+				path = "";
+			}
+			
 			switch (format) {
 				case "vCardDir":
 				case "vCardFile":
@@ -305,8 +314,8 @@ ThunderSyncAutoSync.prototype = {
 			}
 			
 			// check new entry: UID as comment?
-			if (prefs.getPrefType("vCard.UIDinNote."+abName) != prefs.PREF_BOOL) {
-				prefs.setBoolPref("vCard.UIDinNote."+abName,false);
+			if (prefs.getPrefType("vCard.hideUID."+abName) != prefs.PREF_BOOL) {
+				prefs.setBoolPref("vCard.hideUID."+abName,false);
 			}
 			
 			// check new entry: enable quoted-printable encoding?
@@ -317,6 +326,11 @@ ThunderSyncAutoSync.prototype = {
 			// check new entry: enable line folding?
 			if (prefs.getPrefType("vCard.folding."+abName) != prefs.PREF_BOOL) {
 				prefs.setBoolPref("vCard.folding."+abName,true);
+			}
+			
+			// check new entry: filters?
+			if (prefs.getPrefType("filter."+abName) != prefs.PREF_STRING) {
+				prefs.setCharPref("filter."+abName,"");
 			}
 		}
 	}

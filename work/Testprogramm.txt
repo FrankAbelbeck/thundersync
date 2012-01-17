@@ -2,13 +2,13 @@ Testprogramm ThunderSync 2
 ---------+----------------------------------------------------------------------
 Erfüllt? | Funktion
 ---------+----------------------------------------------------------------------
-nein     | Korrektur alter Preferences beim Start
-nein     | Konvertierung von alten Pfaden beim Start
-nein     | Setzen/Speichern aller Preferences gemäß Einstellungsdialog
-nein     | Korrektes Laden aller Preferences
-nein     | Umschalten der Preferences bei Adressbuchwechsel
+ja       | Korrektur alter Preferences beim Start
+ja       | Konvertierung von alten Pfaden beim Start
+ja       | Setzen/Speichern aller Preferences gemäß Einstellungsdialog
+ja       | Korrektes Laden aller Preferences
+ja       | Umschalten der Preferences bei Adressbuchwechsel
 ja       | Auswirkung Änderung Exportformat (Pfad, Exportformat-Reiter)
-nein     | Setzen, laden und speichern der Filterregeln
+ja       | Setzen, laden und speichern der Filterregeln
 ja       | Leeres Adressbuch wird befüllt
 ja       | Lokale Kontakte werden (samt Foto) gelöscht
 ---------+----------------------------------------------------------------------
@@ -16,22 +16,22 @@ ja       | Export als einzelne vCard
 ja       | Export als Sammlung von vCards
 ja       | Import als einzelne vCard
 ja       | Import als Sammlung von vCards
-nein     | Abgleich von Unterschieden
-nein     | Abgleich von Unterschieden basierend auf versch. Regeln
+ja       | Abgleich von Unterschieden
+ja       | Abgleich von Unterschieden basierend auf versch. Regeln
 ja       | Löschen lokaler Kontakte
-nein     | Löschen von einzelnen vCards einer Sammlung
-nein     | Löschen einzelner Kontakte aus einer vCard
-nein     | Aktion beim Starten
-nein     | Standardaktion
-nein     | Aktion beim Beenden
+ja       | Löschen von einzelnen vCards einer Sammlung
+ja       | Löschen einzelner Kontakte aus einer vCard
+ja       | Aktion beim Starten
+ja       | Standardaktion
+ja       | Aktion beim Beenden
 ---------+----------------------------------------------------------------------
-nein     | Export von Bildern
-nein     | Import von Bildern
-nein     | Import von Bildern bei fehlendem Photo-Verzeichnis im Profil
+ja       | Export von Bildern
+ja       | Import von Bildern
+ja       | Import von Bildern bei fehlendem Photo-Verzeichnis im Profil
 ja       | Löschen lokal gespeicherter Bilder
 ---------+----------------------------------------------------------------------
-nein     | Export-Zeichensatz eingehalten
-nein     | Import-Zeichensatz eingehalten
+?        | Export-Zeichensatz eingehalten
+?        | Import-Zeichensatz eingehalten
 nein     | Quoted-Printable-Kodierung
 nein     | Base64-Kodierung
 nein     | Faltung von Zeilen
@@ -42,7 +42,7 @@ nein     | Base64-Dekodierung
 nein     | Quoted-Printable-Dekodierung bei Faltung
 nein     | Base64-Dekodierung bei Faltung
 nein     | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht
-nein     | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht
+ja       | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht
 ---------+----------------------------------------------------------------------
-nein     | Kompatibilität TB 9.x
+ja       | Kompatibilität TB 9.x
 ---------+----------------------------------------------------------------------
