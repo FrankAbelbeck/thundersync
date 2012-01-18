@@ -29,11 +29,11 @@ $Id$
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
 	<toolbarpalette id="MailToolbarPalette">
-		<!--		<toolbarseparator />-->
 		<toolbarbutton id="ThunderSyncToolbarButton"
 			class="toolbarbutton-1"
 			label="ThunderSync"
 			tooltiptext="&ThunderSyncMenuItem;"
+			image="chrome://thundersync/skin/icon24.png"
 			oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
 		/>
 	</toolbarpalette>

@@ -681,10 +681,6 @@ var ThunderSyncVCardLib = {
 			// technique specified in the vCard standard
 			tmp = tmp.replace(/\r\n([\s])/g,"$1");
 			
-// 			Components.classes["@mozilla.org/consoleservice;1"]
-// 				.getService(Components.interfaces.nsIConsoleService)
-// 				.logStringMessage("[ThunderSync] vCard str: "+tmp);
-			
 			// finally, split the datastring at \r\n line breaks
 			var lines = tmp.split(this.CRLF);
 		} catch (exception) {

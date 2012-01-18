@@ -589,8 +589,6 @@ var ThunderSyncPref = {
 		var fp = Components.classes["@mozilla.org/filepicker;1"]
 				.createInstance(nsIFilePicker);
 		
-// 		consoleService.logStringMessage("ThunderSync/File: " + this.ConfigPath[this.aBook]);
-		
 		if (this.ConfigPath[this.aBook].substr(0,7) == "file://") {
 			try {
 				var curFile = Components.classes["@mozilla.org/network/io-service;1"]
@@ -617,7 +615,6 @@ var ThunderSyncPref = {
 		// this will be the default filter
 		switch (this.ConfigFormat[this.aBook]) {
 			case "vCardFile":
-			case "vCardDir":
 				fp.appendFilter(stringsBundle.getString("filterVCard"),"*.vcf");
 				break;
 		}
@@ -718,9 +715,9 @@ var ThunderSyncPref = {
 			}
 		} catch (exception) {
 			// something went wrong, log to error console
-			var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-						.getService(Components.interfaces.nsIConsoleService);
-			consoleService.logStringMessage("ThunderSync/IMAP Options: "+exception);
+			Components.classes["@mozilla.org/consoleservice;1"]
+				.getService(Components.interfaces.nsIConsoleService)
+				.logStringMessage("ThunderSync/IMAP Options: "+exception);
 		}
 	},
 	
@@ -856,9 +853,6 @@ var ThunderSyncPref = {
 				for (var i=0; i<fileList.length; i++) {
 					var photoFile = photoDir.clone();
 					photoFile.append(fileList[i]);
-// 					Components.classes["@mozilla.org/consoleservice;1"]
-// 						.getService(Components.interfaces.nsIConsoleService)
-// 						.logStringMessage("Removing file " + photoFile.path);
 					photoFile.remove(false);
 				}
 			}

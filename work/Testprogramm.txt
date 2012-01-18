@@ -32,16 +32,16 @@ ja       | Löschen lokal gespeicherter Bilder
 ---------+----------------------------------------------------------------------
 ?        | Export-Zeichensatz eingehalten
 ?        | Import-Zeichensatz eingehalten
-nein     | Quoted-Printable-Kodierung
-nein     | Base64-Kodierung
-nein     | Faltung von Zeilen
-nein     | Faltung von Zeilen in Quoted-Printable-Kodierung
-nein     | Faltung von Zeilen in Base64-Kodierung
-nein     | Quoted-Printable-Dekodierung
-nein     | Base64-Dekodierung
-nein     | Quoted-Printable-Dekodierung bei Faltung
-nein     | Base64-Dekodierung bei Faltung
-nein     | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht
+ja       | Quoted-Printable-Kodierung
+ja       | Base64-Kodierung
+ja       | Faltung von Zeilen
+ja       | Faltung von Zeilen in Quoted-Printable-Kodierung
+ja       | Faltung von Zeilen in Base64-Kodierung
+ja       | Quoted-Printable-Dekodierung
+ja       | Base64-Dekodierung
+ja       | Quoted-Printable-Dekodierung bei Faltung
+ja       | Base64-Dekodierung bei Faltung
+ja       | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht
 ja       | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht
 ---------+----------------------------------------------------------------------
 ja       | Kompatibilität TB 9.x

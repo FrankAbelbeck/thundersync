@@ -3,7 +3,7 @@ ThunderSync, a Mozilla Thunderbird v3 extension
 $Id$
 --------------------------------------------------------------------------------
 
-Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+Copyright (C) 2012 Frank Abelbeck <frank.abelbeck@googlemail.com>
 
 This file is part of the Mozilla Thunderbird extension "ThunderSync."
 
@@ -27,7 +27,8 @@ or see <http://www.gnu.org/licenses/>.
 Author.....: Frank Abelbeck
 Supporters.: Lucas Treffenstädt (testing, code contribution auto-start),
              Yair Lanz (feedback regarding charsets)
-Version....: 2011-03-21 (1.2.1)
+             David von Oheimb (feedback, code contribution)
+Version....: 2012-01-18 (2.0)
 Licence....: GNU General Public License version 2
 
 Description: Allows to synchronise Thunderbird's addressbook with external
@@ -71,6 +72,13 @@ Version 1.2 added another option. Now you can choose whether ThunderSync is
 executed when Thunderbird is starting.
 
 Version 1.2.1 is a bugfix release fixing a typo in the photo URL export routine.
+
+Version 2.0 features an all-new comparison/synchronisation system. It supports
+also vCard files containing more than one contact and allows a more detailed
+configuration of ThunderSync's behaviour (filtering of properties, default
+actions, advanced export format options). Finally, it sports an icon as well as
+a toolbar button.
+
 --------------------------------------------------------------------------------
 
 Quick Start Guide #1: Usage
@@ -80,9 +88,11 @@ do a proper synchronisation. Open Thunderbird's addressbook and choose menu
 item
           Extras -> Synchronise addressbook...
 
-A new dialog will pop up. After a click on the "compare" button a list of
-differences between your local addressbook and the external file ressources will
-be built. If both ressources equal, a dialog will inform you about this.
+A new dialog will pop up. Initially ThunderSync should have already compared
+local and remote contacts. But with a click on the "compare" button this can be
+repeated. A list of differences between your local addressbook and the
+external file resources will be built. If both resources are equal, a dialog
+will inform you about this.
 
 Otherwise a table will show the differences, with the middle column displaying
 the type of difference:
@@ -96,7 +106,7 @@ If at least one '!=' is present, you will not be allowed to start a
 synchronisation. You have to resolve the conflict by opening the contact in
 question. Simply click on it, this will show all differing properties. Find any
 property with a '!=' and double-click on it. A double click toggles between
-keeping local information or using the external ressource.
+keeping local information or using the external resource.
 
 When no '!=' is left in the list of differing contacts, the "syncronise" button
 will be enabled and you can trigger the synchronisation process.
@@ -125,3 +135,17 @@ Changelog:
 1.2.1 (2011-03-21)
    - fixed typo in photo URL export routine
 
+2.0 (2012-01-18)
+   - new comparison routine
+   - new synchronisation routine
+   - read and write operations are grouped and executed at begin and end of sync
+   - various quirks in the vCard implementation were fixed
+   - improved file handling (deletion of photo images and external files)
+   - introduction of a property filter system
+   - introduction of advanced vCard options to fix certain compatibility issues
+   - definition of default action as well as start-up and shutdown actions
+   - automatic migration of old preferences
+   - introduction of a routine to delete unused image files in the photo
+     directory of the user's profile
+   - introduction of a toolbar button
+   - ThunderSync icon
