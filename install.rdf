@@ -31,7 +31,7 @@ $Id$
 		<em:name>ThunderSync</em:name>
 		<em:version>2.0</em:version>
 		<em:creator>Frank Abelbeck</em:creator>
-		<em:description>Synchronise Thunderbird's addressbook with an external ressource.</em:description>
+		<em:description>Synchronise Thunderbird's addressbook with an external resource.</em:description>
 		<em:homepage>http://abelbeck.wordpress.com/</em:homepage>
 		
 		<em:localized>
@@ -46,7 +46,7 @@ $Id$
 			<Description>
 				<em:locale>en</em:locale>
 				<em:name>ThunderSync</em:name>
-				<em:description>Synchronise Thunderbird's addressbook with an external ressource.</em:description>
+				<em:description>Synchronise Thunderbird's addressbook with an external resource.</em:description>
 			</Description>
 		</em:localized>
 		

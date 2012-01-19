@@ -1,48 +1,48 @@
 Testprogramm ThunderSync 2
----------+----------------------------------------------------------------------
-Erfüllt? | Funktion
----------+----------------------------------------------------------------------
-ja       | Korrektur alter Preferences beim Start
-ja       | Konvertierung von alten Pfaden beim Start
-ja       | Setzen/Speichern aller Preferences gemäß Einstellungsdialog
-ja       | Korrektes Laden aller Preferences
-ja       | Umschalten der Preferences bei Adressbuchwechsel
-ja       | Auswirkung Änderung Exportformat (Pfad, Exportformat-Reiter)
-ja       | Setzen, laden und speichern der Filterregeln
-ja       | Leeres Adressbuch wird befüllt
-ja       | Lokale Kontakte werden (samt Foto) gelöscht
----------+----------------------------------------------------------------------
-ja       | Export als einzelne vCard
-ja       | Export als Sammlung von vCards
-ja       | Import als einzelne vCard
-ja       | Import als Sammlung von vCards
-ja       | Abgleich von Unterschieden
-ja       | Abgleich von Unterschieden basierend auf versch. Regeln
-ja       | Löschen lokaler Kontakte
-ja       | Löschen von einzelnen vCards einer Sammlung
-ja       | Löschen einzelner Kontakte aus einer vCard
-ja       | Aktion beim Starten
-ja       | Standardaktion
-ja       | Aktion beim Beenden
----------+----------------------------------------------------------------------
-ja       | Export von Bildern
-ja       | Import von Bildern
-ja       | Import von Bildern bei fehlendem Photo-Verzeichnis im Profil
-ja       | Löschen lokal gespeicherter Bilder
----------+----------------------------------------------------------------------
-?        | Export-Zeichensatz eingehalten
-?        | Import-Zeichensatz eingehalten
-ja       | Quoted-Printable-Kodierung
-ja       | Base64-Kodierung
-ja       | Faltung von Zeilen
-ja       | Faltung von Zeilen in Quoted-Printable-Kodierung
-ja       | Faltung von Zeilen in Base64-Kodierung
-ja       | Quoted-Printable-Dekodierung
-ja       | Base64-Dekodierung
-ja       | Quoted-Printable-Dekodierung bei Faltung
-ja       | Base64-Dekodierung bei Faltung
-ja       | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht
-ja       | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht
----------+----------------------------------------------------------------------
-ja       | Kompatibilität TB 9.x
----------+----------------------------------------------------------------------
+---------+---------------------------------------------------------------+------
+Erfüllt? | Funktion                                                      | XPI
+---------+---------------------------------------------------------------+------
+ja       | Korrektur alter Preferences beim Start                        | ja
+ja       | Konvertierung von alten Pfaden beim Start                     | ja
+ja       | Setzen/Speichern aller Preferences gemäß Einstellungsdialog   | ja
+ja       | Korrektes Laden aller Preferences                             | ja
+ja       | Umschalten der Preferences bei Adressbuchwechsel              | ja
+ja       | Auswirkung Änderung Exportformat (Pfad, Exportformat-Reiter)  | ja
+ja       | Setzen, laden und speichern der Filterregeln                  | ja
+ja       | Leeres Adressbuch wird befüllt                                | ja
+ja       | Lokale Kontakte werden (samt Foto) gelöscht                   | ja
+---------+---------------------------------------------------------------+------
+ja       | Export als einzelne vCard                                     | ja
+ja       | Export als Sammlung von vCards                                | ja
+ja       | Import als einzelne vCard                                     | ja
+ja       | Import als Sammlung von vCards                                | ja
+ja       | Abgleich von Unterschieden                                    | ja
+ja       | Abgleich von Unterschieden basierend auf versch. Regeln       | ja
+ja       | Löschen lokaler Kontakte                                      | ja
+ja       | Löschen von einzelnen vCards einer Sammlung                   | ja
+ja       | Löschen einzelner Kontakte aus einer vCard                    | ja
+ja       | Aktion beim Starten                                           | ja
+ja       | Standardaktion                                                | ja
+ja       | Aktion beim Beenden                                           | ja
+---------+---------------------------------------------------------------+------
+ja       | Export von Bildern                                            | ja
+ja       | Import von Bildern                                            | ja
+ja       | Import von Bildern bei fehlendem Photo-Verzeichnis im Profil  | ja
+ja       | Löschen lokal gespeicherter Bilder                            | ja
+---------+---------------------------------------------------------------+------
+?        | Export-Zeichensatz eingehalten                                | ??
+?        | Import-Zeichensatz eingehalten                                | ??
+ja       | Quoted-Printable-Kodierung                                    | ja
+ja       | Base64-Kodierung                                              | ja
+ja       | Faltung von Zeilen                                            | ja
+ja       | Faltung von Zeilen in Quoted-Printable-Kodierung              | ja
+ja       | Faltung von Zeilen in Base64-Kodierung                        | ja
+ja       | Quoted-Printable-Dekodierung                                  | ja
+ja       | Base64-Dekodierung                                            | ja
+ja       | Quoted-Printable-Dekodierung bei Faltung                      | ja
+ja       | Base64-Dekodierung bei Faltung                                | ja
+ja       | Rückfall auf Base64 bei \n, wenn QP-Kodierung nicht gewünscht | ja
+ja       | UID als X-MOZILLA-PROPERTY gespeichert, wenn gewünscht        | ja
+---------+---------------------------------------------------------------+------
+ja       | Kompatibilität TB 9.x                                         | ja
+---------+---------------------------------------------------------------+------

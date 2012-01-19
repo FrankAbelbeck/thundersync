@@ -107,7 +107,7 @@ $Id$
 
 <!ENTITY ThunderSyncPreferences.IMAP.title "ThunderSync IMAP Preferences">
 <!ENTITY ThunderSyncPreferences.IMAP.dialog.title "IMAP Selector">
-<!ENTITY ThunderSyncPreferences.IMAP.description "The following messages were identified by ThunderSync as possible ressources:">
+<!ENTITY ThunderSyncPreferences.IMAP.description "The following messages were identified by ThunderSync as possible resources:">
 <!ENTITY ThunderSyncPreferences.IMAP.accounts "IMAP Accounts">
 
 <!ENTITY ThunderSyncPreferences.IMAP.path "Account/Folder">

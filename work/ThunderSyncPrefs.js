@@ -1,0 +1,11 @@
+user_pref("extensions.ThunderSync.Addressbooks.abook", "/home/frank/dokumente/adressbuecher/persoenlich");
+user_pref("extensions.ThunderSync.Addressbooks.abook-1", "/home/frank/dokumente/adressbuecher/medion-dienste");
+user_pref("extensions.ThunderSync.Addressbooks.abook-2", "/home/frank/dokumente/adressbuecher/bwb");
+user_pref("extensions.ThunderSync.Addressbooks.abook-3", "/home/frank/projekte/thundersync/testbuch");
+user_pref("extensions.ThunderSync.Addressbooks.abook-4", "/home/frank/projekte/thundersync/testbuch2");
+user_pref("extensions.ThunderSync.Addressbooks.history", "");
+user_pref("extensions.ThunderSync.Addressbooks.impab", "/home/frank/dokumente/adressbuecher/102.egrp");
+user_pref("extensions.ThunderSync.exportEncoding", "UTF-8");
+user_pref("extensions.ThunderSync.exportFormat", "vcard");
+user_pref("extensions.ThunderSync.importEncoding", "Standard");
+user_pref("extensions.ThunderSync.syncOnStartup", false);
