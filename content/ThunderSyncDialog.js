@@ -573,10 +573,13 @@ var ThunderSyncDialog = {
 	 * @param mode string, signaling "startUp", "shutdown" or otherwise normal operation
 	 * @param autoclose boolean variable, if true: close dialog if no differences are found.
 	 */
-	compare: function (mode,autoclose) {
+	compare: function () {
 		try {
-			var mode = window.arguments[1];
+			var mode = window.arguments[0].wrappedJSObject.mode;
+			var autoclose = true;
 		} catch (exception) {
+			var mode = null;
+			var autoclose = false;
 		}
 		
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -644,12 +647,7 @@ var ThunderSyncDialog = {
 				stringsBundle.getString("informationDialogTitle"),
 				stringsBundle.getString("notProperlyConfiguredText")
 			);
-			try {
-				var autostartup = window.arguments[1];
-			} catch (exception) {
-				var autostartup = false;
-			}
-			if (autoclose == true || autostartup == false) {
+			if (autoclose) {
 				document.getElementById("ThunderSync.dialog.sync").acceptDialog();
 			}
 			return;
@@ -940,21 +938,14 @@ var ThunderSyncDialog = {
 		//
 		if (document.getElementsByClassName("ThunderSyncDialog.treecell.mode").length == 0) {
 			this.clearTree();
-			try {
-				var autostartup = window.arguments[0];
-			} catch (exception) {
-				var autostartup = false;
-			}
-			if (autostartup == false) {
+			if (!autoclose) {
 				promptService.alert(
 					null,
 					stringsBundle.getString("informationDialogTitle"),
 					stringsBundle.getString("alreadySyncText")
 				);
 			}
-			if (autoclose == true || autostartup == false) {
-				document.getElementById("ThunderSync.dialog.sync").acceptDialog();
-			}
+			document.getElementById("ThunderSync.dialog.sync").acceptDialog();
 		}
 		else {
 			// there are differences to sync:
@@ -1138,18 +1129,16 @@ var ThunderSyncDialog = {
 			.get("ProfD", Components.interfaces.nsIFile);
 		photoFile.append("Photos");
 		photoFile.append(card.getProperty("PhotoName",""));
-		// delete file and set properties to empty strings
-		try {
-			if (photoFile.isFile() && photoFile.exists()) {
-				photoFile.remove(false);
-				card.setProperty("PhotoName","");
-				card.setProperty("PhotoType","");
-				card.setProperty("PhotoURI","");
-			}
+		
+		// delete file if it exists
+		if (photoFile.exists() && photoFile.isFile()) {
+			photoFile.remove(false);
 		}
-		catch (exception) {
-			this.logMsg("Fixing foto file failed.");
-		}
+		
+		// set properties to empty strings
+		card.setProperty("PhotoName","");
+		card.setProperty("PhotoType","");
+		card.setProperty("PhotoURI","");
 	},
 	
 	/**
@@ -1179,47 +1168,48 @@ var ThunderSyncDialog = {
 			.getService(Components.interfaces.nsIProperties)
 			.get("ProfD", Components.interfaces.nsIFile);
 		photoDir.append("Photos");
-		try {
-			if (!photoDir.isDirectory()) {
-				throw "PhotoDir missing";
+		
+		// if it's an existing directory: process photo info
+		if (photoDir.exists() && photoDir.isDirectory()) {
+			// get data string from PhotoURI and determine file type and suffix
+			var datastr = card.getProperty("PhotoURI","");
+			var suffix = ThunderSyncVCardLib.determinePhotoSuffix(datastr.substr(0,8));
+			var filename = "";
+			
+			// create a random number filename similar to the ones created by Thunderbird
+			// control loop with a counter to avoid seemingly infinite loops
+			var counter = 1024;
+			do {
+				filename = new String(Math.random()).replace("0.", "") + "." + suffix;
+				var newImageFile = photoDir.clone();
+				newImageFile.append(filename);
+				counter--;
+			} while (newImageFile.exists() && counter > 0);
+			
+			// if newImageFile doesn't exist: use it
+			if (!newImageFile.exists()) {
+				// write data string to new file
+				var stream = Components.classes["@mozilla.org/network/safe-file-output-stream;1"]
+						.createInstance(Components.interfaces.nsIFileOutputStream);  
+				stream.init(newImageFile,0x04|0x08|0x20,0600,0);
+				stream.write(datastr,datastr.length);
+				if (stream instanceof Components.interfaces.nsISafeOutputStream) {  
+					stream.finish();  
+				}
+				else {  
+					stream.close();  
+				}
+				
+				// create new I/O service to obtain the new file's URI
+				var ios = Components.classes["@mozilla.org/network/io-service;1"]
+						.getService(Components.interfaces.nsIIOService);
+				
+				// fix Photo* properties
+				card.setProperty("PhotoType","file");
+				card.setProperty("PhotoName",newImageFile.leafName);
+				card.setProperty("PhotoURI",ios.newFileURI(newImageFile).spec);
 			}
 		}
-		catch (exception) {
-			this.logMsg("Photo directory is missing!");
-		}
-		
-		// get data string from PhotoURI and determine file type and suffix
-		var datastr = card.getProperty("PhotoURI","");
-		var suffix = ThunderSyncVCardLib.determinePhotoSuffix(datastr.substr(0,8));
-		var filename = "";
-		
-		// create a random number filename similar to the ones created by Thunderbird
-		do {
-			filename = new String(Math.random()).replace("0.", "") + "." + suffix;
-			var newImageFile = photoDir.clone();
-			newImageFile.append(filename);
-		} while (newImageFile.exists());
-		
-		// write data string to new file
-		var stream = Components.classes["@mozilla.org/network/safe-file-output-stream;1"]
-			.createInstance(Components.interfaces.nsIFileOutputStream);  
-		stream.init(newImageFile,0x04|0x08|0x20,0600,0);
-		stream.write(datastr,datastr.length);
-		if (stream instanceof Components.interfaces.nsISafeOutputStream) {  
-			stream.finish();  
-		}
-		else {  
-			stream.close();  
-		}
-		
-		// create new I/O service to obtain the new file's URI
-		var ios = Components.classes["@mozilla.org/network/io-service;1"]
-			.getService(Components.interfaces.nsIIOService);
-		
-		// fix Photo* properties
-		card.setProperty("PhotoType","file");
-		card.setProperty("PhotoName",newImageFile.leafName);
-		card.setProperty("PhotoURI",ios.newFileURI(newImageFile).spec);
 	},
 	
 	/**
@@ -1435,22 +1425,18 @@ var ThunderSyncDialog = {
 			//
 			if (cardsToDelete.length > 0) {
 				// important: delete any photos of these contacts, too!
-				var photoDir = Components
-						.classes["@mozilla.org/file/directory_service;1"]
+				var photoDir = Components.classes["@mozilla.org/file/directory_service;1"]
 						.getService(Components.interfaces.nsIProperties)
 						.get("ProfD", Components.interfaces.nsIFile);
 				photoDir.append("Photos");
-				try {
-					if (photoDir.isDirectory()) {
-						for (var k=0; k<photosToDelete.length; k++) {
-							var photoFile = photoDir.clone();
-							photoFile.append(photosToDelete[k]);
-// 							this.logMsg("Removing file " + photoFile.path);
+				if (photoDir.exists() && photoDir.isDirectory()) {
+					for (var k=0; k<photosToDelete.length; k++) {
+						var photoFile = photoDir.clone();
+						photoFile.append(photosToDelete[k]);
+						if (photoFile.exists() && photoFile.isFile()) {
 							photoFile.remove(false);
 						}
 					}
-				} catch (exception) {
-					this.logMsg("Removing photo file failed; " + exception);
 				}
 				
 				// delete all marked contacts
@@ -1542,7 +1528,6 @@ var ThunderSyncDialog = {
 		var dataString = "";
 		// iterate over all modified contacts (including those to delete)
 		for (i=0; i<this.ModDB.length; i++) {
-			this.logMsg(this.ModDB[i]);
 			abURI = this.ModDB[i][0];
 			path  = this.ModDB[i][1];
 			dataString = "";
@@ -1619,11 +1604,7 @@ var ThunderSyncDialog = {
 				switch (this.FormatDB[abURI]) {
 					case "vCardDir":
 					case "vCardFile":
-						try {
-							file.remove(false);
-						} catch (exception) {
-							this.logMsg(exception);
-						}
+						try { file.remove(false); } catch (exception) {}
 						break;
 				}
 			}

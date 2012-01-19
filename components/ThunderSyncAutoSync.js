@@ -26,7 +26,6 @@ ThunderSyncAutoSync.prototype = {
 				.getBranch("extensions.ThunderSync.");
 		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
 					.getService(Components.interfaces.nsIConsoleService);
-		var action = "no";
 		switch (aTopic) {
 			case "app-startup":
 				try {
@@ -38,7 +37,7 @@ ThunderSyncAutoSync.prototype = {
 				
 			case "profile-after-change":
 				try {
-					observerService.addObserver(this, "quit-application-requested", false);
+					observerService.addObserver(this, "quit-application", false);
 				} catch (exception) {
 					consoleService.logStringMessage("ThunderSync/AutoSync: "+exception);
 				}
@@ -52,48 +51,77 @@ ThunderSyncAutoSync.prototype = {
 					.getService(Components.interfaces.nsIProperties)
 					.get("ProfD", Components.interfaces.nsIFile);
 				photoDir.append("Photos");
-				try {
-					if (!photoDir.exists()) {
-						photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
-					}
-					if (!photoDir.isDirectory()) {
-						throw "PhotoDir missing";
-					}
+				if (!photoDir.exists()) {
+					photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
 				}
-				catch (exception) {}
 				
 				// check if start-up sync should be done
 				var action = false;
-				try {
-					var obj = new Object();
-					var syncPrefs = prefs.getChildList("startUp.",obj);
-					for (i=0;i<syncPrefs.length;i++) {
-						if (prefs.getCharPref(syncPrefs[i]) != "no") {
-							action = true;
-						}
+				// first: get list of addressbooks
+				var obj = new Object();
+				var abooks = prefs.getChildList("Addressbooks.",obj);
+				for (i=0;i<abooks.length;i++) {
+					// obtain name from key list ["Addressbooks.Name1","Addressbooks.Name",...]
+					var abName = abooks[i].substr(13);
+					// look for path (stored in obj[Addressbook.NameX])
+					// if no path is defined: continue with next book
+					try {
+						var path = prefs.getCharPref(abooks[i],"");
+						if (path == "") { continue; }
+					} catch (exception) {
+						continue;
 					}
-					if (action) { this.doSync("startUp"); }
-				} catch (exception) {}
+					// examine sync mode: if it equals ask|export|import,
+					// set action = true and exit loop
+					try {
+						var syncMode = prefs.getCharPref("startUp."+abName,"");
+						if ((syncMode == "ask") || (syncMode == "export") || (syncMode == "import")) {
+							action = true;
+							break;
+						}
+					} catch (exception) {
+						continue;
+					}
+				}
+				if (action) { this.doSync("startUp"); }
 				break;
 				
-			case "quit-application-requested":
+			case "quit-application":
 				try {
 					observerService.removeObserver(this, "profile-after-change");
 				} catch (exception) {}
-				observerService.removeObserver(this, "quit-application-requested");
+				observerService.removeObserver(this, "quit-application");
 				
 				// check if shut-down sync should be done
 				var action = false;
-				try {
-					var obj = new Object();
-					var syncPrefs = prefs.getChildList("shutdown.",obj);
-					for (i=0;i<syncPrefs.length;i++) {
-						if (prefs.getCharPref(syncPrefs[i]) != "no") {
-							action = true;
-						}
+				// first: get list of addressbooks
+				var obj = new Object();
+				var abooks = prefs.getChildList("Addressbooks.",obj);
+				for (i=0;i<abooks.length;i++) {
+					// obtain name from key list ["Addressbooks.Name1","Addressbooks.Name",...]
+					var abName = abooks[i].substr(13);
+					
+					// look for path (stored in obj[Addressbook.NameX])
+					// if no path is defined: continue with next book
+					try {
+						var path = prefs.getCharPref(abooks[i],"");
+						if (path == "") { continue; }
+					} catch (exception) {
+						continue;
 					}
-					if (action) { this.doSync("shutdown"); }
-				} catch (exception) {}
+					// examine sync mode: if it equals ask|export|import,
+					// set action = true and exit loop
+					try {
+						var syncMode = prefs.getCharPref("shutdown."+abName,"");
+						if ((syncMode == "ask") || (syncMode == "export") || (syncMode == "import")) {
+							action = true;
+							break;
+						}
+					} catch (exception) {
+						continue;
+					}
+				}
+				if (action) { this.doSync("shutdown"); }
 				break;
 		}
 	},
@@ -102,17 +130,19 @@ ThunderSyncAutoSync.prototype = {
 		try {
 			var window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 					.getService(Components.interfaces.nsIWindowWatcher);
+			var arguments = { mode:mode };
+			arguments.wrappedJSObject = arguments;
 			var dialog = window.openWindow(
 					null,
 					'chrome://thundersync/content/ThunderSyncDialog.xul',
 					'',
 					'chrome,centerscreen,modal,alwaysRaised,dialog',
-					[mode,true]
+				  	arguments
 			);
 		} catch (exception) {
-			var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-						.getService(Components.interfaces.nsIConsoleService);
-			consoleService.logStringMessage("ThunderSync/AutoSync: "+exception);
+			Components.classes["@mozilla.org/consoleservice;1"]
+				.getService(Components.interfaces.nsIConsoleService)
+				.logStringMessage("ThunderSync/AutoSync: "+exception);
 		}
 	},
 	

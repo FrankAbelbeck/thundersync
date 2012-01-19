@@ -583,8 +583,6 @@ var ThunderSyncPref = {
 	openPathDialog: function (mode) {
 		// create and execute file selection dialog
 		var stringsBundle = document.getElementById("string-bundle");
-		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-					.getService(Components.interfaces.nsIConsoleService);
 		var nsIFilePicker = Components.interfaces.nsIFilePicker;
 		var fp = Components.classes["@mozilla.org/filepicker;1"]
 				.createInstance(nsIFilePicker);
@@ -795,12 +793,6 @@ var ThunderSyncPref = {
 				.get("ProfD", Components.interfaces.nsIFile);
 		var photoDirPath = photoDir.path;
 		photoDir.append("Photos");
-		try {
-			if (!photoDir.isDirectory()) {
-				throw "PhotoDir missing";
-			}
-		}
-		catch (exception) { return; }
 		if (photoDir.exists() && photoDir.isDirectory()) {
 			var files = photoDir.directoryEntries;
 			while (files.hasMoreElements()) {
@@ -809,10 +801,13 @@ var ThunderSyncPref = {
 				file.QueryInterface(Components.interfaces.nsIFile);
 				if (file.isFile()) { fileList.push(file.leafName); }
 			}
+		} else {
+			// no photo directory: return from function
+			return;
 		}
 		
-		// second: iterate over all contacs and delete their photo files
-		// from the file list created above.
+		// second: iterate over all contacs and
+		// remove their photo filenames from the file list created above.
 		var abManager = Components.classes["@mozilla.org/abmanager;1"]
 				.getService(Components.interfaces.nsIAbManager);
 		var allAddressBooks = abManager.directories;

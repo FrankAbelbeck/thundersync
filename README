@@ -24,60 +24,73 @@ or see <http://www.gnu.org/licenses/>.
 
 --------------------------------------------------------------------------------
 
-Author.....: Frank Abelbeck
-Supporters.: Lucas Treffenstädt (testing, code contribution auto-start),
-             Yair Lanz (feedback regarding charsets)
-             David von Oheimb (feedback, code contribution)
-Version....: 2012-01-18 (2.0)
-Licence....: GNU General Public License version 2
+Author.......: Frank Abelbeck
+Supporters...: Lucas Treffenstädt (testing, code contribution auto-start),
+               Yair Lanz (feedback regarding charsets)
+               David von Oheimb (feedback, code contribution)
+Version......: 2.0 (2012-01-19)
+Licence......: GNU General Public License version 2
 
-Description: Allows to synchronise Thunderbird's addressbook with external
-             directories/files. Right now, only vCard version 2.1 is
-             supported as export file format.
-             
-             Most information of Thunderbird's addressbook is translated into
-             the vCard format. Untranslatable stuff is coded as
-             X-MOZILLA-PROPERTY:PropertyName;PropertyValue.
-             
-             Yes, this extension processes your contact images! That was the
-             point of this extension! I wanted nice pictures of the people
-             calling me.
+Description..: Allows to synchronise Thunderbird's addressbook with external
+               directories/files. Right now, only vCard version 2.1 is
+               supported as export file format.
+               
+               Most information of Thunderbird's addressbook is translated into
+               the vCard format. Untranslatable stuff is coded as
+                  X-MOZILLA-PROPERTY:PropertyName;PropertyValue.
+               
+               Yes, this extension processes your contact images! That was the
+               point of this extension! I wanted nice pictures of the people
+               calling me.
 
-Disclaimer.: I created this extension to solve the sync problem with my phone.
-             ThunderSync is distributed in the hope that it will help other
-             people with similar problems. This extension does access your
-             Thunderbird addressbook, so please be cautious! I seek perfection,
-             but I cannot verify the extension's behaviour due to the
-             overwhelming number of possible platform configurations.
+Disclaimer...: I created this extension to solve a sync problem with my phone.
+               ThunderSync is distributed in the hope that it will help other
+               people with similar problems. This extension does access your
+               Thunderbird addressbook, so please be cautious! I seek
+               perfection, but I cannot verify the extension's behaviour due to
+               the overwhelming number of possible platform configurations.
 
 --------------------------------------------------------------------------------
 
 Quick Start Guide #1: Post installation
 
-Open the extension's properties dialog and you will see a list of your
-addressbooks. Right-click on one of these entries and select the action
-"choose path." A directory selection dialog window will open and you will be
-able to select and/or create a target directory for the selected addressbook.
-Future synchronisation operations will use this directory for file storage.
+Open the extension's properties dialog. On the left-hand side you will see a
+list of your addressbooks. To the right all preferences dedicated to the
+selected addressbook are shown -- divided into three sections "General",
+"Export Format" and "Filter".
 
-Prior to closing this dialog make sure that vCard is selected as file format.
-Of course, at the moment this is the only format you can choose. Perhaps
-more will follow in future times...
+Each addressbook can be configured independently.
 
-Starting with Version 1.1 the file encoding für vCards can be chosen. This tries
-to tackle a problem with third-party programs like Outlook which ignore parts of
-the vCard standard.
+To synchronise an addressbook one has to link it to an external resource.
+To do this, select an addressbook on the left-hand side. Then your can choose
+an export format on the right side, in section "General". With a click on the
+button "Choose..." you can pick a file or directory.
 
-Version 1.2 added another option. Now you can choose whether ThunderSync is
-executed when Thunderbird is starting.
+Other options and preferences should be self-explaining.
 
-Version 1.2.1 is a bugfix release fixing a typo in the photo URL export routine.
+Section "Filter" allows to select individual actions for each detail (name,
+e-mail address, phone number) of a contact. First you have to select one or more
+contact details from the list. A right-click on the selection will show a
+context menu from which you can choose an action. This action will be applied to
+all selected contact details.
 
-Version 2.0 features an all-new comparison/synchronisation system. It supports
-also vCard files containing more than one contact and allows a more detailed
-configuration of ThunderSync's behaviour (filtering of properties, default
-actions, advanced export format options). Finally, it sports an icon as well as
-a toolbar button.
+If export or import of a contact lead to charset problems, section
+"Export Format" allows to force a certain charset. 
+Falls der Export oder Import zu Zeichensatzproblemen führt, kann im Abschnitt
+"Exportformat" ein bestimmter Zeichensatz erzwungen werden. You might need to
+use these options if you intent to work with exports from third-party programs
+(which might not stick to the vCard specs).
+
+Since version 2.0 a small tool is available which takes care of unused images
+stored in the user's profile directory. It is accessible with the button at the
+bottom of the properties dialog.
+
+Another novelty of version 2.0 is the toolbar button to simplify the access.
+If you want to use it, you have to choose menu item
+
+          View -> Toolbars -> Customize...
+
+Find ThunderSync's symbol and drag it to one of the white surfaces (toolbars).
 
 --------------------------------------------------------------------------------
 
@@ -97,10 +110,10 @@ will inform you about this.
 Otherwise a table will show the differences, with the middle column displaying
 the type of difference:
 
-    !=    contact/property on both sides, with different content
-    <>    contact/property on both sides, conflict resolved (see below)
-    >>    copy contact/property from left to right (i.e. local to external)
-    <<    copy contact/property from right to left (i.e. external to local)
+    !=    Content on both sides differs; conflict not resolved
+    <>    Content on both sides differs; conflict resolved
+    >>    Copy external contact to local addressbook
+    <<    Copy addressbook entry to external resource
 
 If at least one '!=' is present, you will not be allowed to start a
 synchronisation. You have to resolve the conflict by opening the contact in
@@ -116,36 +129,39 @@ will be enabled and you can trigger the synchronisation process.
 Changelog:
 
 1.0 (2010-12-17)
-   - initial release
+   - Initial release
 
 1.1 (2011-01-12)
-   - preferences storage names changed to Mozilla policy
-   - added support for various charsets (thanks to Yair Lanz for feedback)
-   - vCard file processing improvements
+   - Preferences storage names changed to Mozilla policy
+   - Support for various charsets (thanks to Yair Lanz for feedback)
+   - Improvement of vCard processing
 
 1.2 (2011-02-22)
-   - added option for automatic execution at start (thanks to Lucas Treffenstädt)
-   - changed behaviour: contacts are compared when ThunderSync dialog is opened
-   - internal code revision: contact identification base on unique identifier (UID)
-        - any other property can be changed
-	- multiple contacts with same name (e.g. John Smith) are allowed as long
+   - Option for automatic execution at application start (thanks to Lucas
+     Treffenstädt for code contribution)
+   - Behaviour changed: contacts are compared when ThunderSync dialog is opened
+   - Code revision: contact identification based on unique identifiers (UID)
+        - Now any other property can be changed
+	- Multiple contacts with same name (e.g. John Smith) are allowed as long
           as they differ in at least one property
-   - filenames: new files will be named using the UID
+   - New files will be named using the UID
 
 1.2.1 (2011-03-21)
-   - fixed typo in photo URL export routine
+   - Typo in photo URL export routine fixed
 
-2.0 (2012-01-18)
-   - new comparison routine
-   - new synchronisation routine
-   - read and write operations are grouped and executed at begin and end of sync
-   - various quirks in the vCard implementation were fixed
-   - improved file handling (deletion of photo images and external files)
-   - introduction of a property filter system
-   - introduction of advanced vCard options to fix certain compatibility issues
-   - definition of default action as well as start-up and shutdown actions
-   - automatic migration of old preferences
-   - introduction of a routine to delete unused image files in the photo
-     directory of the user's profile
-   - introduction of a toolbar button
-   - ThunderSync icon
+2.0 (2012-01-19)
+   - New comparison/synchronisation routine:
+        - Read and write operations are grouped and are executed an begin and
+          end of a synchronisation pass
+        - Comparison itself is done in-memory
+   - Improvement of vCard processing
+   - Improvement of file handling (images and external resources)
+   - Assignment of individual preferences to addressbooks
+   - Introduction of a contact detail filter system
+   - Introduction of additional export options to solve compatibility issues
+   - Option to define the default synchronisation action at application start,
+     at application end and during manual execution
+   - Automatic migration of old preferences
+   - Tool to clean the photo directory inside a user's profile
+   - Introduction of a toolbar button
+   - Introduction of a ThunderSync icon

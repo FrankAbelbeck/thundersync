@@ -220,21 +220,22 @@ var ThunderSyncVCardLib = {
 			.get("ProfD", Components.interfaces.nsIFile);
 		filename.append("Photos");
 		filename.append(photoname);
-		
-		var fileuri = Components.classes["@mozilla.org/network/io-service;1"]
-			.getService(Components.interfaces.nsIIOService)
-			.newFileURI(filename);
-		if (fileuri && fileuri.schemeIs("file")) {
-			try {
-				var fileio = Components.classes["@mozilla.org/network/file-input-stream;1"]
-					.createInstance(Components.interfaces.nsIFileInputStream);
-				fileio.init(filename,-1,-1,false);  
-				var binaryio = Components.classes["@mozilla.org/binaryinputstream;1"]
-					.createInstance(Components.interfaces.nsIBinaryInputStream);
-				binaryio.setInputStream(fileio);
-				return binaryio.readBytes(binaryio.available());
+		if (filename.exists() && filename.isFile()) {
+			var fileuri = Components.classes["@mozilla.org/network/io-service;1"]
+				.getService(Components.interfaces.nsIIOService)
+				.newFileURI(filename);
+			if (fileuri && fileuri.schemeIs("file")) {
+				try {
+					var fileio = Components.classes["@mozilla.org/network/file-input-stream;1"]
+						.createInstance(Components.interfaces.nsIFileInputStream);
+					fileio.init(filename,-1,-1,false);  
+					var binaryio = Components.classes["@mozilla.org/binaryinputstream;1"]
+						.createInstance(Components.interfaces.nsIBinaryInputStream);
+					binaryio.setInputStream(fileio);
+					return binaryio.readBytes(binaryio.available());
+				}
+				catch (exception) { }
 			}
-			catch (exception) { }
 		}
 		return "";
 	},
