@@ -30,9 +30,10 @@ $Id$
 		<em:id>thundersync@frank.abelbeck</em:id>
 		<em:name>ThunderSync</em:name>
 		<em:version>2.0</em:version>
+		<em:type>2</em:type>
 		<em:creator>Frank Abelbeck</em:creator>
 		<em:description>Synchronise Thunderbird's addressbook with an external resource.</em:description>
-		<em:homepage>http://abelbeck.wordpress.com/</em:homepage>
+		<em:homepageURL>http://abelbeck.wordpress.com/</em:homepageURL>
 		
 		<em:localized>
 			<Description>
