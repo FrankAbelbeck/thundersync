@@ -828,18 +828,18 @@ var ThunderSyncVCardLib = {
 					var teltype = "HomePhone";
 					if (properties["CELL"]) {
 						teltype = "CellularNumber";
-					}
-					if (properties["FAX"]) {
-						teltype = "FaxNumber";
-					}
-					if (properties["WORK"] && properties["VOICE"]) {
-						teltype = "WorkPhone";
-					}
-					if (properties["HOME"] && properties["VOICE"]) {
-						teltype = "HomePhone";
-					}
-					if (properties["PAGER"]) {
-						teltype = "PagerNumber";
+					} else {
+						if (properties["FAX"]) {
+							teltype = "FaxNumber";
+						} else {
+							if (properties["PAGER"]) {
+								teltype = "PagerNumber";
+							} else {
+								if (properties["WORK"]) {
+									teltype = "WorkPhone";
+								}
+							}
+						}
 					}
 					card.setProperty(teltype,value[0]);
 					break;
