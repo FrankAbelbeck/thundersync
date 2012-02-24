@@ -1569,6 +1569,7 @@ var ThunderSyncDialog = {
 						try {
 							converter.writeString(dataString);
 						} catch (exception) {
+							this.logMsg(exception)
 							// user defined encoding did not work:
 							// fall back to Unicode
 							// i.e. re-encode data string
@@ -1579,7 +1580,7 @@ var ThunderSyncDialog = {
 									dataString += ThunderSyncVCardLib.createVCardString(
 										this.CardDB[abURI][path][k],
 										"UTF-8",
-										this.HideUID[abURI],
+										this.HideUIDDB[abURI],
 										this.UseQPEDB[abURI],
 										this.DoFoldingDB[abURI]
 									)
@@ -1799,12 +1800,16 @@ var ThunderSyncDialog = {
 	 * @param value value of property
 	 */
 	setProperty: function (abURI,path,index,property,value) {
+		// set card's property 
 		this.CardDB[abURI][path][index].setProperty(property,value);
+		// register card, addressed by abURI and path
+		// 1. iterate over all entries of ModDB
 		var newValue = new Array(abURI,path);
 		var doPush = true;
 		for (j=0; j<this.ModDB.length; j++) {
 			if (this.ModDB[j] == newValue) { doPush = false; }
 		}
+		// 2. if no entry was found: add it
 		if (doPush) { this.ModDB.push(newValue);}
 	},
 	
@@ -1880,11 +1885,14 @@ var ThunderSyncDialog = {
 		}
 		this.CardDB[abURI][newPath].push(localCard);
 		
+		// register card, addressed by abURI and path
+		// 1. iterate over all entries of ModDB
 		var newValue = new Array(abURI,newPath);
 		var doPush = true;
 		for (j=0; j<this.ModDB.length; j++) {
 			if (this.ModDB[j] == newValue) { doPush = false; }
 		}
+		// 2. if no entry was found: add it
 		if (doPush) { this.ModDB.push(newValue);}
 	}
 

@@ -1,0 +1,44 @@
+2012-01-16
+- PagerNumber aufgenommen
+- Properties der Form name=value werden nun sowohl als prop[name]=value als auch als prop[value]=true aufgenommen.
+- Handhabung der Fotodateien behoben (Löschen)
+- Fotofixtool in Preferences implementiert
+- Photo-Verzeichnistest in Autostart.
+
+2012-01-17
+- beim Löschen lokaler Kontakte werden die Fotos vergessen: fix
+- dafür entdeckt: Fotos werden ebenfalls nicht gelöscht, wenn man in TB einen Kontakt entfernt -> TB-Problem
+- das Löschen von vCards klappt nicht: file war nicht definiert, so wurde der Wert der Karte davor genommen -> falsche Karte gelöscht!
+- Regelverarbeitung überarbeitet: wenn Eigenschaft nicht gesetzt ist, muss sie bei best. Regeln auf der anderen Seite gelöscht werden
+- komplette Überarbeitung des Modus für das Zusammenführen von Eigenschaften:
+	+ Modus als Bitfeld
+	+ Berücksichtigung reiner Exporte/Importe mit Möglichkeit zur Löschung von Eigenschaften
+- Vermerk: UID als X-MOZILLA-PROPERTY verbergen funktioniert nur bei neuen Exporten; dieser Unterschied wird von compare nicht erfasst...
+- Export/Import: lokales Adressbuch oder externe Ressource müssen vorher gelöscht werden! Todo!
+
+2012-01-18
+- Kontrolliertes Löschen von externen Ressourcen implementiert (erst prüfen, ob valide Kontaktdatei, dann löschen) --> unnötig, einfach als "zu löschen" markieren
+- kompletter Umbau der Vergleichsroutine, um export/import zu ermöglichen:
+	+ Einführung des Flags "to delete" als Parameter bei addTreeItem
+	+ Einführung eines weiteren Parameters bei cardDifferences zwecks ÜBerstimmung der Filtereinstellungen
+- Abschluss Testarbeiten
+- Gestaltung ThunderSync-Icon
+- Bugfix ModDB/Dateilöschung: Array-Vergleich bei Kollisionssuche in deleteCard funktioniert so nicht; einzelne Felder werden nun separat verglichen
+- Anpassung der README
+
+2012-01-19
+- Todo README in LIESMICH übersetzen
+- Todo XPI-Addon: Testen
+	+ Fehler bei StartUp-Aktion: getChildList nicht korrekt verstanden
+	  StartUp- und Shutdown-Abfrage im Autostart umgestrickt; auch nicht definierte Pfade wurde mit einbezogen, um unnötige Vergleiche auszuschließen
+	+ Fehler beim Verarbeiten von übergebenen Parametern in compare(): gestrichen, da nicht benötigt
+	+ komplette Überarbeitung der Parameterübergabe bei window.openWindow() mit window.arguments[]
+	+ Shutdown-Aktion: ThunderSync schaut nun nach quit-application
+	+ Revision der Photo-Verzeichnisbehandlung; bei Start ggf. erzeugen, ansonsten nur abfragen:
+		* filename.append(...) ist beliebig möglich, um Phantasienamen zu erzeugen
+		* filename.exists() funktioniert auch mit nicht existenten Dateien
+		* filename.isDirectory() oder filename.isFile() dagegen schlägt bei nicht existierenden Dateien fehl.
+
+- Todo XPI-Addon: hochladen, Addon-Seite pflegen (README, LIESMICH...)
+
+

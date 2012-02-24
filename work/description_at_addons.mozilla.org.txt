@@ -1,0 +1,51 @@
+<strong>New version 2.0 (see add-on versions below)</strong>:
+ThunderSync 2 is available! Reworked comparison routine, extended options, per-addressbook preferences and overall improvement.
+
+<strong>New version 1.2.1 (see add-on versions below)</strong>:
+Maintenance update: Typo in export routine for web-based contact photos was fixed.
+
+<strong>New version 1.2 (see add-on versions below)</strong>:
+New features: Automatic execution at Thunderbird startup selectable. Contacts are automatically compared when ThunderSync dialog is opened.
+
+Algorithm revision: Unique IDs (UID) are created for all contacts and will be used as identification property. If no UID is given, internal and external contacts are mapped by percentage of matching properties and an UID is assigned afterwards.
+
+File names: A contact's UID is used for file name creation, too.
+
+--
+
+<strong>New version 1.1</strong>:
+Improved vCard support, fixed text folding and better string encoding;
+charset for import and/or export is selectable to fix non-standard vCards (e.g. created by Outlook).
+
+--
+
+Most information of Thunderbird's addressbook is translated into the vCard format. Untranslatable stuff is coded as
+
+<code>X-MOZILLA-PROPERTY:PropertyName;PropertyValue</code>
+
+Yes, this extension processes your contact images! That was the point of this extension! I wanted nice pictures of the people calling me. Image size is not limited, but regarding the phone synchronisation process small file sizes (1-10 kiB) are recommended.
+
+<strong>Disclaimer:</strong> I created this extension to solve the sync problem with my phone. ThunderSync is distributed in the hope that it will help other people with similar problems. This extension does access your Thunderbird addressbook, so please be cautious! I seek perfection, but I cannot verify the extension's behaviour due to the overwhelming number of possible platform configurations.
+
+<strong>Quick Start Guide #1: Post installation</strong>
+
+Open the extension's properties dialog and you will see a list of your addressbooks. Right-click on one of these entries and select the action <em>"choose path."</em> A directory selection dialog window will open and you will be able to select and/or create a target directory for the selected addressbook. Future synchronisation operations will use this directory for file storage.
+
+Prior to closing this dialog make sure that vCard is selected as file format. Of course, at the moment this is the only format you can choose. Perhaps more will follow in future times...
+
+<strong>Quick Start Guide #1: Usage</strong>
+
+If at least one addressbook is mapped to a directory it will be possible to do a proper synchronisation. Open Thunderbird's addressbook and choose menu item <em>Extras -> Synchronise addressbook...</em>
+
+A new dialog will pop up. After a click on the <em>"compare"</em> button a list of differences between your local addressbook and the external file ressources will be built. If both ressources equal, a dialog will inform you about this.
+
+Otherwise a table will show the differences, with the middle column displaying the type of difference:
+
+<code>!=   contact/property on both sides, with different content: conflict!
+<>   contact/property on both sides, conflict resolved (see below)
+>>   copy contact/property from left to right (i.e. local to external)
+<<   copy contact/property from right to left (i.e. external to local)</code>
+
+If at least one <code>!=</code> is present, you will not be allowed to start a synchronisation. You have to resolve the conflict by opening the contact in question. Simply click on it, this will show all differing properties. Find any property with a <code>!=</code> and double-click on it. A double click toggles between keeping local information or using the external ressource.
+
+When no <code>!=</code> is left in the list of differing contacts, the <em>syncronise</em> button will be enabled and you can trigger the synchronisation process.

@@ -1,0 +1,110 @@
+Copyright (C) 2012 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+<strong>Author:</strong> Frank Abelbeck
+<strong>Supporters:</strong> Lucas Treffenstädt (testing, code contribution auto-start), Yair Lanz (feedback regarding charsets), David von Oheimb (feedback, code contribution)
+
+<strong>Description:</strong> Allows to synchronise Thunderbird's addressbook with external directories/files. Right now, only vCard version 2.1 is supported as export file format.
+               
+Most information of Thunderbird's addressbook is translated into the vCard format. Untranslatable stuff is coded as
+
+<code>X-MOZILLA-PROPERTY:PropertyName;PropertyValue.</code>
+
+Yes, this extension processes your contact images! That was the point of this extension! I wanted nice pictures of the people calling me. Image size is not limited, but regarding the phone synchronisation process small file sizes (1-10 kiB) are recommended.
+
+<strong>Disclaimer:</strong> I created this extension to solve a sync problem with my phone. ThunderSync is distributed in the hope that it will help other people with similar problems. This extension does access your Thunderbird addressbook, so please be cautious! I seek perfection, but I cannot verify the extension's behaviour due to the overwhelming number of possible platform configurations.
+
+<strong>Quick Start Guide #1: Post installation</strong>
+
+Open the extension's properties dialog. On the left-hand side you will see a list of your addressbooks. To the right all preferences dedicated to the selected addressbook are shown -- divided into three sections "General", "Export Format" and "Filter".
+
+Each addressbook can be configured independently.
+
+To synchronise an addressbook one has to link it to an external resource. To do this, select an addressbook on the left-hand side. Then your can choose an export format on the right side, in section "General". With a click on the button "Choose..." you can pick a file or directory.
+
+Other options and preferences should be self-explaining.
+
+Section "Filter" allows to select individual actions for each detail (name, e-mail address, phone number) of a contact. First you have to select one or more contact details from the list. A right-click on the selection will show a context menu from which you can choose an action. This action will be applied to all selected contact details.
+
+If export or import of a contact lead to charset problems, section "Export Format" allows to force a certain charset. You might need to use these options if you intent to work with exports from third-party programs (which might not stick to the vCard specs).
+
+Since version 2.0 a small tool is available which takes care of unused images stored in the user's profile directory. It is accessible with the button at the bottom of the properties dialog.
+
+Another novelty of version 2.0 is the toolbar button to simplify the access. If you want to use it, you have to choose menu item
+<blockquote>View -> Toolbars -> Customize...</blockquote>
+
+Find ThunderSync's symbol and drag it to one of the white surfaces (toolbars).
+
+<strong>Quick Start Guide #2: Usage</strong>
+
+If at least one addressbook is mapped to a directory it will be possible to do a proper synchronisation. Open Thunderbird's addressbook and choose menu item
+<blockquote>Extras -> Synchronise addressbook...</blockquote>
+
+A new dialog will pop up. Initially ThunderSync should have already compared local and remote contacts. But with a click on the "compare" button this can be repeated. A list of differences between your local addressbook and the external file resources will be built. If both resources are equal, a dialog will inform you about this.
+
+Otherwise a table will show the differences, with the middle column displaying the type of difference:
+<ul>
+<li><code>!=   </code>Content on both sides differs; conflict not resolved</li>
+<li><code><>   </code>Content on both sides differs; conflict resolved</li>
+<li><code><<   </code>Copy external contact to local addressbook</li>
+<li><code>>>   </code>Copy addressbook entry to external resource</li>
+</ul>
+
+If at least one '!=' is present, you will not be allowed to start a synchronisation. You have to resolve the conflict by opening the contact in question. Simply click on it, this will show all differing properties. Find any property with a '!=' and double-click on it. A double click toggles between keeping local information or using the external resource.
+
+When no '!=' is left in the list of differing contacts, the "syncronise" button will be enabled and you can trigger the synchronisation process.
+
+<strong>Changelog</strong>
+
+1.0 (2010-12-17)
+<ul><li>Initial release</li></ul>
+
+1.1 (2011-01-12)
+<ul>
+<li>Preferences storage names changed to Mozilla policy</li>
+<li>Support for various charsets (thanks to Yair Lanz for feedback)</li>
+<li>Improvement of vCard processing</li>
+</ul>
+
+1.2 (2011-02-22)
+<ul>
+<li>Option for automatic execution at application start (thanks to Lucas Treffenstädt for code contribution)</li>
+<li>Behaviour changed: contacts are compared when ThunderSync dialog is opened</li>
+<li>Code revision: contact identification based on unique identifiers (UID)
+<ul>
+<li>Now any other property can be changed</li>
+<li>Multiple contacts with same name (e.g. John Smith) are allowed as long as they differ in at least one property</li>
+</ul></li>
+<li>New files will be named using the UID</li>
+</ul>
+
+1.2.1 (2011-03-21)
+<ul><li>Typo in photo URL export routine fixed</li></ul>
+
+2.0 (2012-01-19)
+<ul>
+<li>New comparison/synchronisation routine:
+<ul>
+<li>Read and write operations are grouped and are executed an begin and end of a synchronisation pass</li>
+<li>Comparison itself is done in-memory</li>
+</ul></li>
+<li>Improvement of vCard processing</li>
+<li>Improvement of file handling (images and external resources)</li>
+<li>Assignment of individual preferences to addressbooks</li>
+<li>Introduction of a contact detail filter system</li>
+<li>Introduction of additional export options to solve compatibility issues</li>
+<li>Option to define the default synchronisation action at application start, at application end and during manual execution</li>
+<li>Automatic migration of old preferences</li>
+<li>Tool to clean the photo directory inside a user's profile</li>
+<li>Introduction of a toolbar button</li>
+<li>Introduction of a ThunderSync icon</li>
+</ul>

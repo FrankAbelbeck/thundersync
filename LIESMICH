@@ -103,7 +103,7 @@ nun weiß dargestellten Flächen (Toolbars).
 
 --------------------------------------------------------------------------------
 
-Quick Start Guide #1: Anwendung
+Schnellstartanleitung, Teil 2: Anwendung
 
 Wenn wenigstens ein Adressbuch einer externen Ressource zugeordnet ist, kann
 ein Datenabgleich durchgeführt werden. Öffnen Sie hierzu das Adressbuch und
@@ -121,8 +121,8 @@ Spalte die Art des Unterschiedes darstellt:
 
     !=    Inhalt des Kontakts auf beiden Seiten verschieden; Konflikt ungelöst
     <>    Inhalt des Kontakts auf beiden Seiten verschieden; Konflikt gelöst
-    >>    Externen Kontakt ins Adressbuch kopieren
-    <<    Adressbucheintrag in externe Ressource kopieren
+    <<    Externen Kontakt ins Adressbuch kopieren
+    >>    Adressbucheintrag in externe Ressource kopieren
 
 Wenn auch nur ein "!=" vorhanden ist, kann die eigentliche Synchronisierung
 nicht durchgeführt werden. Es liegt ein Konflikt zwischen lokalen und externen
@@ -179,3 +179,8 @@ Versionshistorie:
    - Routine zur Fotoverzeichnisbereinigung
    - Einführung einer Symbolleistenschaltfläche
    - Einführung eines ThunderSync-Symbols
+
+2.1 (2012-02-24)
+   - neue maximal zulässige Thunderbird-Version: 10.*
+   - Typo bei ModDB-Angabe berichtigt
+   - Verbesserung der Telefonnummerninterpretation bei vCards

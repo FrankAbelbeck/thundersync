@@ -1,0 +1,110 @@
+Copyright (C) 2012 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+<strong>Autor:</strong> Frank Abelbeck
+<strong>Unterstützer:</strong> Lucas Treffenstädt (Tests, Quelltextbeiträge "Auto-Start"), Yair Lanz (Rückmeldung bezüglich Zeichensätzen), David von Oheimb (Rückmeldungen, Quelltextbeiträge)
+
+<strong>Beschreibung:</strong> Erlaubt es, Thunderbirds Adressbuch mit externen Verzeichnissen oder Dateien zu synchronisieren. Momentan wird als Exportformat nur das vCard-Format in Version 2.1 unterstützt.
+
+Die meisten Informationen aus Thunderbirds Adressbuch können erfolgreich ins vCard-Format übertragen werden. Nicht-übersetzbare Anteile werden wie folgt kodiert:
+
+<code>X-MOZILLA-PROPERTY:PropertyName;PropertyValue.</code>
+
+Ja, diese Erweiterung verarbeitet Ihre Kontaktbilder! Das war auch der Hauptgrund für die Entwicklung dieser Erweiterung! Ich wollte nette Bilder der Leute, die mich anrufen. Die Bildgröße ist nicht beschränkt, aber mit Blick auf den Synchronisationsprozess empfiehlt es sich, kleinere Dateigrößen (1-10 kiB) zu verwenden.
+
+<strong>Haftungsausschluss:</strong> Ich habe diese Erweiterung erstellt, um ein Problem bei der Synchronisierung mit meinem Mobiltelefon zu lösen. ThunderSync wurde in der Hoffnung veröffentlicht, dass es anderen Leuten mit ähnlichen Problemen weiterhilft. Diese Erweiterung greift auf das Thunderbird-Adressbuch zu, also seien Sie vorsichtig! Ich strebe nach Perfektion, aber ich kann das Verhalten der Erweiterung aufgrund der überwältigenden Vielzahl von unterschiedlichen Systemkonfigurationen nicht vollständig verifizieren.
+
+<strong>Schnellstartanleitung, Teil 1: Nach der Installation</strong>
+
+Öffnen Sie den Einstellungsdialog der Erweiterung. Hier sehen sie auf der linken Seite eine Liste von Adressbüchern. Auf der rechten Seite sind die dem ausgewählten Adressbuch zugeordneten Einstellungen aufgeführt, unterteilt in die drei Abschnitte bzw. Karteireiter "Allgemein", "Exportformat" und "Filter".
+
+Jedes Adressbuch kann unabhängig von den anderen in seinen Einstellungen verändert werden.
+
+Um ein Adressbuch abgleichen zu können, muss ihm eine externe Ressource zugeordnet werden. Wählen Sie hierzu auf der linken Seite ein Adressbuch aus. Anschließend können Sie auf der rechten Seite im Abschnitt "Allgemein" ein Exportformat wählen und dann mittels der Schaltfläche "Wählen..." eine Datei oder ein Verzeichnis auswählen.
+
+Die anderen Einstellungen sollten selbsterklärend sein.
+
+Im Abschnitt "Filter" lassen sie für jede Eigenschaft eines Kontaktes (Name, E-Mail-Adresse, Telefonnummer) individuelle Aktionen beim Abgleich einstellen. Wählen Sie hierfür zunächst eine oder mehrere Eigenschaften aus. Durch einen Rechtsklick auf die Auswahl gelangen Sie in ein Menü, in welchem Sie die festzulegende Aktion auswählen können. Diese wird dann auf alle ausgewählten Eigenschaften angewendet.
+
+Falls der Export oder Import zu Zeichensatzproblemen führt, kann im Abschnitt "Exportformat" ein bestimmter Zeichensatz erzwungen werden. Dieses kann nötig sein, wenn mit Exporten anderer Programme gearbeitet werden soll, welche sich nicht unbedingt an die vCard-Spezifikationen halten.
+
+Seit Version 2.0 ist zudem eine Hilfsroutine verfügbar, die nicht mehr länger benötigte Kontaktfotos im Photos-Verzeichnis des Benutzerprofils löscht. Sie ist aufrufbar über die entsprechende Schaltfläche am unteren Ende des Einstellungsdialogs.
+
+Ebenfalls neu ins Version 2.0 ist eine Schaltfläche für die Symbolleisten, ein "Toolbar button", um den Aufruf von ThunderSync zu vereinfachen. Um diese Schaltfläche zu installieren, rufen Sie über Thunderbirds Menü den Anpassungsdialog auf:
+<blockquote>Ansicht -> Symbolleisten -> Anpassen...</blockquote>
+
+Suchen Sie in der Liste das ThunderSync-Symbol und ziehen Sie es in eine der nun weiß dargestellten Flächen (Toolbars).
+
+<strong>Schnellstartanleitung, Teil 2: Anwendung</strong>
+
+Wenn wenigstens ein Adressbuch einer externen Ressource zugeordnet ist, kann ein Datenabgleich durchgeführt werden. Öffnen Sie hierzu das Adressbuch und wählen Sie im Menü den Eintrag
+<blockquote>Extras -> Adressbuch abgleichen...</blockquote>
+
+Daraufhin wird ThunderSync einen Vergleich durchführen und in einem neuen Dialogfenster die Unterschiede aufführen. Der Vergleich kann durch Aktivieren der "Vergleichen"-Schaltfläche wiederholt werden. Sollten keine Unterschiede vorliegen, wird dieses per Meldungsfenster mitgeteilt. 
+
+Ansonsten wird eine Tabelle die Unterschiede aufzeigen, wobei die mittlere Spalte die Art des Unterschiedes darstellt:
+<ul>
+<li><code>!=   </code>Inhalt des Kontakts auf beiden Seiten verschieden; Konflikt ungelöst</li>
+<li><code><>   </code>Inhalt des Kontakts auf beiden Seiten verschieden; Konflikt gelöst</li>
+<li><code><<   </code>Externen Kontakt ins Adressbuch kopieren</li>
+<li><code>>>   </code>Adressbucheintrag in externe Ressource kopieren</li>
+</ul>
+
+Wenn auch nur ein "!=" vorhanden ist, kann die eigentliche Synchronisierung nicht durchgeführt werden. Es liegt ein Konflikt zwischen lokalen und externen Daten vor, der erst noch gelöst werden muss. Betrachten Sie dazu die Eigenschaften des betreffenden Kontakts. Durch Doppelklick auf die Eingeschaft kann zwischen verschiedenen Synchronisationsaktionen geschaltet werden.
+
+Erst, wenn kein "!=" mehr vorliegt, wird die "Synchronisieren"-Schaltfläche zugänglich, mit der dann die in der Tabelle aufgezeigten Aktionen ausgeführt werden.
+
+<strong>Versionshistorie</strong>
+
+1.0 (2010-12-17)
+<ul><li>Erstveröffentlichung</li></ul>
+
+1.1 (2011-01-12)
+<ul>
+<li>Speicherung der Voreinstellungen mit Namen gemäß der Mozilla-Richtlinien</li>
+<li>Unterstützung von verschiedenen Zeichensätzen (Dank an Yair Lanz für Hinweis und Rückmeldungen)</li>
+<li>Verbesserung der vCard-Verarbeitung</li>
+</ul>
+
+1.2 (2011-02-22)
+<ul>
+<li>Möglichkeit zur automatischen Ausführung zu Programmbeginn (Dank an Lucas Treffenstädt für Quelltextbeiträge)</li>
+<li>Geändertes Verhalten: Vergleich wird schon bei Dialogöffnung durchgeführt</li>
+<li>Quelltextrevision: Identifizierung von Kontakten anhand von eindeutigen Kennungen (unique identifiers, UID)
+<ul>
+<li>Jede Eigenschaft kann nun verändert werden</li>
+<li>Verschiedene Kontakte mit dem gleichen Namen (z.B. Hans Müller) können nun verarbeitet werden, solange sie in wenigstens einer Eigenschaft verschieden sind</li>
+</ul></li>
+<li>Dateinamen auf Basis der UID</li>
+</ul>
+
+1.2.1 (2011-03-21)
+<ul><li>Tippfehler in der Exportroutine für Foto-URLs behoben</li></ul>
+
+2.0 (2012-01-19)
+<ul>
+<li>Neue Vergleichs- und Synchronisationsroutine:
+<ul>
+<li>Lese- und Schreiboperationen externer Ressourcen sind gruppiert und werden nur zu Beginn und am Ende eines Vergleichsdurchgangs durchgeführt</li>
+<li>Der eigentliche Vergleich wird im Speicher durchgeführt</li>
+</ul></li>
+<li>Verbesserung der vCard-Verarbeitung</li>
+<li>Verbesserung der Dateibehandlung (Bilder und externe Ressourcen)</li>
+<li>Zuordnung individueller Einstellungen zu den Adressbüchern</li>
+<li>Einführung eines Eigenschaftsfiltersystems</li>
+<li>Einführung von weiteren Exporteinstellungen für Kompatibilitätszwecke</li>
+<li>Möglichkeit, die Synchronisationsaktion für Programmstart, Programmende und bei manuellem Aufruf zu definieren</li>
+<li>Automatische Migration alter Einstellungen</li>
+<li>Routine zur Fotoverzeichnisbereinigung</li>
+<li>Einführung einer Symbolleistenschaltfläche</li>
+<li>Einführung eines ThunderSync-Symbols</li>
+</ul>
