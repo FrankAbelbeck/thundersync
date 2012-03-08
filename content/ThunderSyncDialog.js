@@ -132,7 +132,7 @@ var ThunderSyncDialog = {
 		// 5. primaryEmail
 		// 6. UID
 		//
-		if (localCard instanceof Components.interfaces.nsIAbCard) {
+		if ((localCard instanceof Components.interfaces.nsIAbCard) && !localCard.isMailList) {
 			var localUID = localCard.getProperty("UID","");
 			if (localCard.displayName != "") {
 				var localDisplayName = localCard.displayName;
@@ -160,7 +160,8 @@ var ThunderSyncDialog = {
 			}
 		}
 		else {
-			// contact is not a nsIAbCard: set to empty strings
+			// contact is not a nsIAbCard or is a Mailing List:
+			// set to empty strings
 			var localUID = "";
 			var localDisplayName = "";
 		}
@@ -179,7 +180,7 @@ var ThunderSyncDialog = {
 		} catch (exception) {
 			var remoteCard = null;
 		}
-		if (remoteCard instanceof Components.interfaces.nsIAbCard) {
+		if ((remoteCard instanceof Components.interfaces.nsIAbCard) && !remoteCard.isMailList) {
 			if (remoteCard.displayName != "") {
 				var remoteDisplayName = remoteCard.displayName;
 			}
@@ -210,7 +211,8 @@ var ThunderSyncDialog = {
 			}
 		}
 		else {
-			// contact is not a nsIAbCard: set to empty string
+			// contact is not a nsIAbCard or is a Mailing List:
+			// set to empty string
 			var remoteDisplayName = "";
 		}
 		
@@ -667,7 +669,7 @@ var ThunderSyncDialog = {
 		while (allAddressBooks.hasMoreElements()) {
 			// get next item in list; skip if it's not an addressbook
 			var addressBook = allAddressBooks.getNext();
-			if (!(addressBook instanceof Components.interfaces.nsIAbDirectory)) { continue; }
+			if (!(addressBook instanceof Components.interfaces.nsIAbDirectory) || addressBook.isMailList) { continue; }
 			var abName = addressBook.fileName.replace(".mab","");
 			
 			// fetch desired path of addressbook from preferences
@@ -752,7 +754,7 @@ var ThunderSyncDialog = {
 			var localUID = "";
 			while (cards.hasMoreElements()) {
 				var card = cards.getNext();
-				if (!(card instanceof Components.interfaces.nsIAbCard)) { continue; }
+				if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList) { continue; }
 				try {
 					// try to read the custom property "UID"
 					localUID = card.getProperty("UID","");
@@ -810,9 +812,9 @@ var ThunderSyncDialog = {
 						var propability = 0;
 						var cards = addressBook.childCards;
 						while (cards.hasMoreElements()) {
-							// get next item in list; skip if it's not a contact or if it was already checked
+							// get next item in list; skip if it's not a contact, if it's a mailing list or if it was already checked
 							var card = cards.getNext();
-							if (!(card instanceof Components.interfaces.nsIAbCard) || (list_checked.indexOf(card.getProperty("UID","")) >= 0)) {
+							if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList || (list_checked.indexOf(card.getProperty("UID","")) >= 0)) {
 								continue;
 							}
 							matches = 0;
@@ -853,7 +855,7 @@ var ThunderSyncDialog = {
 					//   if a local contact was found: calculate differences
 					//   if no contact was found: define a "from-remote" tree item
 					//
-					if (localCard instanceof Components.interfaces.nsIAbCard) {
+					if ((localCard instanceof Components.interfaces.nsIAbCard) && !localCard.isMailList) {
 						// match found! Add to tree
 						// local UID overwrites remote UID
 						remoteUID = localCard.getProperty("UID","");
@@ -913,7 +915,7 @@ var ThunderSyncDialog = {
 			var cards = addressBook.childCards;
 			while (cards.hasMoreElements()) {
 				var card = cards.getNext();
-				if ((card instanceof Components.interfaces.nsIAbCard) && (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
+				if ((card instanceof Components.interfaces.nsIAbCard) && !card.isMailList && (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
 					// add entry: "local name" --> ""
 					// if we are in import mode:
 					// mark local contact as "to delete" (last param = true)
@@ -1533,7 +1535,7 @@ var ThunderSyncDialog = {
 			dataString = "";
 			// iterate over all contacts in given abURI/path combo
 			for (k=0; k<this.CardDB[abURI][path].length; k++) {
-				if (this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) {
+				if ((this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) && !this.CardDB[abURI][path][k].isMailList) {
 					// at least one contact exists: process contact
 					switch (this.FormatDB[abURI]) {
 						case "vCardDir":
@@ -1575,7 +1577,7 @@ var ThunderSyncDialog = {
 							// i.e. re-encode data string
 							dataString = "";
 							for (k=0; k<this.CardDB[abURI][path].length; k++) {
-								if (this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) {
+								if ((this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) && !this.CardDB[abURI][path][k].isMailList) {
 									if (dataString.length > 0) { dataString += ThunderSyncVCardLib.CRLF; }
 									dataString += ThunderSyncVCardLib.createVCardString(
 										this.CardDB[abURI][path][k],
@@ -1852,7 +1854,7 @@ var ThunderSyncDialog = {
 	 * @param localCard contact to add
 	 */
 	addCard: function (abURI,path,format,localCard) {
-		if (!(localCard instanceof Components.interfaces.nsIAbCard)) {
+		if (!(localCard instanceof Components.interfaces.nsIAbCard) || localCard.isMailList) {
 			return;
 		}
 		

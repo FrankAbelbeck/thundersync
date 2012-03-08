@@ -164,7 +164,9 @@ Changelog:
    - Introduction of a toolbar button
    - Introduction of a ThunderSync icon
 
-2.1 (2012-02-24)
-   - new maximum allowed Thunderbird version: 10.*
+2.1 (2012-03-02)
+   - New maximum allowed Thunderbird version: 10.*
    - Type for ModDB reference fixed
    - Improvement of vCard phone number interpretation
+   - Mailing lists are ignored during processing
+
