@@ -43,9 +43,9 @@ $Id$
 	
 	<dialogheader title="&ThunderSyncPreferences.dialog.title;"/>
 	
-	<stringbundleset id="stringbundleset">
-		<stringbundle id="string-bundle" src="chrome://thundersync/locale/ThunderSyncPreferences.properties" />
-		<stringbundle id="string-bundle-prop" src="chrome://thundersync/locale/ThunderSyncDialog.properties" />
+	<stringbundleset id="ThunderSyncPreferences.strings">
+		<stringbundle id="ThunderSyncPreferences.strings.prf" src="chrome://thundersync/locale/ThunderSyncPreferences.properties" />
+		<stringbundle id="ThunderSyncPreferences.strings.dlg" src="chrome://thundersync/locale/ThunderSyncDialog.properties" />
 	</stringbundleset>
 	
 	<popupset>

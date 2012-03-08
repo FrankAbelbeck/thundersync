@@ -187,7 +187,7 @@ var ThunderSyncPref = {
 		//
 		// populate filter tree
 		//
-		var stringsBundleProp = document.getElementById("string-bundle-prop");
+		var stringsBundleProp = document.getElementById("ThunderSyncPreferences.strings.dlg");
 		var props = ThunderSyncVCardLib.baseProperties.concat(
 				ThunderSyncVCardLib.otherProperties
 		);
@@ -243,7 +243,7 @@ var ThunderSyncPref = {
 			// it seems there are no addressbooks: show alert and exit
 			var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 				.getService(Components.interfaces.nsIPromptService);
-			var stringsBundle = document.getElementById("string-bundle");
+			var stringsBundle = document.getElementById("ThunderSyncPreferences.strings.prf");
 			promptService.alert(
 				null,
 				stringsBundle.getString("titleError"),
@@ -390,7 +390,7 @@ var ThunderSyncPref = {
 		//
 		// update filter list
 		//
-		var stringsBundle = document.getElementById("string-bundle");
+		var stringsBundle = document.getElementById("ThunderSyncPreferences.strings.prf");
 		var items = document.getElementsByClassName("ThunderSyncPreferences.treeitem.filter");
 		for (i=0; i<items.length; i++) {
 			var property = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterProperty")[0]
@@ -582,7 +582,7 @@ var ThunderSyncPref = {
 	 */
 	openPathDialog: function (mode) {
 		// create and execute file selection dialog
-		var stringsBundle = document.getElementById("string-bundle");
+		var stringsBundle = document.getElementById("ThunderSyncPreferences.strings.prf");
 		var nsIFilePicker = Components.interfaces.nsIFilePicker;
 		var fp = Components.classes["@mozilla.org/filepicker;1"]
 				.createInstance(nsIFilePicker);
@@ -771,7 +771,7 @@ var ThunderSyncPref = {
 				var property = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterProperty")[0]
 						.getAttribute("value");
 				itemAction.setAttribute("value",action);
-				itemAction.setAttribute("label",document.getElementById("string-bundle").getString("filter"+action));
+				itemAction.setAttribute("label",document.getElementById("ThunderSyncPreferences.strings.prf").getString("filter"+action));
 				this.ConfigFilter[this.aBook][property] = action;
 			}
 		}
@@ -836,7 +836,7 @@ var ThunderSyncPref = {
 		
 		// finally: delete all files still in list
 		// prior to this: ask user if he really wants to do it.
-		var stringsBundle = document.getElementById("string-bundle");
+		var stringsBundle = document.getElementById("ThunderSyncPreferences.strings.prf");
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 			.getService(Components.interfaces.nsIPromptService);
 		if (fileList.length > 0) {
