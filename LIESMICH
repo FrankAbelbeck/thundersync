@@ -180,7 +180,9 @@ Versionshistorie:
    - Einführung einer Symbolleistenschaltfläche
    - Einführung eines ThunderSync-Symbols
 
-2.1 (2012-02-24)
+2.1 (2012-03-02)
    - neue maximal zulässige Thunderbird-Version: 10.*
    - Typo bei ModDB-Angabe berichtigt
    - Verbesserung der Telefonnummerninterpretation bei vCards
+   - Mailing-Listen werden bei der Bearbeitung ignoriert
+
