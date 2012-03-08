@@ -346,7 +346,7 @@ var ThunderSyncDialog = {
 		// and are constructed like the contact treeitem
 		//
 		if (differences.length > 0) {
-			var stringsBundle = document.getElementById("string-bundle");
+			var stringsBundle = document.getElementById("ThunderSyncDialog.strings.dlg");
 			
 			item.setAttribute("container","true");
 			var children = document.createElementNS(
@@ -557,7 +557,7 @@ var ThunderSyncDialog = {
 			
 			if (mode != this.modeIgnore) {
 				if (properties[i] == "Photo") {
-					var photoString = document.getElementById("string-bundle")
+					var photoString = document.getElementById("ThunderSyncDialog.strings.dlg")
 								.getString("Photo");
 					if (prop1 != "") { prop1 = photoString; }
 					if (prop2 != "") { prop2 = photoString; }
@@ -586,7 +586,7 @@ var ThunderSyncDialog = {
 		
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 					.getService(Components.interfaces.nsIPromptService);
-		var stringsBundle = document.getElementById("string-bundle");
+		var stringsBundle = document.getElementById("ThunderSyncDialog.strings.dlg");
 		
 		// prepare preferences access for export format and addressbooks
 		try {
