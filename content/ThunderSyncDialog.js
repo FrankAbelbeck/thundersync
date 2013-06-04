@@ -670,7 +670,11 @@ var ThunderSyncDialog = {
 			// get next item in list; skip if it's not an addressbook
 			var addressBook = allAddressBooks.getNext();
 			if (!(addressBook instanceof Components.interfaces.nsIAbDirectory) || addressBook.isMailList) { continue; }
-			var abName = addressBook.fileName.replace(".mab","");
+			// null pointer fix by gonter <https://github.com/gonter>
+			// see https://github.com/gonter/ThunderSync-snap-mirror/commit/5a07fc6863d5c3c301cbedce966a57630f115cdc
+			var abName = addressBook.fileName;
+			if (abName == null) { continue; }
+			abName = abName.replace(".mab","");
 			
 			// fetch desired path of addressbook from preferences
 			// if this fails, no path was configured: skip addressbook
@@ -754,6 +758,51 @@ var ThunderSyncDialog = {
 			var localUID = "";
 			while (cards.hasMoreElements()) {
 				var card = cards.getNext();
+				
+// 				if (card instanceof Components.interfaces.nsIAbCard && card.isMailList) {
+// 					this.logMsg("*** mailing list ***");
+// 					var enumerator = card.properties;
+// 					while (enumerator.hasMoreElements()) {
+// 						var property = enumerator.getNext();
+// 						// need to unwrap xpconnect wrapped nsisupports!
+// 						// query interface, i.e. transform into nsiproperty
+// 						property.QueryInterface(Components.interfaces.nsIProperty);
+// 						this.logMsg(property.name + " = " + property.value);
+// 					}
+// 					// card is a mailing list: obtain list URI
+// 					mLURI = card.mailListURI;
+// 					this.logMsg("*** mailing list with URI "+mLURI);
+// 					var mLManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
+// 					var mLDir = abManager.getDirectory(mLURI);
+// 					var mLEntries = mLDir.childCards;
+// 					while (mLEntries.hasMoreElements()) {
+// 						var mLEntry = mLEntries.getNext();
+// 						mLEntry.QueryInterface(Components.interfaces.nsIAbCard);
+// 						this.logMsg("** entry " + mLEntry.displayName);
+// 						var enumerator = mLEntry.properties;
+// 						while (enumerator.hasMoreElements()) {
+// 							var property = enumerator.getNext();
+// 							// need to unwrap xpconnect wrapped nsisupports!
+// 							// query interface, i.e. transform into nsiproperty
+// 							property.QueryInterface(Components.interfaces.nsIProperty);
+// 							this.logMsg(property.name + " = " + property.value);
+// 						}
+// 					}
+// 				}
+				
+// 				if (card instanceof Components.interfaces.nsIAbCard && !card.isMailList) {
+// 					var enumerator = card.properties;
+// 					this.logMsg("*** nsIAbCard:start ***")
+// 					while (enumerator.hasMoreElements()) {
+// 						var property = enumerator.getNext();
+// 						// need to unwrap xpconnect wrapped nsisupports!
+// 						// query interface, i.e. transform into nsiproperty
+// 						property.QueryInterface(Components.interfaces.nsIProperty);
+// 						this.logMsg(property.name + " = " + property.value);
+// 					}
+// 					this.logMsg("*** nsIAbCard:stop ***")
+// 				}
+				
 				if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList) { continue; }
 				try {
 					// try to read the custom property "UID"
@@ -866,7 +915,7 @@ var ThunderSyncDialog = {
 							localCard,
 							this.CardDB[addressBook.URI][path][i],
 							filters,
-				      			syncMode
+							syncMode
 						);
 						if (differences.length > 0) {
 							// differences found:

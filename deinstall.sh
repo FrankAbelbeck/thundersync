@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm /home/frank/.thunderbird/3r886l5k.default/extensions/thundersync@frank.abelbeck
+rm /home/frank/.thunderbird/9pg2jc1x.default/extensions/thundersync@frank.abelbeck

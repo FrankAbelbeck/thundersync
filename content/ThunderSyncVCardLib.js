@@ -72,7 +72,9 @@ var ThunderSyncVCardLib = {
 		"WorkZipCode", "WorkCountry",
 		"HomePhone", "WorkPhone", "FaxNumber", "CellularNumber", "PagerNumber",
 		"JobTitle", "Department", "Company", "WebPage1", "WebPage2",
-		"BirthYear", "BirthMonth", "BirthDay", "Notes"
+		"BirthYear", "BirthMonth", "BirthDay", "Notes",
+		"_AimScreenName",
+		"_GoogleTalk", "_Yahoo", "_Skype", "_MSN", "_ICQ", "_JabberId" // new since 2012?
 	),
 	
 	// list of photo properties
@@ -82,13 +84,13 @@ var ThunderSyncVCardLib = {
 	otherProperties: new Array(
 		"NickName", "PhoneticFirstName", "PhoneticLastName",
 		"SpouseName", "FamilyName",
-		"AnniversaryDay", "AnniversaryMonth", "AnniversaryYear",
 		"HomePhoneType", "WorkPhoneType", "FaxNumberType",
 		"PagerNumberType", "CellularNumberType",
-		"_AimScreenName",
-		"PopularityIndex", "PreferMailFormat",		// int
-		"AllowRemoteContent",				// bool
-		"Custom1", "Custom2", "Custom3", "Custom4"	// base64?
+		"PopularityIndex", "PreferMailFormat", // int
+		"AllowRemoteContent", // bool
+		"Custom1", "Custom2", "Custom3", "Custom4",	// base64?
+		"_QQ", "_IRC", // new since 2012?
+		"AnniversaryYear", "AnniversaryMonth", "AnniversaryDay"
 	),
 	
 	allProperties: function () {
@@ -506,6 +508,27 @@ var ThunderSyncVCardLib = {
 			}
 		}
 		
+		value = card.getProperty("_AimScreenName","");
+		if (value != "") { vcfstr += "X-AIM:" + value + this.CRLF; }
+		
+		value = card.getProperty("_GoogleTalk","");
+		if (value != "") { vcfstr += "X-GOOGLE-TALK:" + value + this.CRLF; }
+		
+		value = card.getProperty("_Yahoo","");
+		if (value != "") { vcfstr += "X-YAHOO:" + value + this.CRLF; }
+		
+		value = card.getProperty("_Skype","");
+		if (value != "") { vcfstr += "X-SKYPE:" + value + this.CRLF; }
+		
+		value = card.getProperty("_MSN","");
+		if (value != "") { vcfstr += "X-MSN:" + value + this.CRLF; }
+		
+		value = card.getProperty("_ICQ","");
+		if (value != "") { vcfstr += "X-ICQ:" + value + this.CRLF; }
+		
+		value = card.getProperty("_JabberId","");
+		if (value != "") { vcfstr += "X-JABBER:" + value + this.CRLF; }
+		
 		for (var i = 0; i < this.otherProperties.length; i++) {
 			value = String(card.getProperty(this.otherProperties[i],"")).replace(/;/g,"\\;");
 			if (value != "") {
@@ -682,6 +705,9 @@ var ThunderSyncVCardLib = {
 			// technique specified in the vCard standard
 			tmp = tmp.replace(/\r\n([\s])/g,"$1");
 			
+			// unmaks all masked (escaped) characters, i.e. \; \, \\
+			tmp = tmp.replace(/\\(;|,|\\)/g,"$1");
+			
 			// finally, split the datastring at \r\n line breaks
 			var lines = tmp.split(this.CRLF);
 		} catch (exception) {
@@ -704,11 +730,31 @@ var ThunderSyncVCardLib = {
 				var posColon = lines[i].indexOf(":");
 				if (posColon == -1 ) { throw "undefined"; }
 				
-				property = lines[i].substr(0,posColon).split(";");
-				value = lines[i].substr(posColon+1).split(";");
-				//
-				// todo: handle masked semicolons (\;)
-				//
+				property = lines[i].substr(0,posColon).toUpperCase().split(";"); // case insensitive properties! -> toUpperCase
+				switch (property[0]) {
+					case "FN":
+					case "PHOTO":
+					case "BDAY":
+					case "TEL":
+					case "EMAIL":
+					case "TITLE":
+					case "NOTE":
+					case "URL":
+					case "REV":
+					case "UID":
+					case "VERSION":
+						// these properties only feature one value
+						// thus the value doesn't need to be split up
+						// (just in case the optional semi-colon masking is
+						// really interpreted as optional; otherwise we would
+						// miss the remainder of the field after the first ";")
+						value = [lines[i].substr(posColon+1)];
+						break;
+					default:
+						// property features multiple values (compound property)
+						// therefore, it is split up along semi-colons...
+						value = lines[i].substr(posColon+1).split(";");
+				}
 				for (var k = 1; k < property.length; k++) {
 					var prop = property[k].split("=");
 					switch (prop.length) {
@@ -894,10 +940,42 @@ var ThunderSyncVCardLib = {
 				case "UID":
 					card.setProperty("UID",value[0]);
 					break;
+				case "X-AIM":
+					card.setProperty("_AimScreenName",value[0]);
+					break;
+				case "X-ICQ":
+					card.setProperty("_ICQ",value[0]);
+					break;
+				case "X-GOOGLE-TALK":
+					card.setProperty("_GoogleTalk",value[0]);
+					break;
+				case "X-JABBER":
+					card.setProperty("_JabberId",value[0]);
+					break;
+				case "X-MSN":
+					card.setProperty("_MSN",value[0]);
+					break;
+				case "X-YAHOO":
+					card.setProperty("_Yahoo",value[0]);
+					break;
+				case "X-SKYPE":
+					card.setProperty("_Skype",value[0]);
+					break;
 			}
 			i++;
 		}
 		return card;
+	},
+	
+	/**
+	 * Write a message to Thunderbird's error console
+	 * 
+	 * @param msg message string
+	 */
+	logMsg: function (msg) {
+		Components.classes["@mozilla.org/consoleservice;1"]
+			.getService(Components.interfaces.nsIConsoleService)
+			.logStringMessage("[ThunderSync] "+msg);
 	},
 	
 }
