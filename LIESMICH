@@ -28,7 +28,7 @@ Autor.........: Frank Abelbeck
 Unterstützer..: Lucas Treffenstädt (Tests, Quelltextbeiträge "Auto-Start")
                 Yair Lanz (Rückmeldung bezüglich Zeichensätzen)
                 David von Oheimb (Rückmeldungen, Quelltextbeiträge)
-Version.......: 2.0 (2012-01-19)
+Version.......: 2.2 alpha (2013-06-04)
 Lizenz........: GNU General Public License version 2
 
 Beschreibung..: Erlaubt es, Thunderbirds Adressbuch mit externen Verzeichnissen
@@ -185,4 +185,12 @@ Versionshistorie:
    - Typo bei ModDB-Angabe berichtigt
    - Verbesserung der Telefonnummerninterpretation bei vCards
    - Mailing-Listen werden bei der Bearbeitung ignoriert
+
+2.2 alpha (2013-06-04)
+   - Null-Pointer-Problem entschärft gemäß Vorschlag gonter (GitHub)
+   - Integration neuer Messenger-Informationen wie _GoogleTalk sowie
+     Umsetzung in X-...-Eigenschaften
+   - Korrektur der Handhabung von maskierten Semikolons
+   - Korrektur: Eigenschaftsnamen unabhängig von Groß-/Kleinschreibung
+   - Baustelle: Analyse von Mailing Lists
 
