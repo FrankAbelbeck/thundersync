@@ -77,7 +77,12 @@ var ThunderSyncPref = {
 			var addressBook = allAddressBooks.getNext();
 			if (addressBook instanceof Components.interfaces.nsIAbDirectory)
 			{
-				var fileName = addressBook.fileName.replace(".mab","");
+				var fileName = addressBook.fileName;
+				// null pointer fix by gonter <https://github.com/gonter>
+				// see https://github.com/gonter/ThunderSync-snap-mirror/commit/5a07fc6863d5c3c301cbedce966a57630f115cdc
+				if (fileName == null) { continue; }
+				fileName = fileName.replace(".mab","");
+				
 				var item = document.createElementNS(
 					"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 					"listitem"
