@@ -28,7 +28,7 @@ Author.......: Frank Abelbeck
 Supporters...: Lucas Treffenstädt (testing, code contribution auto-start),
                Yair Lanz (feedback regarding charsets)
                David von Oheimb (feedback, code contribution)
-Version......: 2.0 (2012-01-19)
+Version......: 2.2a (2013-06-04)
 Licence......: GNU General Public License version 2
 
 Description..: Allows to synchronise Thunderbird's addressbook with external
@@ -170,3 +170,10 @@ Changelog:
    - Improvement of vCard phone number interpretation
    - Mailing lists are ignored during processing
 
+2.2 alpha (2013-06-04)
+   - fixed null pointer problem as proposed by gonter (GitHub)
+   - integration of new messenger information like _GoogleTalk and export as
+     corresponding X-... properties
+   - handling of masked semi-colons corrected
+   - correction: property names are now case-insensitive
+   - under construction: debugging of mailing lists
