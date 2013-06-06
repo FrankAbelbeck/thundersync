@@ -398,9 +398,8 @@ var ThunderSyncPref = {
 		var stringsBundle = document.getElementById("ThunderSyncPreferences.strings.prf");
 		var items = document.getElementsByClassName("ThunderSyncPreferences.treeitem.filter");
 		for (i=0; i<items.length; i++) {
-			var property = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterProperty")[0]
-						.getAttribute("value");
-			var itemAction   = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterAction")[0];
+			var property = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterProperty")[0].getAttribute("value");
+			var itemAction = items[i].getElementsByClassName("ThunderSyncPreferences.treecell.filterAction")[0];
 			if (filterList[property] && filterList[property] != itemAction.getAttribute("value")) {
 				itemAction.setAttribute("value",filterList[property]);
 				itemAction.setAttribute("label",stringsBundle.getString("filter"+filterList[property]));
@@ -862,6 +861,6 @@ var ThunderSyncPref = {
 				stringsBundle.getFormattedString("textNoCleanFoto",[photoDirPath])
 			);
 		}
-	}
+	},
 }
 

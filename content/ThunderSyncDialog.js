@@ -1858,7 +1858,10 @@ var ThunderSyncDialog = {
 		var newValue = new Array(abURI,path);
 		var doPush = true;
 		for (j=0; j<this.ModDB.length; j++) {
-			if (this.ModDB[j] == newValue) { doPush = false; }
+			if (this.ModDB[j][0] == newValue[0] && this.ModDB[j][1] == newValue[1]) {
+				doPush = false;
+				continue;
+			}
 		}
 		// 2. if no entry was found: add it
 		if (doPush) { this.ModDB.push(newValue);}
@@ -1941,7 +1944,10 @@ var ThunderSyncDialog = {
 		var newValue = new Array(abURI,newPath);
 		var doPush = true;
 		for (j=0; j<this.ModDB.length; j++) {
-			if (this.ModDB[j] == newValue) { doPush = false; }
+			if (this.ModDB[j][0] == newValue[0] && this.ModDB[j][1] == newValue[1]) {
+				doPush = false; 
+				continue;
+			}
 		}
 		// 2. if no entry was found: add it
 		if (doPush) { this.ModDB.push(newValue);}
