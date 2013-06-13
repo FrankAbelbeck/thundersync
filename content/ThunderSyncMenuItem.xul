@@ -24,17 +24,76 @@ or see <http://www.gnu.org/licenses/>.
 
 $Id$
 -->
-
 <overlay id="ThunderSync.overlay.menuitem"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
-	<menu id="tasksMenu">
-		<menupopup id="taskPopup">
+		<script type="application/x-javascript" src="chrome://thundersync/content/ThunderSyncMenuItem.js" />
+		
+		<stringbundleset id="stringbundleset"> <!-- apparently this stringbundleset is already defined, so we use it in this overlay -->
+			<stringbundle id="ThunderSyncMenuItem.strings.menu" src="chrome://thundersync/locale/ThunderSyncMenuItem.properties" />
+		</stringbundleset>
+		
+		<menu id="tasksMenu">
+			<menupopup id="taskPopup">
+				<menuseparator />  
+				<menu label="&ThunderSyncMenuBase;">
+					<menupopup onpopupshowing="ThunderSyncMenuItem.checkDirTreeContext()">
+						<menuitem id="ThunderSyncMenuItem.MenuItem"
+							label="&ThunderSyncMenuItem;"
+							oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
+						/>
+						<menuitem id="ThunderSyncMenuItem.MenuItemExport"
+							label="&ThunderSyncMenuItemExport;"
+							oncommand="ThunderSyncMenuItem.callCompare('export');"
+						/>
+						<menuitem id="ThunderSyncMenuItem.MenuItemImport"
+							label="&ThunderSyncMenuItemImport;"
+							oncommand="ThunderSyncMenuItem.callCompare('import');"
+						/>
+					</menupopup>
+				</menu>
+			</menupopup>
+		</menu>
+		
+		<menupopup id="dirTreeContext">
 			<menuseparator />  
-			<menuitem label="&ThunderSyncMenuItem;"
-				oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
-			/>
+			<menu id="ThunderSyncMenuItem.DirContextMenu" label="&ThunderSyncMenuBase;">
+				<menupopup onpopupshowing="ThunderSyncMenuItem.checkDirTreeContext()">
+					<menuitem id="ThunderSyncMenuItem.DirContextMenuItem"
+						label="&ThunderSyncDirContextMenuItem;"
+						oncommand="ThunderSyncMenuItem.callCompare('dirSync');"
+					/>
+					<menuitem id="ThunderSyncMenuItem.DirContextMenuItemExport"
+						label="&ThunderSyncDirContextMenuItemExport;"
+						oncommand="ThunderSyncMenuItem.callCompare('dirExport');"
+					/>
+					<menuitem id="ThunderSyncMenuItem.DirContextMenuItemImport"
+						label="&ThunderSyncDirContextMenuItemImport;"
+						oncommand="ThunderSyncMenuItem.callCompare('dirImport');"
+					/>
+					<menuseparator />
+					<menuitem label="&ThunderSyncMenuItemPrefs;"
+						oncommand="ThunderSyncMenuItem.callPreferences()"
+					/>
+				</menupopup>
+			</menu>
 		</menupopup>
-        </menu>
+		
+		<menupopup id="abResultsTreeContext">
+			<menuseparator />  
+			<menu id="ThunderSyncMenuItem.CardContextMenu" label="&ThunderSyncMenuBase;">
+				<menupopup onpopupshowing="ThunderSyncMenuItem.checkContactTreeContext()">
+					<menuitem id="ThunderSyncMenuItem.CardContextMenuItem"
+						oncommand="ThunderSyncMenuItem.callCompare('cardSync');"
+					/>
+					<menuitem id="ThunderSyncMenuItem.CardContextMenuItemExport"
+						oncommand="ThunderSyncMenuItem.callCompare('cardExport');"
+					/>
+					<menuitem id="ThunderSyncMenuItem.CardContextMenuItemImport"
+						oncommand="ThunderSyncMenuItem.callCompare('cardImport');"
+					/>
+				</menupopup>
+			</menu>
+		</menupopup>
 	
 </overlay>

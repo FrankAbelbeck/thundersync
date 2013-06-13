@@ -21,4 +21,18 @@ or see <http://www.gnu.org/licenses/>.
 $Id$
 -->
 
-<!ENTITY ThunderSyncMenuItem "Synchronise addressbook...">
+<!ENTITY ThunderSyncMenuBase "ThunderSync">
+<!ENTITY ThunderSyncMenuItem "Synchronise addressbooks...">
+<!ENTITY ThunderSyncMenuItemExport "Export addressbooks...">
+<!ENTITY ThunderSyncMenuItemImport "Import addressbooks...">
+
+<!ENTITY ThunderSyncMenuItemPrefs  "Configure...">
+
+<!ENTITY ThunderSyncDirContextMenuItem       "Synchronise this addressbook...">
+<!ENTITY ThunderSyncDirContextMenuItemExport "Export this addressbook...">
+<!ENTITY ThunderSyncDirContextMenuItemImport "Import this addressbook...">
+
+<!ENTITY ThunderSyncCardContextMenuItem       "Synchronise this contact...">
+<!ENTITY ThunderSyncCardContextMenuItemExport "Export this contact...">
+<!ENTITY ThunderSyncCardContextMenuItemImport "Import this contact...">
+

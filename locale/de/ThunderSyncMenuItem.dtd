@@ -21,4 +21,17 @@ or see <http://www.gnu.org/licenses/>.
 $Id$
 -->
 
-<!ENTITY ThunderSyncMenuItem "Adressbuch abgleichen...">
+<!ENTITY ThunderSyncMenuBase       "ThunderSync">
+<!ENTITY ThunderSyncMenuItem       "Adressbücher abgleichen...">
+<!ENTITY ThunderSyncMenuItemExport "Adressbücher exportieren...">
+<!ENTITY ThunderSyncMenuItemImport "Adressbücher importieren...">
+
+<!ENTITY ThunderSyncMenuItemPrefs "Konfigurieren...">
+
+<!ENTITY ThunderSyncDirContextMenuItem       "Dieses Adressbuch abgleichen...">
+<!ENTITY ThunderSyncDirContextMenuItemExport "Dieses Adressbuch exportieren...">
+<!ENTITY ThunderSyncDirContextMenuItemImport "Dieses Adressbuch importieren...">
+
+<!ENTITY ThunderSyncCardContextMenuItem       "Diesen Kontakt abgleichen...">
+<!ENTITY ThunderSyncCardContextMenuItemExport "Diesen Kontakt exportieren...">
+<!ENTITY ThunderSyncCardContextMenuItemImport "Diesen Kontakt importieren...">

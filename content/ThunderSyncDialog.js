@@ -103,6 +103,7 @@ var ThunderSyncDialog = {
 		this.HideUIDDB   = new Object();
 		this.UseQPEDB    = new Object();
 		this.DoFoldingDB = new Object();
+		this.UIDDB       = new Object();
 	},
 	
 	/**
@@ -576,12 +577,18 @@ var ThunderSyncDialog = {
 	 * @param autoclose boolean variable, if true: close dialog if no differences are found.
 	 */
 	compare: function () {
+		var autoclose = false;
+		var autoapply = true;
+		var mode = null;
 		try {
-			var mode = window.arguments[0].wrappedJSObject.mode;
-			var autoclose = true;
+			// first try the wrappedJSObject trick for passing Javascript
+			// objects between windows when no intial window is available
+			// https://developer.mozilla.org/en-US/docs/Working_with_windows_in_chrome_code#Example_5.3A_Using_nsIWindowWatcher_for_passing_an_arbritrary_JavaScript_object
+			mode = window.arguments[0].wrappedJSObject.mode;
+			autoclose = true;
 		} catch (exception) {
-			var mode = null;
-			var autoclose = false;
+			// no wrappedJSObject trick: dialog is called without arguments
+			// no mode defined: just normal interactive mode...
 		}
 		
 		var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -664,8 +671,24 @@ var ThunderSyncDialog = {
 		// iterate over all contacts in every addressbook
 		//
 		var abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
-		var allAddressBooks = abManager.directories;
-		var ablist = document.getElementById("ThunderSyncPreferences.list.addressbook");
+		
+		switch (mode) {
+			case "dirSync":
+			case "dirExport":
+			case "dirImport":
+			case "cardSync":
+			case "cardExport":
+			case "cardImport":
+				// in case the user only wants to sync one addressbook
+				// (by using the context menu), a custom directory iterator
+				// has to be used; it is contained in the "arguments" parameter
+				var allAddressBooks = window.arguments[0].wrappedJSObject.directories;
+				if (allAddressBooks) { break; }
+				// that should not have happened... falling through to default...
+			default:
+				// in any other case: work with all directories
+				var allAddressBooks = abManager.directories;
+		}
 		while (allAddressBooks.hasMoreElements()) {
 			// get next item in list; skip if it's not an addressbook
 			var addressBook = allAddressBooks.getNext();
@@ -737,152 +760,113 @@ var ThunderSyncDialog = {
 				filterstr = filterPrefs.getCharPref(abName).split(",");
 				for (var i=0; i<filterstr.length; i++) {
 					[name,value] = filterstr[i].split("=");
-					filters[name] = value;
+					if (name.length > 0) {
+						filters[name] = value;
+					}
 				}
 			} catch (exception) {}
 			
 			// read addressbook-specific comparison mode: no, ask, export, import
-			try {
-				var syncMode = modePrefs.getCharPref(abName);
-			} catch (exception) {
-				var syncMode = "ask";
+			var syncMode = "no";
+			switch (mode) {
+				case "export":
+				case "dirExport":
+				case "cardExport":
+					syncMode = "export";
+					break;
+				case "dirSync":
+				case "cardSync":
+					syncMode = "ask";
+					break;
+				case "import":
+				case "dirImport":
+				case "cardImport":
+					var syncMode = "import";
+					break;
+				default:
+					try {
+						var syncMode = modePrefs.getCharPref(abName);
+					} catch (exception) {
+						var syncMode = "ask";
+					}
+			}
+			
+			// check if synchronisation is meant to be non-interactive
+			switch (syncMode) {
+				case "forced export":
+					syncMode = "export"; // remove "forced "
+					break;
+				case "forced import":
+					syncMode = "import"; // remove "forced "
+					break;
+				default:
+					// at least one addressbook wants interaction during sync
+					// thus, the global auto apply option is negated
+					autoapply = false;
 			}
 			
 			// no path defined or no sync desired? skip this addressbook...
 			if ((remoteResource == "") || (syncMode == "no")) { continue; }
 			
-			// make sure all addressbook entries have an UID:
-			//   iterate over all entries and look for UIDs;
-			//   if none is set, generate one.
-			var cards = addressBook.childCards;
-			var localUID = "";
-			while (cards.hasMoreElements()) {
-				var card = cards.getNext();
-				
-// 				if (card instanceof Components.interfaces.nsIAbCard && card.isMailList) {
-// 					this.logMsg("*** mailing list ***");
-// 					var enumerator = card.properties;
-// 					while (enumerator.hasMoreElements()) {
-// 						var property = enumerator.getNext();
-// 						// need to unwrap xpconnect wrapped nsisupports!
-// 						// query interface, i.e. transform into nsiproperty
-// 						property.QueryInterface(Components.interfaces.nsIProperty);
-// 						this.logMsg(property.name + " = " + property.value);
-// 					}
-// 					// card is a mailing list: obtain list URI
-// 					mLURI = card.mailListURI;
-// 					this.logMsg("*** mailing list with URI "+mLURI);
-// 					var mLManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
-// 					var mLDir = abManager.getDirectory(mLURI);
-// 					var mLEntries = mLDir.childCards;
-// 					while (mLEntries.hasMoreElements()) {
-// 						var mLEntry = mLEntries.getNext();
-// 						mLEntry.QueryInterface(Components.interfaces.nsIAbCard);
-// 						this.logMsg("** entry " + mLEntry.displayName);
-// 						var enumerator = mLEntry.properties;
-// 						while (enumerator.hasMoreElements()) {
-// 							var property = enumerator.getNext();
-// 							// need to unwrap xpconnect wrapped nsisupports!
-// 							// query interface, i.e. transform into nsiproperty
-// 							property.QueryInterface(Components.interfaces.nsIProperty);
-// 							this.logMsg(property.name + " = " + property.value);
-// 						}
-// 					}
-// 				}
-				
-// 				if (card instanceof Components.interfaces.nsIAbCard && !card.isMailList) {
-// 					var enumerator = card.properties;
-// 					this.logMsg("*** nsIAbCard:start ***")
-// 					while (enumerator.hasMoreElements()) {
-// 						var property = enumerator.getNext();
-// 						// need to unwrap xpconnect wrapped nsisupports!
-// 						// query interface, i.e. transform into nsiproperty
-// 						property.QueryInterface(Components.interfaces.nsIProperty);
-// 						this.logMsg(property.name + " = " + property.value);
-// 					}
-// 					this.logMsg("*** nsIAbCard:stop ***")
-// 				}
-				
-				if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList) { continue; }
-				try {
-					// try to read the custom property "UID"
-					localUID = card.getProperty("UID","");
-				} catch (exception) {
-					// seems this property is not defined...
-					localUID = "";
-				}
-				if (localUID == "") {
-					// undefined UID: create new one and apply changes
-					card.setProperty("UID",uuidgenerator.generateUUID().toString().slice(1,37));
-					addressBook.modifyCard(card);
-				}
-			}
-			
-			// read all external contacts
+			// read all external contacts related to the current addressbook
 			this.read(addressBook.URI,remoteResource);
 			
-			// iterate over path and contacts...
-			for (var path in this.CardDB[addressBook.URI]) {
-				for (var i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
+			// process all or a subset of the contacts in the current addressbook
+			if (mode == "cardSync" || mode == "cardExport" || mode == "cardImport") {
+				// in case the user only wants to sync a few contacts
+				// (by using the context menu), a custom card iterator
+				// with selected entries has to be used
+				var localCards = window.arguments[0].wrappedJSObject.cards;
+				if (localCards) { break; }
+				// that should not have happened... falling through to default...
+			} else {
+				// in any other case: iterate over all contacts...
+				var localCards = addressBook.childCards;
+			}
+			
+			while (localCards.hasMoreElements()) {
+				var localCard = localCards.getNext();
+				// catch undefined results or mailing list: skip...
+				if (!(localCard instanceof Components.interfaces.nsIAbCard) || localCard.isMailList) { continue; }
+				
+				// try to find a match via UID
+				var localUID = localCard.getProperty("UID","");
+				if (localUID == "") {
+					// undefined UID: create new one and apply changes
+					localCard.setProperty("UID",uuidgenerator.generateUUID().toString().slice(1,37));
+					addressBook.modifyCard(localCard);
+				}
+				var remoteCardAddr = this.UIDDB[addressBook.URI][localUID];
+				if (remoteCardAddr == undefined) {
 					//
-					// this.CardDB[abURI][path][i] is an nsIAbCard, compare!
+					// no matching UID was found: search all remote contacts
+					// count matching properties and calculate propability
+					// (number of matches/total number of properties)
 					//
-					// make sure UID property is defined, even if empty
-					// if UID is set: register modification for later use...
-					try {
-						var remoteUID = this.getProperty(addressBook.URI,path,i,"UID","");
-					} catch (exception) {
-						var remoteUID = "";
-						this.setProperty(addressBook.URI,path,i,"UID","");
-					}
-					
-					var localCard = null;
+					// matching is democratic, i.e. the card with
+					// the greatest propability > 2/3 wins
 					//
-					// look for addressbook contacts that might match
-					//
-					// first matching property: UID, if not empty
-					var value = "";
-					if (remoteUID != "") {
-						localCard = addressBook.getCardFromProperty("UID",remoteUID,false);
-					}
-					else {
-						//
-						// no UID is set, therefore remote contact is
-						// matched to all local contacts:
-						// count matching properties and calculate propability
-						// (number of matches/total number of properties)
-						//
-						// matching is democratic, i.e. the card with
-						// the greatest propability > 2/3 wins
-						//
-						var matches = 0;
-						var total = 0;
-						var propability_max = 0.665;
-						var propability = 0;
-						var cards = addressBook.childCards;
-						while (cards.hasMoreElements()) {
-							// get next item in list; skip if it's not a contact, if it's a mailing list or if it was already checked
-							var card = cards.getNext();
-							if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList || (list_checked.indexOf(card.getProperty("UID","")) >= 0)) {
-								continue;
-							}
-							matches = 0;
-							total = 0;
-							for (k=0; k<ThunderSyncVCardLib.baseProperties.length; k++) {
-								// compare all base properties
+					var matches = 0;
+					var total = 0;
+					var propability_max = 0.665;
+					var propability = 0;
+					// iterate over remote contacts
+					for (var path in this.CardDB[addressBook.URI]) {
+						for (var i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
+							// but skip already checked contacts...
+							if (list_checked.indexOf([path,i].join("/")) >= 0) { continue; }
+							// iterate over all properties set in local contact
+							var properties = localCard.properties;
+							while (properties.hasMoreElements()) {
+								var property = properties.getNext();
+								// need to unwrap xpconnect wrapped nsisupports!
+								// query interface, i.e. transform into nsiproperty
+								property.QueryInterface(Components.interfaces.nsIProperty);
 								try {
-									value = this.getProperty(
-											addressBook.URI,path,i,
-											ThunderSyncVCardLib.baseProperties[k],""
-									);
-								} catch (exception) {}
-								
-								if (value != "") {
-									total++;
-									if (value == card.getProperty(ThunderSyncVCardLib.baseProperties[k],"")) {
-										matches++;
-									}
-								}
+									var value = this.getProperty(addressBook.URI,path,i,property.name,"");
+								} catch (exception) { var value = ""; }
+								if (property.value == value) { matches++; }
+								total++;
 							}
 							try {
 								// try to calculate propability
@@ -894,49 +878,75 @@ var ThunderSyncDialog = {
 							if (propability > propability_max) {
 								// new greatest propability found...
 								propability_max = propability;
-								localCard = card;
+								remoteCardAddr = [path,i];
 							}
 						}
 					}
-					
-					//
-					// process results:
-					//   if a local contact was found: calculate differences
-					//   if no contact was found: define a "from-remote" tree item
-					//
-					if ((localCard instanceof Components.interfaces.nsIAbCard) && !localCard.isMailList) {
-						// match found! Add to tree
-						// local UID overwrites remote UID
-						remoteUID = localCard.getProperty("UID","");
-						this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
-						// interactive mode: compute differences
-						// take syncMode into account
-						var differences = this.cardDifferences(
+				}
+				//
+				// process results:
+				//   if a remote contact was found: calculate differences
+				//   if no contact was found: define a "from-local" tree item
+				//
+				if (remoteCardAddr != undefined) {
+					// matching external contact found! Add to tree
+					// local UID overwrites remote UID
+					path = remoteCardAddr[0];
+					i    = remoteCardAddr[1];
+					this.setProperty(addressBook.URI,path,i,"UID",localUID);
+					// interactive mode: compute differences
+					// take syncMode into account
+					var differences = this.cardDifferences(
+						localCard,
+						this.CardDB[addressBook.URI][path][i],
+						filters,
+						syncMode
+					);
+					if (differences.length > 0) {
+						// differences found:
+						// add entry: "local name" <--> "external name"
+						this.addTreeItem(
+							addressBook.URI,
+							addressBook.dirName,
 							localCard,
-							this.CardDB[addressBook.URI][path][i],
-							filters,
-							syncMode
+							path,
+							i,
+							differences,
+							false
 						);
-						if (differences.length > 0) {
-							// differences found:
-							// add entry: "local name" <--> "external name"
-							this.addTreeItem(
-								addressBook.URI,
-								addressBook.dirName,
-								localCard,
-								path,
-								i,
-								differences,
-								false
-							);
-						}
 					}
-					else {
-						// no match found, seems to be a new external contact
-						if (remoteUID == "") {
+					// record path/index combination to prevent re-evaluation
+					// of this contact
+					list_checked.push(remoteCardAddr.join("/"));
+				} else {
+					// no match found, seems to be a new local contact
+					//
+					// add entry: "local name" --> ""
+					// if we are in import mode:
+					// mark local contact as "to delete" (last param = true)
+					this.addTreeItem(
+						addressBook.URI,
+						addressBook.dirName,
+						localCard,
+						null,
+						null,
+						[],
+						(syncMode == "import")
+					);
+				}
+			}
+			//
+			// it remains to check if there are new external contacts
+			// (but only if this not a card-specific sync)
+			if (mode != "cardSync" && mode != "cardExport" && mode != "cardImport") {
+				// iterate over remote contacts
+				for (var path in this.CardDB[addressBook.URI]) {
+					for (var i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
+						// but skip already checked contacts...
+						if (list_checked.indexOf([path,i].join("/")) >= 0 ) { continue; }
+						if (this.getProperty(addressBook.URI,path,i,"UID","") == "") {
 							// generate UID for contact
-							remoteUID = uuidgenerator.generateUUID().toString().slice(1,37);
-							this.setProperty(addressBook.URI,path,i,"UID",remoteUID);
+							this.setProperty(addressBook.URI,path,i,"UID",uuidgenerator.generateUUID().toString().slice(1,37));
 						}
 						// add entry: "" <-- "external name"
 						// if we are in export mode:
@@ -951,32 +961,6 @@ var ThunderSyncDialog = {
 							(syncMode == "export")
 						);
 					}
-					// register UID as checked so it's skipped
-					// when all addressbook items are processed
-					list_checked.push(remoteUID);
-				}
-			}
-			
-			//
-			// read all contacts from addressbook and process
-			// if not yet checked (i.e. not in list_checked)
-			//
-			var cards = addressBook.childCards;
-			while (cards.hasMoreElements()) {
-				var card = cards.getNext();
-				if ((card instanceof Components.interfaces.nsIAbCard) && !card.isMailList && (list_checked.indexOf(card.getProperty("UID","")) == -1)) {
-					// add entry: "local name" --> ""
-					// if we are in import mode:
-					// mark local contact as "to delete" (last param = true)
-					this.addTreeItem(
-						addressBook.URI,
-						addressBook.dirName,
-						card,
-						null,
-						null,
-						[],
-						(syncMode == "import")
-					);
 				}
 			}
 		}
@@ -1001,7 +985,7 @@ var ThunderSyncDialog = {
 		else {
 			// there are differences to sync:
 			// enable synchronisation pushbutton
-			this.checkIfSyncReady();
+			this.checkIfSyncReady(autoapply);
 		}
 	},
 	
@@ -1013,9 +997,7 @@ var ThunderSyncDialog = {
 		try {
 			// get currently selected row in tree
 			var tree = document.getElementById("ThunderSyncDialog.tree");
-			var selectedItem = tree
-				.treeBoxObject.view
-				.getItemAtIndex(tree.currentIndex);
+			var selectedItem = tree.treeBoxObject.view.getItemAtIndex(tree.currentIndex);
 		}
 		catch (exception) {
 			// nothing found, return immediately
@@ -1109,8 +1091,11 @@ var ThunderSyncDialog = {
 	 * Check if all properties in the whole tree are not set to "not equal."
 	 * If that's the case, all collisions were resolved and we are ready
 	 * for synchronisation.
+	 * 
+	 * @param autoapply boolean parameter to indicate if the synchronisation
+	 *                  should be carried out immediately if ready
 	 */
-	checkIfSyncReady: function () {
+	checkIfSyncReady: function (autoapply) {
 		var properties =  document
 			.getElementsByClassName("ThunderSyncDialog.treecell.property.mode");
 		
@@ -1122,6 +1107,12 @@ var ThunderSyncDialog = {
 			}
 		}
 		document.getElementById("ThunderSyncDialog.button.sync").setAttribute("disabled",unequal.toString());
+		if (!unequal && autoapply) {
+			// no unequality sign detected and automatic synchronisation is requested:
+			// call synchronisation function immediately
+			ThunderSyncDialog.sync();
+		}
+		
 	},
 	
 	/**
@@ -1708,13 +1699,17 @@ var ThunderSyncDialog = {
 							.getService(Components.interfaces.nsIIOService)
 							.newFileURI(file).spec;
 					if (cards.length > 0) {
-						if (!this.CardDB[abURI]) {
-							this.CardDB[abURI] = new Object();
-						}
-						if (!this.CardDB[abURI][path]) {
-							this.CardDB[abURI][path] = new Array();
-						}
+						if (!this.CardDB[abURI]) { this.CardDB[abURI] = new Object();}
+						if (!this.CardDB[abURI][path]) { this.CardDB[abURI][path] = new Array(); }
 						this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
+					}
+					// record all defined UIDs
+					if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
+					for (var i=0; i < cards.length; i++) {
+						var cardUID = cards[i].getProperty("UID","");
+						if (cardUID != "") {
+							this.UIDDB[abURI][cardUID] = [path,i];
+						}
 					}
 				}
 			}
@@ -1742,6 +1737,14 @@ var ThunderSyncDialog = {
 				}
 				this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 			}
+			// record all defined UIDs
+			if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
+			for (var i=0; i < cards.length; i++) {
+				var cardUID = cards[i].getProperty("UID","");
+				if (cardUID != "") {
+					this.UIDDB[abURI][cardUID] = [path,i];
+				}
+			}
 		}
 	},
 	
@@ -1753,7 +1756,7 @@ var ThunderSyncDialog = {
 	logMsg: function (msg) {
 		Components.classes["@mozilla.org/consoleservice;1"]
 			.getService(Components.interfaces.nsIConsoleService)
-			.logStringMessage("[ThunderSync] "+msg);
+			.logStringMessage("[ThunderSync/MainDialog] "+msg);
 	},
 
 	/**

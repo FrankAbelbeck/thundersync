@@ -94,6 +94,8 @@ $Id$
 <!ENTITY ThunderSyncPreferences.autoSync.no "No synchronisation">
 <!ENTITY ThunderSyncPreferences.autoSync.export "Export from Thunderbird">
 <!ENTITY ThunderSyncPreferences.autoSync.import "Import in Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.exportForced "Export from Thunderbird (non-interactive!)">
+<!ENTITY ThunderSyncPreferences.autoSync.importForced "Import in Thunderbird (non-interactive!)">
 <!ENTITY ThunderSyncPreferences.autoSync.ask "Interactive synchronisation">
 
 <!ENTITY ThunderSyncPreferences.property "Property">

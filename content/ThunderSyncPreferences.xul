@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE window SYSTEM "chrome://thundersync/locale/ThunderSyncPreferences.dtd">
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="ThunderSyncPreferences.css" type="text/css"?>
 
 <!--
 ThunderSync Preferences Dialog.
@@ -164,9 +165,15 @@ $Id$
 									<menuitem label="&ThunderSyncPreferences.autoSync.export;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="export" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.exportForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced export" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.import;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="import" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.importForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced import" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.ask;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="ask" /> 
@@ -187,9 +194,15 @@ $Id$
 									<menuitem label="&ThunderSyncPreferences.autoSync.export;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="export" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.exportForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced export" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.import;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="import" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.importForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced import" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.ask;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="ask" /> 
@@ -210,9 +223,15 @@ $Id$
 									<menuitem label="&ThunderSyncPreferences.autoSync.export;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="export" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.exportForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced export" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.import;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="import" /> 
+									<menuitem label="&ThunderSyncPreferences.autoSync.importForced;"
+										class="ThunderSyncPreferences.menuitem.autoSyncForced"
+										value="forced import" /> 
 									<menuitem label="&ThunderSyncPreferences.autoSync.ask;"
 										class="ThunderSyncPreferences.menuitem.autoSync"
 										value="ask" /> 
