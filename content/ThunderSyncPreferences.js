@@ -36,6 +36,15 @@ var ThunderSyncPref = {
 	 */
 	
 	load: function () {
+		var selectedURI = "";
+		try {
+			// first try the wrappedJSObject trick for passing Javascript
+			// objects between windows when no intial window is available
+			// https://developer.mozilla.org/en-US/docs/Working_with_windows_in_chrome_code#Example_5.3A_Using_nsIWindowWatcher_for_passing_an_arbritrary_JavaScript_object
+			selectedURI = window.arguments[0].wrappedJSObject.selectedURI;
+		} catch (exception) {
+			// no wrappedJSObject trick: dialog is called without arguments
+		}
 		//
 		// access preferences system and prepare in-object storage
 		//
@@ -73,6 +82,8 @@ var ThunderSyncPref = {
 		var abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
 		var allAddressBooks = abManager.directories;
 		var ablist = document.getElementById("ThunderSyncPreferences.list.addressbook");
+		var selectedIndex = 0;
+		var index = 0;
 		while (allAddressBooks.hasMoreElements()) {
 			var addressBook = allAddressBooks.getNext();
 			if (addressBook instanceof Components.interfaces.nsIAbDirectory)
@@ -186,9 +197,10 @@ var ThunderSyncPref = {
 				}
 				
 				ablist.appendChild(item);
+				if (addressBook.URI == selectedURI) { selectedIndex = index; }
+				index++;
 			}
 		}
-		
 		//
 		// populate filter tree
 		//
@@ -244,6 +256,8 @@ var ThunderSyncPref = {
 			document.getElementById("ThunderSyncPreferences.list.addressbook").selectedIndex = 0;
 			document.getElementById("ThunderSyncPreferences.tree.filter").view.selection.select(0);
 			this.updateExportFormat();
+			// set addressbook list to predefined selection
+			ablist.selectedIndex = selectedIndex;
 		} catch (exception) {
 			// it seems there are no addressbooks: show alert and exit
 			var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -569,7 +583,7 @@ var ThunderSyncPref = {
 	 * Let the user choose a file and set it as path of the current addressbook
 	 */
 	openFileDialog: function () {
-		this.openPathDialog(Components.interfaces.nsIFilePicker.modeOpen);
+		this.openPathDialog(Components.interfaces.nsIFilePicker.modeSave); // 2013-06-06: changed to modeSave, so that files can be created, too
 	},
 	
 	/**

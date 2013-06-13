@@ -28,14 +28,40 @@ $Id$
 <overlay id="ThunderSync.overlay.toolbar"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	
+	<script>
+		/**
+		 * openDialog call wrapper, using the wrappedJSObject trick to
+		 * provide the sync mode as arguments
+		 */
+		function ThunderSyncToolbarCall (cmd) {
+			var arguments = new Object();
+			arguments.mode = cmd;
+			arguments.wrappedJSObject = arguments;
+			window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen',arguments);
+		}
+	</script>
+	
 	<toolbarpalette id="MailToolbarPalette">
 		<toolbarbutton id="ThunderSyncToolbarButton"
-			class="toolbarbutton-1"
-			label="ThunderSync"
-			tooltiptext="&ThunderSyncMenuItem;"
-			image="chrome://thundersync/skin/icon24.png"
-			oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
-		/>
+			type="menu"
+			label="&ThunderSyncMenuBase;"
+			image="chrome://thundersync/skin/icon24.png">
+			<menupopup>
+				<menuitem label="&ThunderSyncMenuItem;"
+					oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncDialog.xul','','chrome,centerscreen')"
+				/>
+				<menuitem label="&ThunderSyncMenuItemExport;"
+					oncommand="ThunderSyncToolbarCall('export');"
+				/>
+				<menuitem label="&ThunderSyncMenuItemImport;"
+					oncommand="ThunderSyncToolbarCall('import');"
+				/>
+				<menuseparator />
+				<menuitem label="&ThunderSyncMenuItemPrefs;"
+					oncommand="window.openDialog('chrome://thundersync/content/ThunderSyncPreferences.xul','','chrome,centerscreen')"
+				/>
+			</menupopup>
+		</toolbarbutton>
 	</toolbarpalette>
 	
 </overlay>

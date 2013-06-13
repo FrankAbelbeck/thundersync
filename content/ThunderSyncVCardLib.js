@@ -1060,7 +1060,7 @@ var ThunderSyncVCardLib = {
 	logMsg: function (msg) {
 		Components.classes["@mozilla.org/consoleservice;1"]
 			.getService(Components.interfaces.nsIConsoleService)
-			.logStringMessage("[ThunderSync] "+msg);
+			.logStringMessage("[ThunderSync/vCardLib] "+msg);
 	},
 	
 }

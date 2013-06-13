@@ -94,6 +94,8 @@ $Id$
 <!ENTITY ThunderSyncPreferences.autoSync.no "Kein Abgleich">
 <!ENTITY ThunderSyncPreferences.autoSync.export "Export aus Thunderbird">
 <!ENTITY ThunderSyncPreferences.autoSync.import "Import in Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.exportForced "Export aus Thunderbird ohne Rückfrage!">
+<!ENTITY ThunderSyncPreferences.autoSync.importForced "Import in Thunderbird ohne Rückfrage!">
 <!ENTITY ThunderSyncPreferences.autoSync.ask "interaktiver Abgleich">
 
 <!ENTITY ThunderSyncPreferences.property "Eigenschaft">

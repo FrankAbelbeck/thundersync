@@ -34,16 +34,14 @@ $Id$
 	onload="ThunderSyncDialog.compare();"
 	buttons=",">
 	
-	<script type="application/x-javascript"
-		src="chrome://thundersync/content/ThunderSyncDialog.js" />
-	<script type="application/x-javascript"
-		src="chrome://thundersync/content/ThunderSyncVCardLib.js" />
+	<script type="application/x-javascript" src="chrome://thundersync/content/ThunderSyncDialog.js" />
+	<script type="application/x-javascript" src="chrome://thundersync/content/ThunderSyncVCardLib.js" />
 	
 	<dialogheader title="&ThunderSyncDialog.dialog.title;"
 		description="&ThunderSyncDialog.dialog.description;" />
 	
 	<stringbundleset id="ThunderSyncDialog.strings">
-		<stringbundle id="ThunderSyncDialog.strings.dlg" src="chrome://thundersync/locale/ThunderSyncDialog.properties"/>
+		<stringbundle id="ThunderSyncDialog.strings.dlg" src="chrome://thundersync/locale/ThunderSyncDialog.properties" />
 	</stringbundleset>
 	
 	<tree id="ThunderSyncDialog.tree"

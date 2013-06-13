@@ -24,14 +24,12 @@ ThunderSyncAutoSync.prototype = {
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
 				.getService(Components.interfaces.nsIPrefService)
 				.getBranch("extensions.ThunderSync.");
-		var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-					.getService(Components.interfaces.nsIConsoleService);
 		switch (aTopic) {
 			case "app-startup":
 				try {
 					observerService.addObserver(this, "profile-after-change", false);
 				} catch (exception) {
-					consoleService.logStringMessage("ThunderSync/AutoSync: "+exception);
+					this.logMsg(exception);
 				}
 				break;
 				
@@ -39,7 +37,7 @@ ThunderSyncAutoSync.prototype = {
 				try {
 					observerService.addObserver(this, "quit-application", false);
 				} catch (exception) {
-					consoleService.logStringMessage("ThunderSync/AutoSync: "+exception);
+					this.logMsg(exception);
 				}
 				// fix preferences from versions prior to 2.x
 				this.fixPreferences();
@@ -53,6 +51,29 @@ ThunderSyncAutoSync.prototype = {
 				photoDir.append("Photos");
 				if (!photoDir.exists()) {
 					photoDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
+				}
+				
+				// make sure all addressbook entries in all addressbooks have a UID:
+				//   iterate over all entries and look for UIDs;
+				//   if none is set, generate one.
+				var uuidgenerator = Components.classes["@mozilla.org/uuid-generator;1"].getService(Components.interfaces.nsIUUIDGenerator);
+				var addressBooks = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager).directories;
+				while (addressBooks.hasMoreElements()) {
+					// get next item in list; skip if it's not an addressbook
+					var addressBook = addressBooks.getNext();
+					if (!(addressBook instanceof Components.interfaces.nsIAbDirectory) || addressBook.isMailList) { continue; }
+					var localUID = "";
+					var cards = addressBook.childCards;
+					while (cards.hasMoreElements()) {
+						var card = cards.getNext();
+						if (!(card instanceof Components.interfaces.nsIAbCard) || card.isMailList) { continue; }
+						localUID = card.getProperty("UID","");
+						if (localUID == "") {
+							// undefined UID: create new one and apply changes
+							card.setProperty("UID",uuidgenerator.generateUUID().toString().slice(1,37));
+							addressBook.modifyCard(card);
+						}
+					}
 				}
 				
 				// check if start-up sync should be done
@@ -126,6 +147,17 @@ ThunderSyncAutoSync.prototype = {
 		}
 	},
 	
+	/**
+	 * Write a message to Thunderbird's error console
+	 * 
+	 * @param msg message string
+	 */
+	logMsg: function (msg) {
+		Components.classes["@mozilla.org/consoleservice;1"]
+			.getService(Components.interfaces.nsIConsoleService)
+			.logStringMessage("[ThunderSync/AutoSync] "+msg);
+	},
+	
 	doSync: function (mode) {
 		try {
 			var window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
@@ -140,9 +172,7 @@ ThunderSyncAutoSync.prototype = {
 				  	arguments
 			);
 		} catch (exception) {
-			Components.classes["@mozilla.org/consoleservice;1"]
-				.getService(Components.interfaces.nsIConsoleService)
-				.logStringMessage("ThunderSync/AutoSync: "+exception);
+			this.logMsg("ThunderSync/AutoSync: "+exception);
 		}
 	},
 	
@@ -170,7 +200,8 @@ ThunderSyncAutoSync.prototype = {
 				break;
 			case prefs.PREF_STRING:
 				syncOnStartup = prefs.getCharPref("syncOnStartup")
-				if (syncOnStartup != "ask" && syncOnStartup != "export" && syncOnStartup != "import" ) {
+				if (syncOnStartup != "ask" && syncOnStartup != "export" && syncOnStartup != "import" &&
+					syncOnStartup != "forced export" && syncOnStartup != "forced import" ) {
 					syncOnStartup = "no";
 				}
 				break;
@@ -193,7 +224,8 @@ ThunderSyncAutoSync.prototype = {
 				break;
 			case prefs.PREF_STRING:
 				syncOnShutdown = prefs.getCharPref("syncOnShutdown")
-				if (syncOnShutdown != "ask" && syncOnShutdown != "export" && syncOnShutdown != "import" ) {
+				if (syncOnShutdown != "ask" && syncOnShutdown != "export" && syncOnShutdown != "import" &&
+					syncOnShutdown != "forced export" && syncOnShutdown != "forced import" ) {
 					syncOnShutdown = "no";
 				}
 				break;
@@ -339,7 +371,8 @@ ThunderSyncAutoSync.prototype = {
 			} else {
 				var syncMode = null;
 			}
-			if (syncMode != "no" && syncMode != "export" && syncMode != "import" ) {
+			if (syncMode != "no" && syncMode != "export" && syncMode != "import" &&
+				syncMode != "forced export" && syncMode != "force import") {
 				prefs.setCharPref("syncMode."+abName,"ask");
 			}
 			
