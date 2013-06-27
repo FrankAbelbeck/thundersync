@@ -1485,6 +1485,7 @@ var ThunderSyncDialog = {
 				addressBook.deleteCards(cardsToDelete);
 			}
 		}
+		
 		//
 		// now that all's sorted out: execute write ops
 		//
