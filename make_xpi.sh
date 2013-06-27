@@ -14,8 +14,6 @@ zip -r thundersync-2.2b.xpi \
 	content/ThunderSyncPreferences.css \
 	content/ThunderSyncPreferences.js \
 	content/ThunderSyncPreferences.xul \
-	content/ThunderSyncPreferencesIMAP.js \
-	content/ThunderSyncPreferencesIMAP.xul \
 	content/ThunderSyncToolbar.xul \
 	content/ThunderSyncVCardLib.js \
 	locale/de/ThunderSyncDialog.dtd \
