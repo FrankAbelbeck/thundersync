@@ -332,12 +332,15 @@ var ThunderSyncVCardLib = {
 		//
 		// 2013-06-05: iterate over properties instead of checking every property
 		//
+		
 		var properties = card.properties;
 		while (properties.hasMoreElements()) {
 			property = properties.getNext();
 			// need to unwrap xpconnect wrapped nsisupports!
 			// query interface, i.e. transform into nsiproperty
 			property.QueryInterface(Components.interfaces.nsIProperty);
+			
+// 			this.logMsg(property.name + " = " + property.value);
 			
 			switch (property.name) {
 				//
@@ -627,7 +630,7 @@ var ThunderSyncVCardLib = {
 									}
 								} else {
 									// fall back to base64 encoding
-									tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ";ENCODING=BASE64:" + this.otherProperties[i] + ";";
+									tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ";ENCODING=BASE64:" + property.name + ";";
 									if (doFolding) {
 										// ...and folding is allowed, too!
 										vcfstr += tmpstr + this.foldBase64(window.btoa(value),tmpstr.length) + this.CRLF + this.CRLF;
@@ -640,11 +643,11 @@ var ThunderSyncVCardLib = {
 								// encoding not needed
 								if (doFolding) {
 									// ...but we are allowed to fold it!
-									tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + this.otherProperties[i] + ";"+ value;
+									tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + property.name + ";"+ value;
 									vcfstr += this.foldText(tmpstr) + this.CRLF;
 								} else {
 									// ...but don't fold the line
-									vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + this.otherProperties[i] + ";"+ value + this.CRLF;
+									vcfstr += "X-MOZILLA-PROPERTY;CHARSET=" + charset + ":" + property.name + ";"+ value + this.CRLF;
 								}
 							}
 						}
@@ -698,7 +701,7 @@ var ThunderSyncVCardLib = {
 					if (suffix != undefined) {
 						photoStr = "PHOTO;ENCODING=BASE64;TYPE=" + suffix + ":";
 						if (doFolding) {
-							vcfstr += photoStr + this.foldBase64(window.btoa(photoData),photoStr.length) + this.CRLF + this.CRLF;
+							vcfstr += photoStr + this.foldBase64(window.btoa(photoURI),photoStr.length) + this.CRLF + this.CRLF;
 						} else {
 							vcfstr += photoStr + window.btoa(photoData) + this.CRLF;
 						}
