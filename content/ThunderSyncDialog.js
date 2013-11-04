@@ -689,6 +689,7 @@ var ThunderSyncDialog = {
 				// in any other case: work with all directories
 				var allAddressBooks = abManager.directories;
 		}
+		
 		while (allAddressBooks.hasMoreElements()) {
 			// get next item in list; skip if it's not an addressbook
 			var addressBook = allAddressBooks.getNext();
@@ -817,8 +818,6 @@ var ThunderSyncDialog = {
 				// (by using the context menu), a custom card iterator
 				// with selected entries has to be used
 				var localCards = window.arguments[0].wrappedJSObject.cards;
-				if (localCards) { break; }
-				// that should not have happened... falling through to default...
 			} else {
 				// in any other case: iterate over all contacts...
 				var localCards = addressBook.childCards;
@@ -826,6 +825,7 @@ var ThunderSyncDialog = {
 			
 			while (localCards.hasMoreElements()) {
 				var localCard = localCards.getNext();
+				
 				// catch undefined results or mailing list: skip...
 				if (!(localCard instanceof Components.interfaces.nsIAbCard) || localCard.isMailList) { continue; }
 				
@@ -836,7 +836,9 @@ var ThunderSyncDialog = {
 					localCard.setProperty("UID",uuidgenerator.generateUUID().toString().slice(1,37));
 					addressBook.modifyCard(localCard);
 				}
+				
 				var remoteCardAddr = this.UIDDB[addressBook.URI][localUID];
+				
 				if (remoteCardAddr == undefined) {
 					//
 					// no matching UID was found: search all remote contacts
@@ -852,6 +854,7 @@ var ThunderSyncDialog = {
 					var propability = 0;
 					// iterate over remote contacts
 					for (var path in this.CardDB[addressBook.URI]) {
+						
 						for (var i = 0; i < this.CardDB[addressBook.URI][path].length; i++) {
 							// but skip already checked contacts...
 							if (list_checked.indexOf([path,i].join("/")) >= 0) { continue; }
@@ -888,6 +891,7 @@ var ThunderSyncDialog = {
 				//   if a remote contact was found: calculate differences
 				//   if no contact was found: define a "from-local" tree item
 				//
+				
 				if (remoteCardAddr != undefined) {
 					// matching external contact found! Add to tree
 					// local UID overwrites remote UID
@@ -902,6 +906,7 @@ var ThunderSyncDialog = {
 						filters,
 						syncMode
 					);
+			
 					if (differences.length > 0) {
 						// differences found:
 						// add entry: "local name" <--> "external name"
@@ -1598,13 +1603,17 @@ var ThunderSyncDialog = {
 					.newURI(path,null,null)
 					.QueryInterface(Components.interfaces.nsIFileURL)
 					.file;
+			
 			if (dataString.length > 0) {
+				// file exists and is a regular file!
 				// contacts were processed, so data should be written...
 				switch (this.FormatDB[abURI]) {
 					case "vCardDir":
 					case "vCardFile":
 						// initialise file stream object
+						if (!file.exists()) { file.create(file.NORMAL_FILE_TYPE,0660); }
 						fStream.init(file,0x02|0x08|0x20,0600,0);
+						
 						// a vCard ought to be written...
 						// fix Outlook's non-standard behaviour:
 						// apply a different encoding chosen by the user
@@ -1612,7 +1621,6 @@ var ThunderSyncDialog = {
 						try {
 							converter.writeString(dataString);
 						} catch (exception) {
-							this.logMsg(exception)
 							// user defined encoding did not work:
 							// fall back to Unicode
 							// i.e. re-encode data string
@@ -1685,6 +1693,13 @@ var ThunderSyncDialog = {
 				.QueryInterface(Components.interfaces.nsIFileURL)
 				.file;
 		
+		// problem: if this.UIDDB[abURI] is not defined, then the access to
+		// this.UIDDB[abURI][localUID] will fail, silently...
+		// this leads to an empty comparison dialog and NO error message
+		// thus empty objects are created to catch this one
+		if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
+		if (!this.CardDB[abURI]) { this.CardDB[abURI] = new Object();}
+		
 		if (resource.exists() && resource.isDirectory()) {
 			var files = resource.directoryEntries;
 			while (files.hasMoreElements()) {
@@ -1700,12 +1715,10 @@ var ThunderSyncDialog = {
 							.getService(Components.interfaces.nsIIOService)
 							.newFileURI(file).spec;
 					if (cards.length > 0) {
-						if (!this.CardDB[abURI]) { this.CardDB[abURI] = new Object();}
 						if (!this.CardDB[abURI][path]) { this.CardDB[abURI][path] = new Array(); }
 						this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 					}
 					// record all defined UIDs
-					if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
 					for (var i=0; i < cards.length; i++) {
 						var cardUID = cards[i].getProperty("UID","");
 						if (cardUID != "") {
@@ -1724,25 +1737,27 @@ var ThunderSyncDialog = {
 				.QueryInterface(Components.interfaces.nsIFileURL)
 				.file;
 		
+		// problem: if this.UIDDB[abURI] is not defined, then the access to
+		// this.UIDDB[abURI][localUID] will fail, silently...
+		// this leads to an empty comparison dialog and NO error message
+		// thus empty objects are created to catch this one
+		if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
+		if (!this.CardDB[abURI]) { this.CardDB[abURI] = new Object();}
+		
 		if (resource.exists() && resource.isFile()) {
 			var cards = this.readContactsFromFile(
 					resource,
 					this.FormatDB[abURI],
 					this.ImpEncDB[abURI]);
+			
 			if (cards.length > 0) {
-				if (!this.CardDB[abURI]) {
-					this.CardDB[abURI] = new Object();
-				}
-				if (!this.CardDB[abURI][path]) {
-					this.CardDB[abURI][path] = new Array();
-				}
+				if (!this.CardDB[abURI][path]) { this.CardDB[abURI][path] = new Array(); }
 				this.CardDB[abURI][path] = this.CardDB[abURI][path].concat(cards);
 			}
 			// record all defined UIDs
-			if (!this.UIDDB[abURI]) { this.UIDDB[abURI] = new Object(); }
 			for (var i=0; i < cards.length; i++) {
 				var cardUID = cards[i].getProperty("UID","");
-				if (cardUID != "") {
+				if (cardUID != "") { 
 					this.UIDDB[abURI][cardUID] = [path,i];
 				}
 			}

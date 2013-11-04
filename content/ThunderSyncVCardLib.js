@@ -394,9 +394,13 @@ var ThunderSyncVCardLib = {
 				// e-mail
 				//
 				case "PrimaryEmail":
+					value = String(property.value);
+					if (value != "") { vcfstr += "EMAIL;TYPE=INTERNET;PRIMARY:" + value + this.CRLF; }
+					break;
+				
 				case "SecondEmail":
 					value = String(property.value);
-					if (value != "") { vcfstr += "EMAIL;TYPE=INTERNET:" + value + this.CRLF; }
+					if (value != "") { vcfstr += "EMAIL;TYPE=INTERNET;SECONDARY:" + value + this.CRLF; }
 					break;
 				//
 				// home address
@@ -978,13 +982,10 @@ var ThunderSyncVCardLib = {
 					card.setProperty(teltype,value[0]);
 					break;
 				case "EMAIL":
-					if (value[0] != "") {
-						if (card.getProperty("PrimaryEmail","") == "") {
-							card.setProperty("PrimaryEmail",value[0]);
-						}
-						else {
-							card.setProperty("SecondEmail",value[0]);
-						}
+					if (properties["SECONDARY"]) {
+						card.setProperty("SecondEmail",value[0]);
+					} else {
+						card.setProperty("PrimaryEmail",value[0]);
 					}
 					break;
 				case "TITLE":
