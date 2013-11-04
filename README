@@ -177,3 +177,10 @@ Changelog:
    - handling of masked semi-colons corrected
    - correction: property names are now case-insensitive
    - under construction: debugging of mailing lists
+
+2.2 beta (2013-06-27)
+   - reworked sync algorithm
+
+2.2.1 beta (2013-11-04)
+   - fixed bug concerning non-existent files
+
