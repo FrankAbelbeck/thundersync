@@ -618,7 +618,7 @@ var ThunderSyncPref = {
 		} else {
 			if (this.ConfigPath[this.aBook].length > 0) {
 				var curFile = Components.classes["@mozilla.org/file/local;1"]
-						.createInstance(Components.interfaces.nsILocalFile);
+						.createInstance(Components.interfaces.nsIFile);
 				try {
 					curFile.initWithPath(this.ConfigPath[this.aBook]);
 					fp.displayDirectory = curFile.parent;

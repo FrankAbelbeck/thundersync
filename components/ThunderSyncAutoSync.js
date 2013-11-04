@@ -327,7 +327,7 @@ ThunderSyncAutoSync.prototype = {
 						// try to load file as if it were a native path string
 						// (e.g. /home/user/vcard)
 						var pathFile = Components.classes["@mozilla.org/file/local;1"]
-								.createInstance(Components.interfaces.nsILocalFile);
+								.createInstance(Components.interfaces.nsIFile);
 						pathFile.initWithPath(path);
 						// convert path to a URI
 						path = Components.classes["@mozilla.org/network/io-service;1"]

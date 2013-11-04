@@ -1565,7 +1565,7 @@ var ThunderSyncDialog = {
 	 */
 	write: function () {
 		var file = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsILocalFile);
+				.createInstance(Components.interfaces.nsIFile);
 		var fStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
 				.createInstance(Components.interfaces.nsIFileOutputStream);
 		var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"]
