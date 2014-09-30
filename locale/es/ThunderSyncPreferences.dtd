@@ -1,0 +1,122 @@
+<!--
+Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+$Id$
+-->
+
+<!ENTITY ThunderSyncPreferences.title "Opciones de ThunderSync">
+<!ENTITY ThunderSyncPreferences.dialog.title "Preferencias de sincronización">
+
+<!ENTITY ThunderSyncPreferences.tab.general "General">
+<!ENTITY ThunderSyncPreferences.tab.format "Formato de exportación">
+<!ENTITY ThunderSyncPreferences.tab.filter "Filtro">
+
+<!ENTITY ThunderSyncPreferences.label.path "Recurso externo">
+<!ENTITY ThunderSyncPreferences.button.clearPath "Limpiar">
+<!ENTITY ThunderSyncPreferences.button.choosePath "Elegir...">
+<!ENTITY ThunderSyncPreferences.button.chooseFile "Archivo">
+<!ENTITY ThunderSyncPreferences.button.chooseDir "Carpeta">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPMsg "Mensaje IMAP">
+<!ENTITY ThunderSyncPreferences.button.chooseIMAPFolder "Carpeta IMAP">
+
+<!ENTITY ThunderSyncPreferences.addressbook "Libreta de direcciones">
+
+<!ENTITY ThunderSyncPreferences.label.format "Formato de exportación">
+<!ENTITY ThunderSyncPreferences.format.vcard "vCard v2.1 (*.vcf)">
+<!ENTITY ThunderSyncPreferences.format.vCardDir "vCard v2.1 (*.vcf, archivos en una carpeta)">
+<!ENTITY ThunderSyncPreferences.format.vCardFile "vCard v2.1 (*.vcf, un solo archivo)">
+
+<!ENTITY ThunderSyncPreferences.label.importEncoding "Juego de caracteres del archivo (Importar)">
+<!ENTITY ThunderSyncPreferences.label.exportEncoding "Juego de caracteres del archivo (Exportar)">
+
+<!ENTITY ThunderSyncPreferences.encoding.standard "estándar vCard">
+
+<!ENTITY ThunderSyncPreferences.encoding.iso88591 "Western European (ISO 8859-1)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88592 "Central European (ISO 8859-2)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88593 "South European (ISO 8859-3)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88594 "North European (ISO 8859-4)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88595 "Cyrillic (ISO 8859-5)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88596 "Arabic (ISO 8859-6)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88597 "Greek (ISO 8859-7)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88598 "Hebrew (ISO 8859-8)">
+<!ENTITY ThunderSyncPreferences.encoding.iso88599 "Turkish (ISO 8859-9)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885910 "Nordic (ISO 8859-10)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885911 "Thai (ISO 8859-11)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885913 "Baltic (ISO 8859-13)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885914 "Celtic (ISO 8859-14)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885915 "Western Europe +Euro (ISO 8859-15)">
+<!ENTITY ThunderSyncPreferences.encoding.iso885916 "South-Eastern European (ISO 8859-16)">
+
+<!ENTITY ThunderSyncPreferences.encoding.windows874 "Thai (Windows-874)">
+<!ENTITY ThunderSyncPreferences.encoding.windows932 "Japanese (Windows-932)">
+<!ENTITY ThunderSyncPreferences.encoding.windows936 "Chinese, simplified (Windows-936)">
+<!ENTITY ThunderSyncPreferences.encoding.windows949 "Korean (Windows-949)">
+<!ENTITY ThunderSyncPreferences.encoding.windows950 "Chinese, traditional (Windows-950)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1250 "Central European (Windows-1250)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1251 "Cyrillic (Windows-1251)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1252 "Western European (Windows-1252)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1253 "Greek (Windows-1253)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1254 "Turkish (Windows-1254)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1255 "Hebrew (Windows-1255)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1256 "Arabic (Windows-1256)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1257 "Baltic (Windows-1257)">
+<!ENTITY ThunderSyncPreferences.encoding.windows1258 "Vietnamese (Windows-1258)">
+
+<!ENTITY ThunderSyncPreferences.encoding.utf8 "Unicode (UTF-8)">
+
+<!ENTITY ThunderSyncPreferences.label.syncOnStartUp "Acción al iniciarse">
+<!ENTITY ThunderSyncPreferences.label.syncMode "Acción estándar">
+<!ENTITY ThunderSyncPreferences.label.syncOnShutdown "Acción al cerrarse">
+
+<!ENTITY ThunderSyncPreferences.label.advancedOptions "Opciones para usuarios avanzados">
+<!ENTITY ThunderSyncPreferences.label.UID "Codificar UID de manera adicional como una propiedad de Mozilla">
+<!ENTITY ThunderSyncPreferences.label.quotedPrintable "Usar codificación con comillas imprimibles (valor predeterminado: activado)">
+<!ENTITY ThunderSyncPreferences.label.folding "Plegar las líneas largas (valor predeterminado: activado)">
+<!ENTITY ThunderSyncPreferences.label.warning "¡Advertencia! ¡Las siguientes dos opciones sólo deberían cambiarse si un programa de terceros no puede procesar la codificación con comillas imprimibles y/o el plegado de líneas!">
+
+<!ENTITY ThunderSyncPreferences.autoSync.no "Sin sincronización">
+<!ENTITY ThunderSyncPreferences.autoSync.export "Exportar desde Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.import "Importar a Thunderbird">
+<!ENTITY ThunderSyncPreferences.autoSync.exportForced "Exportar desde Thunderbird (¡no interactivo!)">
+<!ENTITY ThunderSyncPreferences.autoSync.importForced "Importar a Thunderbird (¡no interactivo!)">
+<!ENTITY ThunderSyncPreferences.autoSync.ask "Sincronización interactiva">
+
+<!ENTITY ThunderSyncPreferences.property "Propiedad">
+<!ENTITY ThunderSyncPreferences.action "Acción">
+
+<!ENTITY ThunderSyncPreferences.filterAction.ignore "Ignorar">
+<!ENTITY ThunderSyncPreferences.filterAction.import "Importar a la libreta de direcciones">
+<!ENTITY ThunderSyncPreferences.filterAction.export "Exportar desde la libreta de direcciones">
+<!ENTITY ThunderSyncPreferences.filterAction.ask "Preguntar">
+<!ENTITY ThunderSyncPreferences.filterAction.clear "Reiniciar">
+
+<!ENTITY ThunderSyncPreferences.IMAP.title "Opciones de IMAP de ThunderSync">
+<!ENTITY ThunderSyncPreferences.IMAP.dialog.title "Selector IMAP">
+<!ENTITY ThunderSyncPreferences.IMAP.description "ThunderSync identificó los siguientes mensajes como posibles recursos:">
+<!ENTITY ThunderSyncPreferences.IMAP.accounts "Cuentas IMAP">
+
+<!ENTITY ThunderSyncPreferences.IMAP.path "Cuenta/Carpeta">
+<!ENTITY ThunderSyncPreferences.IMAP.date "Fecha">
+<!ENTITY ThunderSyncPreferences.IMAP.attachment "Adjunto">
+<!ENTITY ThunderSyncPreferences.IMAP.size "Tamaño">
+<!ENTITY ThunderSyncPreferences.IMAP.subject "Asunto">
+
+<!ENTITY ThunderSyncPreferences.button.fixfoto  "Borrar los archivos de fotos no usadas de la carpeta del perfil">
+

@@ -1,0 +1,40 @@
+<!--
+Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+
+This file is part of the Mozilla Thunderbird extension "ThunderSync."
+
+ThunderSync is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+ThunderSync is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ThunderSync; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+or see <http://www.gnu.org/licenses/>.
+
+$Id$
+-->
+
+<!ENTITY ThunderSyncDialog.title "ThunderSync">
+<!ENTITY ThunderSyncDialog.dialog.title "ThunderSync: Sincronización">
+<!ENTITY ThunderSyncDialog.dialog.description "Importar, exportar, fusionar.">
+
+<!ENTITY ThunderSyncDialog.useLocal     "Usar entrada de Thunderbird">
+<!ENTITY ThunderSyncDialog.useRemote    "Usar entrada externa">
+<!ENTITY ThunderSyncDialog.deleteLocal  "Borrar entrada de Thunderbird">
+<!ENTITY ThunderSyncDialog.deleteRemote "Borrar entrada externa">
+
+<!ENTITY ThunderSyncDialog.header.local  "Thunderbird">
+<!ENTITY ThunderSyncDialog.header.remote "Recurso externo">
+<!ENTITY ThunderSyncDialog.header.mode   "Modo">
+<!ENTITY ThunderSyncDialog.header.type   "Propiedad">
+
+<!ENTITY ThunderSyncDialog.button.compare "Comparar">
+<!ENTITY ThunderSyncDialog.button.sync    "Sincronizar">
+<!ENTITY ThunderSyncDialog.button.close   "Cerrar">
