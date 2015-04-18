@@ -511,10 +511,11 @@ var ThunderSyncVCardLib = {
 				// break and might create a rather long line if not folded
 				//
 				case "Notes":
-					value = String(property.value);
+					value = String(property.value)
 					if (value != "") {
 						if (value.indexOf("\n") != -1) {
 							// at least one line break is present: encoding needed
+							value = converter.ConvertFromUnicode(String(property.value));
 							if (useQPE) {
 								// the user allows quoted printable: use it
 								tmpstr = "NOTE;CHARSET=" + charset + ";ENCODING=QUOTED-PRINTABLE:";
@@ -545,6 +546,7 @@ var ThunderSyncVCardLib = {
 								}
 							}
 						} else {
+							value = String(property.value);
 							// encoding not needed
 							if (doFolding) {
 								// ...but we are allowed to fold it!
@@ -618,10 +620,10 @@ var ThunderSyncVCardLib = {
 				default:
 					if (this.otherProperties.indexOf(property.name) > -1) {
 						// yes, property is known (in this.otherProperties)
-						var value = String(property.value).replace(/;/g,"\\;");
 						if (value != "") {
 							if (value.indexOf("\n") != -1) {
 								// at least one line break is present: encoding needed
+								var value = converter.ConvertFromUnicode(String(property.value).replace(/;/g,"\\;"));
 								if (useQPE) {
 									// the user allows quoted printable: use it
 									tmpstr = "X-MOZILLA-PROPERTY;CHARSET=" + charset + ";ENCODING=QUOTED-PRINTABLE:" + property.name + ";";
@@ -644,6 +646,7 @@ var ThunderSyncVCardLib = {
 									}
 								}
 							} else {
+								var value = String(property.value).replace(/;/g,"\\;");
 								// encoding not needed
 								if (doFolding) {
 									// ...but we are allowed to fold it!
