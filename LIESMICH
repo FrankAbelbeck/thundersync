@@ -194,3 +194,13 @@ Versionshistorie:
    - Korrektur: Eigenschaftsnamen unabhängig von Groß-/Kleinschreibung
    - Baustelle: Analyse von Mailing Lists
 
+2.2 beta (2013-06-27)
+   - überarbeiteter Sync-Algorithmus
+
+2.2.1 beta (2013-11-04)
+   - Korrektur bei der Behandlung nicht-existenter Dateien
+
+2.2.2 (2015-04-18)
+   - Korrektur für UTF-8 in Verbindung mit quoted-printable/base64
+   - neue Sprachdateien "Spanisch" (Dank an Laura Arjona)
+
