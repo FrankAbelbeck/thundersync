@@ -372,7 +372,7 @@ ThunderSyncAutoSync.prototype = {
 				var syncMode = null;
 			}
 			if (syncMode != "no" && syncMode != "export" && syncMode != "import" &&
-				syncMode != "forced export" && syncMode != "force import") {
+				syncMode != "forced export" && syncMode != "forced import") {
 				prefs.setCharPref("syncMode."+abName,"ask");
 			}
 			
