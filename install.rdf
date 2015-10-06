@@ -2,7 +2,7 @@
 
 <!--
 Installation manifest for ThunderSync.
-Copyright (C) 2011 Frank Abelbeck <frank.abelbeck@googlemail.com>
+Copyright (C) 2011-2015 Frank Abelbeck <frank.abelbeck@googlemail.com>
 
 This file is part of the Mozilla Thunderbird extension "ThunderSync."
 
@@ -29,7 +29,7 @@ $Id$
 		
 		<em:id>thundersync@frank.abelbeck</em:id>
 		<em:name>ThunderSync</em:name>
-		<em:version>2.3</em:version>
+		<em:version>2.4</em:version>
 		<em:type>2</em:type>
 		<em:creator>Frank Abelbeck</em:creator>
 		<em:description>Synchronise Thunderbird's addressbook with an external resource.</em:description>
