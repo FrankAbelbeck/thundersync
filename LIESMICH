@@ -3,7 +3,7 @@ ThunderSync, a Mozilla Thunderbird v3 extension
 $Id$
 --------------------------------------------------------------------------------
 
-Copyright (C) 2012 Frank Abelbeck <frank.abelbeck@googlemail.com>
+Copyright (C) 2012-2015 Frank Abelbeck <frank.abelbeck@googlemail.com>
 
 Diese Datei ist Teil der Mozilla-Thunderbird-Erweiterung "ThunderSync."
 
@@ -28,7 +28,8 @@ Autor.........: Frank Abelbeck
 Unterstützer..: Lucas Treffenstädt (Tests, Quelltextbeiträge "Auto-Start")
                 Yair Lanz (Rückmeldung bezüglich Zeichensätzen)
                 David von Oheimb (Rückmeldungen, Quelltextbeiträge)
-Version.......: 2.2 alpha (2013-06-04)
+                Laura Arjona (Spanish translation)
+Version.......: 2.4 (2015-10-06)
 Lizenz........: GNU General Public License version 2
 
 Beschreibung..: Erlaubt es, Thunderbirds Adressbuch mit externen Verzeichnissen
@@ -203,4 +204,7 @@ Versionshistorie:
 2.3 (2015-04-18)
    - Korrektur für UTF-8 in Verbindung mit quoted-printable/base64
    - neue Sprachdateien "Spanisch" (Dank an Laura Arjona)
+
+2.4 (2015-10-06)
+   - Korrektur der Voreinstellungsroutine für erzwungenen Import/Export
 

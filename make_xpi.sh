@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zip -r thundersync-2.3.xpi \
+zip -r thundersync-2.4.xpi \
 	chrome.manifest \
 	README \
 	COPYING \
