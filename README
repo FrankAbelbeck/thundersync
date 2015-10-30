@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------
 ThunderSync, a Mozilla Thunderbird v3 extension
-$Id$
 --------------------------------------------------------------------------------
 
 Copyright (C) 2012-2015 Frank Abelbeck <frank.abelbeck@googlemail.com>
@@ -29,7 +28,7 @@ Supporters...: Lucas Treffenstädt (testing, code contribution auto-start),
                Yair Lanz (feedback regarding charsets)
                David von Oheimb (feedback, code contribution)
                Laura Arjona (Spanish translation)
-Version......: 2.4 (2015-10-06)
+Version......: 2.5 (2015-10-30)
 Licence......: GNU General Public License version 2
 
 Description..: Allows to synchronise Thunderbird's addressbook with external
@@ -191,3 +190,9 @@ Changelog:
 
 2.4 (2015-10-06)
    - fixed forced import/export preferences
+
+2.5 (2015-10-30)
+   - modified filter behaviour: properties are now also ignored even when
+     the global action is set to export or import;
+   - modified revision handling: REV is now only updated when changes are made
+     

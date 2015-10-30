@@ -340,8 +340,6 @@ var ThunderSyncVCardLib = {
 			// query interface, i.e. transform into nsiproperty
 			property.QueryInterface(Components.interfaces.nsIProperty);
 			
-// 			this.logMsg(property.name + " = " + property.value);
-			
 			switch (property.name) {
 				//
 				// revision ("last modified date")

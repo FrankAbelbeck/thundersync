@@ -453,23 +453,26 @@ var ThunderSyncDialog = {
 		var prop1 = "";
 		var prop2 = "";
 		for (var i = 0; i < properties.length; i++) {
-			// process syncMode
+			// extract filter setting of this property (local sync mode)
+			try {
+				var propFilter = filters[properties[i]];
+			} catch (exception) {
+				var propFilter = null;
+			}
+			// 1. check if property should be ignored; in this case: skip iteration
+			if (propFilter == "ignore") { continue; }
+			// 2. process global syncMode
 			switch (syncMode) {
 				case "no":
-					var propFilter = "ignore";
+					propFilter = "ignore";
 					break;
 				case "import":
 				case "export":
-					var propFilter = syncMode;
+					propFilter = syncMode;
 					break;
 				default:
-					try {
-						var propFilter = filters[properties[i]];
-					} catch (exception) {
-						var propFilter = null;
-					}
+					propFilter = null;
 			}
-			if (propFilter == "ignore") { continue; }
 			
 			if (properties[i] != "Photo") {
 				// process a normal property
@@ -1130,13 +1133,16 @@ var ThunderSyncDialog = {
 	 * @param abURI related addressBook URI
 	 * @param path path of remote contact resource
 	 * @param index index of remote contact in this path
+	 * @return integer indicating if local card (=1) or remote card (=2) was changed
 	 */
 	mergeProperties: function (propType,propMode,propDeleted,localCard,abURI,path,index) {
+		var retval = 0;
 		switch (propMode) {
 			case this.symbolModeFromLocal:
 				if (propDeleted) {
 					// delete local property 
 					localCard.setProperty(propType,"");
+					retval = 1;
 				}
 				else {
 					// create external property
@@ -1144,12 +1150,14 @@ var ThunderSyncDialog = {
 						propType,
 						localCard.getProperty(propType,"")
 					);
+					retval = 2;
 				}
 				break;
 			case this.symbolModeFromRemote:
 				if (propDeleted) {
 					// delete external property
 					this.setProperty(abURI,path,index,propType,"");
+					retval = 2;
 				}
 				else {
 					// set local property
@@ -1157,9 +1165,11 @@ var ThunderSyncDialog = {
 						propType,
 						this.getProperty(abURI,path,index,propType,"")
 					);
+					retval = 1;
 				}
 				break;
 		}
+		return retval;
 	},
 	
 	/**
@@ -1268,19 +1278,23 @@ var ThunderSyncDialog = {
 	 * @param abURI related addressBook URI
 	 * @param path path of remote contact resource
 	 * @param index index of remote contact in this path
+	 * @return integer indicating if local card (=1) or remote card (=2) was changed
 	 */
 	mergePhotoProperty: function (propMode,propDeleted,localCard,abURI,path,index) {
+		var retval = 0;
 		switch (propMode) {
 			case this.symbolModeFromLocal:
 				if (propDeleted) {
 					// delete local property
 					this.removePhotoFile(localCard);
+					retval = 1;
 				}
 				else {
 					// create external property
 					this.setProperty(abURI,path,index,"PhotoName",localCard.getProperty("PhotoName",""));
 					this.setProperty(abURI,path,index,"PhotoType",localCard.getProperty("PhotoType",""));
 					this.setProperty(abURI,path,index,"PhotoURI", localCard.getProperty("PhotoURI",""));
+					retval = 2;
 				}
 				break;
 			case this.symbolModeFromRemote:
@@ -1289,6 +1303,7 @@ var ThunderSyncDialog = {
 					this.setProperty(abURI,path,index,"PhotoName","");
 					this.setProperty(abURI,path,index,"PhotoType","");
 					this.setProperty(abURI,path,index,"PhotoURI","");
+					retval = 2;
 				}
 				else {
 					// set local property
@@ -1297,9 +1312,11 @@ var ThunderSyncDialog = {
 					localCard.setProperty("PhotoType",this.getProperty(abURI,path,index,"PhotoType",""));
 					localCard.setProperty("PhotoURI", this.getProperty(abURI,path,index,"PhotoURI",""));
 					this.processPhotoInformation(localCard);
+					retval = 1;
 				}
 				break;
 		}
+		return retval;
 	},
 	
 	/**
@@ -1383,6 +1400,7 @@ var ThunderSyncDialog = {
 						// and apply changes
 						//
 						var properties = contacts[k].getElementsByClassName("ThunderSyncDialog.treeitem.property");
+						var side = 0;
 						for (var j = 0; j < properties.length; j++) {
 							var propType = properties[j]
 								.getElementsByClassName("ThunderSyncDialog.treecell.property.type")[0]
@@ -1394,20 +1412,28 @@ var ThunderSyncDialog = {
 							var propDeleted = propModeCell.getAttribute("properties") == "deleteItem";
 							
 							if (propType != "Photo") {
-								this.mergeProperties(propType,propMode,propDeleted,localCard,addressBook.URI,path,index);
+								side = side | this.mergeProperties(propType,propMode,propDeleted,localCard,addressBook.URI,path,index);
 							}
 							else {
-								this.mergePhotoProperty(propMode,propDeleted,localCard,addressBook.URI,path,index);
+								side = side | this.mergePhotoProperty(propMode,propDeleted,localCard,addressBook.URI,path,index);
 							}
 						}
-						addressBook.modifyCard(localCard);
-						var rev = localCard.getProperty("LastModifiedDate",0);
-						if (rev == 0) { rev = Date.parse(Date()) / 1000; }
-						
-						if (remoteUID == "") {
-							this.setProperty(addressBook.URI,path,index,"UID",localUID);
+						// side: variable that tracks local/remote changes
+						//  bit 0 set = at least one local change occured
+						//  bit 1 set = at least one remote change occured
+						if (side & 1) {
+							// local side was modified: apply modification
+							addressBook.modifyCard(localCard);
 						}
-						this.setProperty(addressBook.URI,path,index,"LastModifiedDate",rev);
+						if (side & 2) {
+							// remote side was modified: calculate revision, copy UID if needed
+//							var rev = localCard.getProperty("LastModifiedDate",0);
+							var rev = Date.parse(Date()) / 1000;
+							this.setProperty(addressBook.URI,path,index,"LastModifiedDate",rev);
+							if (remoteUID == "") {
+								this.setProperty(addressBook.URI,path,index,"UID",localUID);
+							}
+						}
 						break;
 					
 					case this.symbolModeFromLocal:
