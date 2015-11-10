@@ -28,7 +28,7 @@ Supporters...: Lucas Treffenstädt (testing, code contribution auto-start),
                Yair Lanz (feedback regarding charsets)
                David von Oheimb (feedback, code contribution)
                Laura Arjona (Spanish translation)
-Version......: 2.5 (2015-10-30)
+Version......: 2.6 (2015-11-10)
 Licence......: GNU General Public License version 2
 
 Description..: Allows to synchronise Thunderbird's addressbook with external
@@ -193,6 +193,8 @@ Changelog:
 
 2.5 (2015-10-30)
    - modified filter behaviour: properties are now also ignored even when
-     the global action is set to export or import;
+     the global action is set to export or import
    - modified revision handling: REV is now only updated when changes are made
      
+2.6 (2015-11-10)
+   - fixed behaviour if a vCard dir does not exist (i.e. skip addressbook)

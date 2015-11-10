@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------
 ThunderSync, a Mozilla Thunderbird v3 extension
-$Id$
 --------------------------------------------------------------------------------
 
 Copyright (C) 2012-2015 Frank Abelbeck <frank.abelbeck@googlemail.com>
@@ -29,7 +28,7 @@ Unterstützer..: Lucas Treffenstädt (Tests, Quelltextbeiträge "Auto-Start")
                 Yair Lanz (Rückmeldung bezüglich Zeichensätzen)
                 David von Oheimb (Rückmeldungen, Quelltextbeiträge)
                 Laura Arjona (spanische Übersetzung)
-Version.......: 2.4 (2015-10-06)
+Version.......: 2.6 (2015-11-10)
 Lizenz........: GNU General Public License version 2
 
 Beschreibung..: Erlaubt es, Thunderbirds Adressbuch mit externen Verzeichnissen
@@ -207,4 +206,14 @@ Versionshistorie:
 
 2.4 (2015-10-06)
    - Korrektur der Voreinstellungsroutine für erzwungenen Import/Export
+
+2.5 (2015-10-30)
+   - geändertes Filter-Verhalten: Eigenschaften werden nun ignoriert, selbst
+     wenn das globale Verhalten auf Export oder Import eingestellt ist
+   - geänderte Handhabung der Versionierung: REV wird nun nur aktualisiert,
+     wenn tatsächlich Änderungen am Kontakt vorgenommen werden
+
+2.6 (2015-11-10)
+   - Korrektur des Verhaltens, wenn ein vCard-Verzeichnis nicht existiert
+     (überspringt Adressbuch in diesem Fall)
 
