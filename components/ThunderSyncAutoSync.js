@@ -356,7 +356,12 @@ ThunderSyncAutoSync.prototype = {
 						// if path points to a file that is not a directory or
 						// if a file object could not be constructed:
 						// reset path
-						path = "";
+						//
+						// 2015-11-10: disabled; formerly, this was done to sanitise
+						//             old prefs, but now it interferes with sync
+						//             processes that use remote dirs; these might
+						//             not be always mounted.
+						//path = "";
 					}
 					break;
 				default:

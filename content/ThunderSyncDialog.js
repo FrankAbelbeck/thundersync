@@ -812,6 +812,17 @@ var ThunderSyncDialog = {
 			// no path defined or no sync desired? skip this addressbook...
 			if ((remoteResource == "") || (syncMode == "no")) { continue; }
 			
+			// 2015-11-10: check if given path exists when in vCardDir mode
+			var file = Components.classes["@mozilla.org/network/io-service;1"]
+					.getService(Components.interfaces.nsIIOService)
+					.newURI(remoteResource,null,null)
+					.QueryInterface(Components.interfaces.nsIFileURL)
+					.file;
+ 			if (this.FormatDB[addressBook.URI] == "vCardDir" && !file.exists()) {
+				this.logMsg("vCard directory does not exist: ignored.")
+				break;
+			}
+			
 			// read all external contacts related to the current addressbook
 			this.read(addressBook.URI,remoteResource);
 			
@@ -1590,8 +1601,6 @@ var ThunderSyncDialog = {
 	 * Write all modified contacts back to their external resources (and delete if necessary).
 	 */
 	write: function () {
-		var file = Components.classes["@mozilla.org/file/local;1"]
-				.createInstance(Components.interfaces.nsIFile);
 		var fStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
 				.createInstance(Components.interfaces.nsIFileOutputStream);
 		var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"]
@@ -1605,6 +1614,19 @@ var ThunderSyncDialog = {
 			abURI = this.ModDB[i][0];
 			path  = this.ModDB[i][1];
 			dataString = "";
+			
+			var file = Components.classes["@mozilla.org/network/io-service;1"]
+					.getService(Components.interfaces.nsIIOService)
+					.newURI(path,null,null)
+					.QueryInterface(Components.interfaces.nsIFileURL)
+					.file;
+			
+			// 2015-11-10: check if given path exists when in vCardDir mode
+ 			if (this.FormatDB[abURI] == "vCardDir" && !file.parent.exists()) {
+				this.logMsg("vCard directory does not exist: ignored.")
+				continue;
+			}
+			
 			// iterate over all contacts in given abURI/path combo
 			for (k=0; k<this.CardDB[abURI][path].length; k++) {
 				if ((this.CardDB[abURI][path][k] instanceof Components.interfaces.nsIAbCard) && !this.CardDB[abURI][path][k].isMailList) {
@@ -1624,11 +1646,6 @@ var ThunderSyncDialog = {
 					}
 				}
 			}
-			var file = Components.classes["@mozilla.org/network/io-service;1"]
-					.getService(Components.interfaces.nsIIOService)
-					.newURI(path,null,null)
-					.QueryInterface(Components.interfaces.nsIFileURL)
-					.file;
 			
 			if (dataString.length > 0) {
 				// file exists and is a regular file!
@@ -1694,7 +1711,7 @@ var ThunderSyncDialog = {
 	 * store them in local memory; addressed via addressbook URI, path and index.
 	 * 
 	 * @param abURI URI of the corresponding addressbook
-	 * @param path path to teh file resource
+	 * @param path path to the file resource
 	 */
 	read: function (abURI,path) {
 		switch (this.FormatDB[abURI]) {
